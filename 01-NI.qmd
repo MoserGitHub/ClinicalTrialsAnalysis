@@ -1,4 +1,14 @@
-# Two-arm non-inferiority setting
+# Power and sample size calculations
+
+## Background
+
+The terminology of 'power' is often imprecisely used @Kunzmann2022. Kunzmann et al. suggest to use the neutral term 'probability of rejection'. The classical (frequentist) 'power' is defined as the probability of rejection given that the alternative hypothesis is true. Frequentist power calculations do not include uncertainties of the treatment effect, whereas Bayesian and hybrid approaches include such uncertainties in their calculations. In the following we use different approaches for the calculation of the 'probability of rejection' (frequentist, Bayesian and hybrid) for different clinical trial designs.
+
+**Definition 'hybrid'** (@Spiegelhalter2003, Section 6.5.2)
+
+*'\[...\] we have a prior distribution to use in our study design, but that the conclusions of the study will be entirely classical and will not make use of the prior \[...\]'*
+
+## Two-arm non-inferiority setting
 
 In this section we consider a non-inferiority clinical trial setting with a null hypothesis $H_0: \delta > \delta^*$ and alternative hypothesis $H_a: \delta \leq \delta^*$, where $\delta^*>0$ is a fixed non-inferiority margin and a treatment effect $\delta$, for example, a continuous difference or a risk difference.
 
@@ -17,7 +27,7 @@ data <- rbind(data, data.frame(x=-0.04, y=0.5, x_min=-0.07, x_max=0))
 ggplot(data=data, aes(x=x, y=y))+geom_vline(xintercept=0.035, linetype="dashed")+geom_vline(xintercept=0)+theme_bw()+scale_x_continuous(limits=c(-0.1, 0.07), breaks=c(-0.1, 0, 0.035), labels=c("", "delta", "non-inferiority margin"))+xlab("Treatment effect (<--- favors active treatment)")+ylim(0,2)+theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), panel.grid = element_blank())+ylab("")+geom_rect(aes(ymax=2, ymin=0, xmin=0.035, xmax=0.07), alpha=0.3)+geom_text(aes(x=0.05, y=1, label="H0:\nActive\ntreatment\nis inferior"))+geom_rect(aes(ymax=2, ymin=0, xmin=-0.1, xmax=0.035), alpha=0.3, fill="lightblue")+geom_text(aes(x=-0.07, y=1.8, label="HA: Active treatment\nis non-inferior"))+geom_rect(aes(ymax=1, ymin=0, xmin=-0.1, xmax=0), alpha=0.3, fill="blue")+geom_text(aes(x=-0.07, y=0.2, label="HA_0: Active treatment\nis superior"))+geom_point(colour="red", size=2)+geom_linerange(aes(xmax=x_max, xmin=x_min), colour="red", linewidth=1)
 ```
 
-## Binomial outcome
+### Binomial outcome
 
 Here $p_1$ and $p_0$ are event probabilities from an active treatment arm and a control arm, respectively. $\delta=p_1-p_0$ is the true treatment effect expressed as a risk difference.
 
@@ -35,7 +45,7 @@ The non-inferiority margin was set at 3.5% and it was assumed that the proportio
 
 ------------------------------------------------------------------------
 
-### Frequentist approach
+#### Frequentist approach
 
 Let $Y_{i,k} \sim^{iid} Bernoulli(p_i)$, $k=1,\dots,n_i$, $i\in \{0,1\}$. Let $\overline p_i=\frac{1}{n_i}\sum_{k\leq n_i} Y_{i,k}$, $i\in {0,1}$, and thus the estimated risk difference $D=\overline p_1-\overline p_0$ is asymptotically Gaussian distributed with $D \sim N\left(\delta, \frac{\sigma_1^2}{n_1}+\frac{\sigma_0^2}{n_0}\right)$, where $\sigma_i^2=p_i(1-p_i)$, $i\in \{0,1\}$. For notational purposes we denote $\sigma_{treat}^2=\frac{\sigma_1^2}{n_1}+\frac{\sigma_0^2}{n_0}$, that is, the variance for the treatment effect.
 
@@ -139,7 +149,7 @@ Under the specified parameters a sample size of 200 patients (100 per arm) is ne
 
 ------------------------------------------------------------------------
 
-### Hybrid approach: Prior on treatment effect
+#### Hybrid approach: Prior on treatment effect
 
 Suppose that the true treatment effect $\delta$ is a realization from a random variable $\Delta$ with $p(\delta)$. In this subsection we assume that the prior comes from a Gaussian distribution function so that $\Delta \sim N\left(d, \frac{\sigma_1^2+\sigma_0^2}{m}\right)$. Note that this prior can be thought as a realisation from $m$ Gaussian 'prior observations' with variance $\sigma_1^2+\sigma_0^2$. Again for notational purposes we denote $\sigma_{prior}^2=\frac{\sigma_1^2+\sigma_0^2}{m}$ as the variance of the design prior on the treatment effect.
 
@@ -711,7 +721,7 @@ data_ep
 
 ------------------------------------------------------------------------
 
-### Proper Bayesian approach
+#### Proper Bayesian approach
 
 A proper Bayesian approach uses the posterior distribution to define 'Bayesian significance': $S^B:=P(\Delta\leq\delta^*|data)=1-\epsilon$. Remember $D=p_1-p_0$ with $D \sim N(\delta, \sigma^2_{treat})$. Suppose that $\Delta \sim N(d, \sigma^2_{prior})$ then the posterior distribution given $D$ is distributed as $$
 \begin{aligned}

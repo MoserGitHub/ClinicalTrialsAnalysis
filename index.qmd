@@ -1,10 +1,4 @@
-# Background
-
-The terminology of 'power' is often imprecisely used @Kunzmann2022. Kunzmann et al. suggest to use the neutral term 'probability of rejection'. The classical (frequentist) 'power' is defined as the probability of rejection given that the alternative hypothesis is true. Frequentist power calculations do not include uncertainties of the treatment effect, whereas Bayesian and hybrid approaches include such uncertainties in their calculations. In the following we use different approaches for the calculation of the 'probability of rejection' (frequentist, Bayesian and hybrid) for different clinical trial designs.
-
-**Definition 'hybrid'** (@Spiegelhalter2003, Section 6.5.2)
-
-*'\[...\] we have a prior distribution to use in our study design, but that the conclusions of the study will be entirely classical and will not make use of the prior \[...\]'*
+# Introduction
 
 ## General notation and abbreviations
 

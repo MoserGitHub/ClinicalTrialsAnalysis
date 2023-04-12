@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Bayesian approaches in clinical trials - 2&nbsp; Two-arm non-inferiority setting</title>
+<title>Bayesian approaches in clinical trials - 2&nbsp; Power and sample size calculations</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -143,7 +143,7 @@ div.csl-indent {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Two-arm non-inferiority setting</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Power and sample size calculations</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -166,12 +166,12 @@ div.csl-indent {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Background</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./01-NI.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Two-arm non-inferiority setting</span></a>
+  <a href="./01-NI.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Power and sample size calculations</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -185,11 +185,15 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#binomial-outcome" id="toc-binomial-outcome" class="nav-link active" data-scroll-target="#binomial-outcome"><span class="toc-section-number">2.1</span>  Binomial outcome</a>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background"><span class="toc-section-number">2.1</span>  Background</a></li>
+  <li><a href="#two-arm-non-inferiority-setting" id="toc-two-arm-non-inferiority-setting" class="nav-link" data-scroll-target="#two-arm-non-inferiority-setting"><span class="toc-section-number">2.2</span>  Two-arm non-inferiority setting</a>
+  <ul>
+  <li><a href="#binomial-outcome" id="toc-binomial-outcome" class="nav-link" data-scroll-target="#binomial-outcome"><span class="toc-section-number">2.2.1</span>  Binomial outcome</a>
   <ul class="collapse">
-  <li><a href="#frequentist-approach" id="toc-frequentist-approach" class="nav-link" data-scroll-target="#frequentist-approach"><span class="toc-section-number">2.1.1</span>  Frequentist approach</a></li>
-  <li><a href="#hybrid-approach-prior-on-treatment-effect" id="toc-hybrid-approach-prior-on-treatment-effect" class="nav-link" data-scroll-target="#hybrid-approach-prior-on-treatment-effect"><span class="toc-section-number">2.1.2</span>  Hybrid approach: Prior on treatment effect</a></li>
-  <li><a href="#proper-bayesian-approach" id="toc-proper-bayesian-approach" class="nav-link" data-scroll-target="#proper-bayesian-approach"><span class="toc-section-number">2.1.3</span>  Proper Bayesian approach</a></li>
+  <li><a href="#frequentist-approach" id="toc-frequentist-approach" class="nav-link" data-scroll-target="#frequentist-approach"><span class="toc-section-number">2.2.1.1</span>  Frequentist approach</a></li>
+  <li><a href="#hybrid-approach-prior-on-treatment-effect" id="toc-hybrid-approach-prior-on-treatment-effect" class="nav-link" data-scroll-target="#hybrid-approach-prior-on-treatment-effect"><span class="toc-section-number">2.2.1.2</span>  Hybrid approach: Prior on treatment effect</a></li>
+  <li><a href="#proper-bayesian-approach" id="toc-proper-bayesian-approach" class="nav-link" data-scroll-target="#proper-bayesian-approach"><span class="toc-section-number">2.2.1.3</span>  Proper Bayesian approach</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -202,7 +206,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Two-arm non-inferiority setting</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Power and sample size calculations</span></h1>
 </div>
 
 
@@ -217,24 +221,32 @@ div.csl-indent {
 
 </header>
 
+<section id="background" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="background"><span class="header-section-number">2.1</span> Background</h2>
+<p>The terminology of ‘power’ is often imprecisely used <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">1</a>]</span>. Kunzmann et al.&nbsp;suggest to use the neutral term ‘probability of rejection’. The classical (frequentist) ‘power’ is defined as the probability of rejection given that the alternative hypothesis is true. Frequentist power calculations do not include uncertainties of the treatment effect, whereas Bayesian and hybrid approaches include such uncertainties in their calculations. In the following we use different approaches for the calculation of the ‘probability of rejection’ (frequentist, Bayesian and hybrid) for different clinical trial designs.</p>
+<p><strong>Definition ‘hybrid’</strong> (<span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">2</a>]</span>, Section 6.5.2)</p>
+<p><em>‘[…] we have a prior distribution to use in our study design, but that the conclusions of the study will be entirely classical and will not make use of the prior […]’</em></p>
+</section>
+<section id="two-arm-non-inferiority-setting" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="two-arm-non-inferiority-setting"><span class="header-section-number">2.2</span> Two-arm non-inferiority setting</h2>
 <p>In this section we consider a non-inferiority clinical trial setting with a null hypothesis <span class="math inline">\(H_0: \delta &gt; \delta^*\)</span> and alternative hypothesis <span class="math inline">\(H_a: \delta \leq \delta^*\)</span>, where <span class="math inline">\(\delta^*&gt;0\)</span> is a fixed non-inferiority margin and a treatment effect <span class="math inline">\(\delta\)</span>, for example, a continuous difference or a risk difference.</p>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="01-NI_files/figure-html/fig1-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<section id="binomial-outcome" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="binomial-outcome"><span class="header-section-number">2.1</span> Binomial outcome</h2>
+<section id="binomial-outcome" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="binomial-outcome"><span class="header-section-number">2.2.1</span> Binomial outcome</h3>
 <p>Here <span class="math inline">\(p_1\)</span> and <span class="math inline">\(p_0\)</span> are event probabilities from an active treatment arm and a control arm, respectively. <span class="math inline">\(\delta=p_1-p_0\)</span> is the true treatment effect expressed as a risk difference.</p>
 <p>In this section we assume that the variances in both groups are known, but might be different.</p>
 <hr>
 <p><strong>Working example</strong></p>
-<p>We use the SAFE-SSPE trial as a working example <span class="citation" data-cites="Baumgartner2020">[<a href="references.html#ref-Baumgartner2020" role="doc-biblioref">1</a>]</span>. In brief, this non-inferiority randomised placebo-controlled trial compares clinical surveillance versus anticoagulant treatment in low-risk patients with isolated subsegmental pulmonary embolism (SSPE). The primary outcome is the proportion of 3-month recurrence of venous thromboembolism (VTE).</p>
+<p>We use the SAFE-SSPE trial as a working example <span class="citation" data-cites="Baumgartner2020">[<a href="references.html#ref-Baumgartner2020" role="doc-biblioref">3</a>]</span>. In brief, this non-inferiority randomised placebo-controlled trial compares clinical surveillance versus anticoagulant treatment in low-risk patients with isolated subsegmental pulmonary embolism (SSPE). The primary outcome is the proportion of 3-month recurrence of venous thromboembolism (VTE).</p>
 <p>The null hypothesis <span class="math inline">\(H_0\)</span> is <em>‘clinical surveillance is inferior to anticoagulant treatment’</em> versus the alternative hypothesis <span class="math inline">\(H_a\)</span> <em>‘clinical surveillance is non-inferior to anticoagulant treatment’</em>. Thus, <span class="math inline">\(H_0: p_1-p_0&gt;0\)</span> vs <span class="math inline">\(H_a: p_1-p_0\leq 0\)</span>, where <span class="math inline">\(p_1\)</span> is the VTE proportion in the clinical surveillance arm and <span class="math inline">\(p_0\)</span> is the VTE proportion in the control arm.</p>
 <p>The non-inferiority margin was set at 3.5% and it was assumed that the proportion of VTE in both groups was 1%.</p>
 <hr>
-<section id="frequentist-approach" class="level3" data-number="2.1.1">
-<h3 data-number="2.1.1" class="anchored" data-anchor-id="frequentist-approach"><span class="header-section-number">2.1.1</span> Frequentist approach</h3>
+<section id="frequentist-approach" class="level4" data-number="2.2.1.1">
+<h4 data-number="2.2.1.1" class="anchored" data-anchor-id="frequentist-approach"><span class="header-section-number">2.2.1.1</span> Frequentist approach</h4>
 <p>Let <span class="math inline">\(Y_{i,k} \sim^{iid} Bernoulli(p_i)\)</span>, <span class="math inline">\(k=1,\dots,n_i\)</span>, <span class="math inline">\(i\in \{0,1\}\)</span>. Let <span class="math inline">\(\overline p_i=\frac{1}{n_i}\sum_{k\leq n_i} Y_{i,k}\)</span>, <span class="math inline">\(i\in {0,1}\)</span>, and thus the estimated risk difference <span class="math inline">\(D=\overline p_1-\overline p_0\)</span> is asymptotically Gaussian distributed with <span class="math inline">\(D \sim N\left(\delta, \frac{\sigma_1^2}{n_1}+\frac{\sigma_0^2}{n_0}\right)\)</span>, where <span class="math inline">\(\sigma_i^2=p_i(1-p_i)\)</span>, <span class="math inline">\(i\in \{0,1\}\)</span>. For notational purposes we denote <span class="math inline">\(\sigma_{treat}^2=\frac{\sigma_1^2}{n_1}+\frac{\sigma_0^2}{n_0}\)</span>, that is, the variance for the treatment effect.</p>
 <p>We are interested whether the upper <span class="math inline">\((1-\alpha)\%\)</span>-confidence limit is smaller than the non-inferiority margin, that is, <span class="math display">\[
 D+z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}\leq \delta^*,
@@ -324,8 +336,8 @@ $power
 <p>Under the specified parameters a sample size of 200 patients (100 per arm) is needed to reject the null hypothesis of inferiority. This is more or less the sample size mentioned in the study protocol of the SAFE-SSPE trial but without dropouts and adjustments for rare events.</p>
 <hr>
 </section>
-<section id="hybrid-approach-prior-on-treatment-effect" class="level3" data-number="2.1.2">
-<h3 data-number="2.1.2" class="anchored" data-anchor-id="hybrid-approach-prior-on-treatment-effect"><span class="header-section-number">2.1.2</span> Hybrid approach: Prior on treatment effect</h3>
+<section id="hybrid-approach-prior-on-treatment-effect" class="level4" data-number="2.2.1.2">
+<h4 data-number="2.2.1.2" class="anchored" data-anchor-id="hybrid-approach-prior-on-treatment-effect"><span class="header-section-number">2.2.1.2</span> Hybrid approach: Prior on treatment effect</h4>
 <p>Suppose that the true treatment effect <span class="math inline">\(\delta\)</span> is a realization from a random variable <span class="math inline">\(\Delta\)</span> with <span class="math inline">\(p(\delta)\)</span>. In this subsection we assume that the prior comes from a Gaussian distribution function so that <span class="math inline">\(\Delta \sim N\left(d, \frac{\sigma_1^2+\sigma_0^2}{m}\right)\)</span>. Note that this prior can be thought as a realisation from <span class="math inline">\(m\)</span> Gaussian ‘prior observations’ with variance <span class="math inline">\(\sigma_1^2+\sigma_0^2\)</span>. Again for notational purposes we denote <span class="math inline">\(\sigma_{prior}^2=\frac{\sigma_1^2+\sigma_0^2}{m}\)</span> as the variance of the design prior on the treatment effect.</p>
 <p>In the following we will use the following priors:</p>
 <ul>
@@ -345,7 +357,7 @@ $power
 <p>Let <span class="math display">\[
 AP:=\int_{\Delta} P_{\delta}(D\leq D_{suc}^{\delta^*})p(\delta)d\delta,
 \]</span></p>
-<p>be the <strong>‘average power’</strong> <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">2</a>]</span> (also called ‘assurance’ <span class="citation" data-cites="OHagan2005">[<a href="references.html#ref-OHagan2005" role="doc-biblioref">3</a>]</span>, ‘probability of success’ <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">4</a>]</span>, <span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">5</a>]</span> or Bayesian predictive power <span class="citation" data-cites="Rufibach2016">[<a href="references.html#ref-Rufibach2016" role="doc-biblioref">6</a>]</span>. The supplemental section of <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">4</a>]</span> contains a literature review of the used terminology). Remember that in an hybrid approach we are interested in trial conclusions from a frequentist point of view, thus we are interested in</p>
+<p>be the <strong>‘average power’</strong> <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span> (also called ‘assurance’ <span class="citation" data-cites="OHagan2005">[<a href="references.html#ref-OHagan2005" role="doc-biblioref">5</a>]</span>, ‘probability of success’ <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">1</a>]</span>, <span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">2</a>]</span> or Bayesian predictive power <span class="citation" data-cites="Rufibach2016">[<a href="references.html#ref-Rufibach2016" role="doc-biblioref">6</a>]</span>. The supplemental section of <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">1</a>]</span> contains a literature review of the used terminology). Remember that in an hybrid approach we are interested in trial conclusions from a frequentist point of view, thus we are interested in</p>
 <p><span class="math display">\[
 D\leq -z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*.
 \]</span> By using a design prior we take into account the uncertainty of the treatment effect. The prior predictive distribution for an estimated risk difference, say <span class="math inline">\(\tilde D\)</span>, with a prior <span class="math inline">\(\Delta \sim N\left(d, \sigma_{prior}^2\right)\)</span> includes this uncertainty. For the Gaussian case, the prior predictive distribution of <span class="math inline">\(\tilde D\)</span> is given as <span class="math display">\[
@@ -355,7 +367,7 @@ D\leq -z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*.
 \begin{aligned}
 AP&amp;=\int_{-\infty}^{-z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*}f(\tilde\delta)d\tilde\delta= \Phi\left(\frac{1}{\sigma_{prior}}\left[-z_{1-\alpha}\sigma_{treat}-(d-\delta^*)\right]\right)
 \end{aligned}
-\]</span> see for example <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">2</a>]</span>. Note that as <span class="math inline">\(m \rightarrow \infty\)</span>, then <span class="math inline">\(AP \rightarrow \Phi\left(-z_{1-\alpha}-\frac{(d-\delta^*)}{\sigma_{treat}}\right)\)</span>, that is, the frequentist power at <span class="math inline">\(d\)</span>.</p>
+\]</span> see for example <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span>. Note that as <span class="math inline">\(m \rightarrow \infty\)</span>, then <span class="math inline">\(AP \rightarrow \Phi\left(-z_{1-\alpha}-\frac{(d-\delta^*)}{\sigma_{treat}}\right)\)</span>, that is, the frequentist power at <span class="math inline">\(d\)</span>.</p>
 <hr>
 <p><strong>Working example (continued)</strong></p>
 <p>We calculate the AP under the assumed prior distributions and parameters for the SAFE-SSPE trial.</p>
@@ -423,7 +435,7 @@ AP&amp;=\int_{-\infty}^{-z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_
 </div>
 <p>Under an ‘enthusiastic prior’ we get an average power of 59%. For an ‘skeptical prior’ the average power decreases to 34%. These values are lower than the frequentist power of 80%.</p>
 <hr>
-<p>Rufibach et al.&nbsp;give a closed a formula for the distribution of <span class="math inline">\(RPR:=P_\Delta(D\leq D_{suc}^{\delta^*})\)</span>, where <span class="math inline">\(\Delta \sim N(d,\sigma^2_{prior})\)</span>, and discuss the shape under different prior choices <span class="citation" data-cites="Rufibach2016">[<a href="references.html#ref-Rufibach2016" role="doc-biblioref">6</a>]</span>. In the following we use the wording ’random probability to reject` (RPR) similar to <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">4</a>]</span>.</p>
+<p>Rufibach et al.&nbsp;give a closed a formula for the distribution of <span class="math inline">\(RPR:=P_\Delta(D\leq D_{suc}^{\delta^*})\)</span>, where <span class="math inline">\(\Delta \sim N(d,\sigma^2_{prior})\)</span>, and discuss the shape under different prior choices <span class="citation" data-cites="Rufibach2016">[<a href="references.html#ref-Rufibach2016" role="doc-biblioref">6</a>]</span>. In the following we use the wording ’random probability to reject` (RPR) similar to <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">1</a>]</span>.</p>
 <p>For <span class="math inline">\(0&lt;y&lt;1\)</span>, the random variable <span class="math inline">\(RPR\)</span> has a probability density function <span class="math display">\[
 \begin{aligned}
 f(y)&amp;=\frac{\sigma_{treat}}{\sigma_{prior}} \phi\left(-z_{1-\alpha}\frac{\sigma_{treat}}{\sigma_{prior}}-\frac{(d-\delta^*)}{\sigma_{prior}}-\frac{\sigma_{treat}}{\sigma_{prior}}\Phi^{-1}(y) \right)\left[ \phi\left(\Phi^{-1}(y) \right) \right]^{-1},
@@ -667,7 +679,7 @@ P(RPR\leq y)=1-\Phi&amp;\left(\frac{\sigma_{treat}}{\sigma_{prior}}\left[-z_{1-\
 </div>
 </div>
 <hr>
-<p>Note that the average power AP integrates over the whole <span class="math inline">\(\Delta\)</span> range. This might include also ‘non-favorable’ regions. To see that one can decompose AP as follows (see <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">4</a>]</span>, <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">2</a>]</span>): <span class="math display">\[
+<p>Note that the average power AP integrates over the whole <span class="math inline">\(\Delta\)</span> range. This might include also ‘non-favorable’ regions. To see that one can decompose AP as follows (see <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">1</a>]</span>, <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span>): <span class="math display">\[
 AP=\overbrace{P(D\leq D_{suc}^{\delta^*}, \Delta&gt;\delta^*)}^{(1)}+\overbrace{P(D\leq D_{suc}^{\delta^*}, 0&lt;\Delta\leq\delta^*)}^{(2)}+\overbrace{P(D\leq D_{suc}^{\delta^*}, \Delta\leq0)}^{(3)}
 \]</span> where</p>
 <ul>
@@ -675,17 +687,17 @@ AP=\overbrace{P(D\leq D_{suc}^{\delta^*}, \Delta&gt;\delta^*)}^{(1)}+\overbrace{
 <li><span class="math inline">\((2)\)</span> ‘Non-inferior, but treatment effect not relevant’,</li>
 <li><span class="math inline">\((3)\)</span> ‘Non-inferior, treatment effect relevant’.</li>
 </ul>
-<p><span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">5</a>]</span> shows that <span class="math inline">\(AP \approx P(D\leq D_{suc}^{\delta^*}, \Delta\leq0)\)</span> because the type-I error is often small and one has strong believe for the alternative hypothesis <span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">5</a>]</span>. <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">4</a>]</span> and <span class="citation" data-cites="OHagan2005">[<a href="references.html#ref-OHagan2005" role="doc-biblioref">3</a>]</span> discuss the relevance of the AP decomposition. For example, pharmaceutical companies might (1)+(2)+(3) taking into account shortterm risk, wheras regulators are interested in (1) or (1)+(2), that is non-inferior outcomes with relevant treatment effects.</p>
+<p><span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">2</a>]</span> shows that <span class="math inline">\(AP \approx P(D\leq D_{suc}^{\delta^*}, \Delta\leq0)\)</span> because the type-I error is often small and one has strong believe for the alternative hypothesis <span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">2</a>]</span>. <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">1</a>]</span> and <span class="citation" data-cites="OHagan2005">[<a href="references.html#ref-OHagan2005" role="doc-biblioref">5</a>]</span> discuss the relevance of the AP decomposition. For example, pharmaceutical companies might (1)+(2)+(3) taking into account shortterm risk, wheras regulators are interested in (1) or (1)+(2), that is non-inferior outcomes with relevant treatment effects.</p>
 <p>For the non-inferiority setting we are interested in (2)+(3):</p>
 <p><span class="math display">\[
 P(D\leq D_{suc}^{\delta^*}, \Delta\leq\delta^*)=P(D\leq D_{suc}^{\delta^*}|\Delta\leq\delta^*)P(\Delta\leq\delta^*)=\underbrace{E\left[P_{\Delta\leq\delta^*}(D\leq D_{suc}^{\delta^*})\right]}_{EP}P(\Delta\leq\delta^*),
-\]</span> Kunzmann et al.&nbsp;denote EP the <strong>‘expected power’</strong> (<span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">4</a>]</span>). Note that</p>
+\]</span> Kunzmann et al.&nbsp;denote EP the <strong>‘expected power’</strong> (<span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">1</a>]</span>). Note that</p>
 <p><span class="math display">\[
 \underbrace{P(D\leq D_{suc}^{\delta^*}, \Delta\leq\delta^*)}_{PAP}=\underbrace{E\left[P_{\Delta\leq\delta^*}(D\leq D_{suc}^{\delta^*})\right]}_{EP}\underbrace{P(\Delta\leq\delta^*)}_{constant}.
 \]</span> Spiegelhalter calls <span class="math inline">\(P(P(D\leq D_{suc}^{\delta^*}, \Delta\leq\delta^*)\)</span> the <strong>‘prior adjusted power’</strong> (PAP):</p>
 <p>The AP decomposition can be visualised using the posterior predictive distribution. Let <span class="math inline">\(p(\tilde\delta)\)</span> be the pdf of the posterior predictive distribution then <span class="math display">\[
 p(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin{pmatrix} \sigma^2_{treat}+\sigma^2_{prior} \quad \sigma^2_{prior} \\ \quad \quad \sigma^2_{prior} \quad \ \quad  \sigma^2_{prior}\end{pmatrix}\right),
-\]</span> see formula (2.11) in <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">2</a>]</span>.</p>
+\]</span> see formula (2.11) in <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span>.</p>
 <hr>
 <p><strong>Working example (continued)</strong></p>
 <p>For the SAFE-SSPE study the bivariate scatterplot of <span class="math inline">\(p(\tilde\delta, \delta)\)</span> under an enthusiastic prior can be visualised as:</p>
@@ -829,8 +841,8 @@ p(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin{p
 </div>
 <hr>
 </section>
-<section id="proper-bayesian-approach" class="level3" data-number="2.1.3">
-<h3 data-number="2.1.3" class="anchored" data-anchor-id="proper-bayesian-approach"><span class="header-section-number">2.1.3</span> Proper Bayesian approach</h3>
+<section id="proper-bayesian-approach" class="level4" data-number="2.2.1.3">
+<h4 data-number="2.2.1.3" class="anchored" data-anchor-id="proper-bayesian-approach"><span class="header-section-number">2.2.1.3</span> Proper Bayesian approach</h4>
 <p>A proper Bayesian approach uses the posterior distribution to define ‘Bayesian significance’: <span class="math inline">\(S^B:=P(\Delta\leq\delta^*|data)=1-\epsilon\)</span>. Remember <span class="math inline">\(D=p_1-p_0\)</span> with <span class="math inline">\(D \sim N(\delta, \sigma^2_{treat})\)</span>. Suppose that <span class="math inline">\(\Delta \sim N(d, \sigma^2_{prior})\)</span> then the posterior distribution given <span class="math inline">\(D\)</span> is distributed as <span class="math display">\[
 \begin{aligned}
 \Delta|D \sim N\left(\frac{\frac{d}{\sigma^2_{prior}}+\frac{D}{\sigma^2_{treat}}}{\frac{1}{\sigma^2_{prior}}+\frac{1}{\sigma^2_{treat}}}, \frac{1}{\frac{1}{\sigma^2_{prior}}+\frac{1}{\sigma^2_{treat}}}\right)=N\left( \frac{\sigma^2_{treat}d+\sigma^2_{prior}D}{\sigma^2_{treat}+\sigma^2_{prior}}, \frac{\sigma^2_{treat}\sigma^2_{prior}}{\sigma^2_{treat}+\sigma^2_{prior}}  \right)
@@ -1120,25 +1132,26 @@ BAP&amp;=-z_{1-\epsilon}\sqrt{\frac{m}{n}}-\sqrt{\frac{(m+n)m}{2n\sigma^2}}(d-\d
 
 
 <div id="refs" class="references csl-bib-body" role="doc-bibliography" style="display: none">
-<div id="ref-Baumgartner2020" class="csl-entry" role="doc-biblioentry">
-<div class="csl-left-margin">1. </div><div class="csl-right-inline">Baumgartner C, Klok FA, Carrier M, Limacher A, Moor J, Righini M, et al. Clinical surveillance vs. Anticoagulation for low-risk patiEnts with isolated SubSegmental pulmonary embolism: Protocol for a multicentre randomised placebo-controlled non-inferiority trial (SAFE-SSPE). BMJ Open. 2020;10: e040151. doi:<a href="https://doi.org/10.1136/bmjopen-2020-040151">10.1136/bmjopen-2020-040151</a></div>
-</div>
-<div id="ref-Grieve2022" class="csl-entry" role="doc-biblioentry">
-<div class="csl-left-margin">2. </div><div class="csl-right-inline">Grieve AP. Hybrid frequentist/bayesian power and bayesian power in planning clinical trials. Chapman; Hall/CRC; 2022. doi:<a href="https://doi.org/10.1201/9781003218531">10.1201/9781003218531</a></div>
-</div>
-<div id="ref-OHagan2005" class="csl-entry" role="doc-biblioentry">
-<div class="csl-left-margin">3. </div><div class="csl-right-inline">O’Hagan A, Stevens JW, Campbell MJ. Assurance in clinical trial design. Pharmaceutical Statistics. 2005;4: 187–201. doi:<a href="https://doi.org/10.1002/pst.175">10.1002/pst.175</a></div>
-</div>
 <div id="ref-Kunzmann2022" class="csl-entry" role="doc-biblioentry">
-<div class="csl-left-margin">4. </div><div class="csl-right-inline">Kunzmann K, Grayling MJ, Lee KM, Robertson DS, Rufibach K, Wason JMS. A review of bayesian perspectives on sample size derivation for confirmatory trials. The American Statistician. 2021;75: 424–432. doi:<a href="https://doi.org/10.1080/00031305.2021.1901782">10.1080/00031305.2021.1901782</a></div>
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Kunzmann K, Grayling MJ, Lee KM, Robertson DS, Rufibach K, Wason JMS. A review of bayesian perspectives on sample size derivation for confirmatory trials. The American Statistician. 2021;75: 424–432. doi:<a href="https://doi.org/10.1080/00031305.2021.1901782">10.1080/00031305.2021.1901782</a></div>
 </div>
 <div id="ref-Spiegelhalter2003" class="csl-entry" role="doc-biblioentry">
-<div class="csl-left-margin">5. </div><div class="csl-right-inline">Spiegelhalter DJ, Abrams KR, Myles JP. Bayesian approaches to clinical trials and health‐care evaluation. Wiley; 2003. doi:<a href="https://doi.org/10.1002/0470092602">10.1002/0470092602</a></div>
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Spiegelhalter DJ, Abrams KR, Myles JP. Bayesian approaches to clinical trials and health‐care evaluation. Wiley; 2003. doi:<a href="https://doi.org/10.1002/0470092602">10.1002/0470092602</a></div>
+</div>
+<div id="ref-Baumgartner2020" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Baumgartner C, Klok FA, Carrier M, Limacher A, Moor J, Righini M, et al. Clinical surveillance vs. Anticoagulation for low-risk patiEnts with isolated SubSegmental pulmonary embolism: Protocol for a multicentre randomised placebo-controlled non-inferiority trial (SAFE-SSPE). BMJ Open. 2020;10: e040151. doi:<a href="https://doi.org/10.1136/bmjopen-2020-040151">10.1136/bmjopen-2020-040151</a></div>
+</div>
+<div id="ref-Grieve2022" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Grieve AP. Hybrid frequentist/bayesian power and bayesian power in planning clinical trials. Chapman; Hall/CRC; 2022. doi:<a href="https://doi.org/10.1201/9781003218531">10.1201/9781003218531</a></div>
+</div>
+<div id="ref-OHagan2005" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">5. </div><div class="csl-right-inline">O’Hagan A, Stevens JW, Campbell MJ. Assurance in clinical trial design. Pharmaceutical Statistics. 2005;4: 187–201. doi:<a href="https://doi.org/10.1002/pst.175">10.1002/pst.175</a></div>
 </div>
 <div id="ref-Rufibach2016" class="csl-entry" role="doc-biblioentry">
 <div class="csl-left-margin">6. </div><div class="csl-right-inline">Rufibach K, Burger HU, Abt M. Bayesian predictive power: Choice of prior and some recommendations for its use as probability of success in drug development. Pharmaceutical Statistics. 2016;15: 438–446. doi:<a href="https://doi.org/10.1002/pst.1764">10.1002/pst.1764</a></div>
 </div>
 </div>
+</section>
 </section>
 </section>
 
@@ -1279,7 +1292,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./index.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Background</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

@@ -23,6 +23,7 @@ csl: plos-one.csl
 format:
   html:
     toc-location: left
+    toc-depth: 4  
     grid:
       sidebar-width: 300px
       body-width: 800px
@@ -40,6 +41,7 @@ format:
       - left=20mm
       - right=20mm
       - bottom=30mm
-      
+    include-in-header: preamble.tex
+    
 editor: source
 
