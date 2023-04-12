@@ -2,6 +2,7 @@
 
 In this section we consider a non-inferiority clinical trial setting with a null hypothesis $H_0: \delta > \delta^*$ and alternative hypothesis $H_a: \delta \leq \delta^*$, where $\delta^*>0$ is a fixed non-inferiority margin and a treatment effect $\delta$.
 
+
 ```{r}
 #| echo: false
 #| message: false
@@ -16,6 +17,7 @@ data <- rbind(data, data.frame(x=-0.04, y=0.5, x_min=-0.07, x_max=0))
 
 ggplot(data=data, aes(x=x, y=y))+geom_vline(xintercept=0.035, linetype="dashed")+geom_vline(xintercept=0)+theme_bw()+scale_x_continuous(limits=c(-0.1, 0.07), breaks=c(-0.1, 0, 0.035), labels=c(-0.1, 0, 0.035))+xlab("Treatment effect (<0: favors clinical surveillance)")+ylim(0,2)+theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), panel.grid = element_blank())+ylab("")+geom_rect(aes(ymax=2, ymin=0, xmin=0.035, xmax=0.07), alpha=0.3)+geom_text(aes(x=0.05, y=1, label="H0:\nClinical\nsurveillance\nis inferior"))+geom_rect(aes(ymax=2, ymin=0, xmin=-0.1, xmax=0.035), alpha=0.3, fill="lightblue")+geom_text(aes(x=-0.07, y=1.8, label="HA: Clinical surveillance\nis non-inferior"))+geom_rect(aes(ymax=1, ymin=0, xmin=-0.1, xmax=0), alpha=0.3, fill="blue")+geom_text(aes(x=-0.07, y=0.2, label="HA_0: Clinical surveillance\nis superior"))+geom_point(colour="red", size=2)+geom_linerange(aes(xmax=x_max, xmin=x_min), colour="red", linewidth=1)
 ```
+
 
 ## Binomial outcome
 
@@ -58,6 +60,7 @@ $$
 
 $\delta_0$, $\delta_A$ and $\delta^*$ are assumed as fixed and known constants in a frequentist approach. Their choices are of high importance, because all trial conclusions are based on those choices and affect the sample size calculation. The plot below shows how the sample size increase as $\delta^*$ approaches $\delta$.
 
+
 ```{r}
 #| echo: false
 
@@ -86,6 +89,7 @@ data_output <- data.frame(delta_star_range, n_output)
 ggplot(data_output, aes(x=delta_star_range, y=n_output))+geom_line(linewidth=1)+theme_bw()+xlab("Delta star")+ylab("Sample size (n0)")+geom_vline(aes(xintercept=0.035), linetype="dashed")+theme(panel.grid.minor = element_blank())+scale_x_continuous(breaks=c(0, 0.2, 0.035, 0.05), limits=c(0, 0.075))
 ```
 
+
 ------------------------------------------------------------------------
 
 **Working example (continued)**
@@ -93,6 +97,7 @@ ggplot(data_output, aes(x=delta_star_range, y=n_output))+geom_line(linewidth=1)+
 We calculate the required sample size for the SAFE-SSPE trial under the following parameters:
 
 -   $p_1=0.01$, $p_0=0.01$, $\delta^*=0.035$, $1-\beta=0.8$, $\alpha=0.05$, $a=1/1$
+
 
 ```{r}
 #| echo: true
@@ -116,6 +121,7 @@ n_1 <- n_0*a
 n_1
 ```
 
+
 Given the specified operating characteristics and parameters a sample size of 200 patients (100 per arm) is needed to reject the null hypothesis of inferiority. This is more or less the sample size mentioned in the study protocol of the SAFE-SSPE trial but without dropouts and adjustments for rare events.
 
 ------------------------------------------------------------------------
@@ -130,6 +136,7 @@ In the following we will use the following priors:
 -   **Skeptical prior** (favors inferiority): $d=\delta^*$, $m=6.6$, $P(\Delta>0)=0.05$. This prior is centered on the non-inferiority margin such that there is a low probability (here 5%) of superiority.
 -   **Informative prior** (clinical expert knowledge): $d=0$ with $m=25$.
 -   **Noninformative prior**: $d=0$ with $m=0.5$.
+
 
 ```{r}
 #| echo: false
@@ -166,6 +173,7 @@ prior_mean_skeptical <- delta_star
 ggplot(data_output, aes(x=delta_range, y=y, colour=factor(type)))+geom_line(linewidth=1.2)+theme_bw()+xlab("delta=p1-p0")+ylab("Density")+scale_x_continuous(breaks=c(-0.1, 0, delta_star, 0.1))+theme(panel.grid = element_blank())+geom_vline(xintercept=delta_star, linetype="dotted")+geom_vline(xintercept=0, linetype="dashed")+scale_linetype("Prior type") + stat_function(fun = dnorm, args = list(mean = prior_mean_enthusiastic, sd = sd_tilde/m0), xlim = c(delta_star, 0.1), geom = "area", show.legend = F, fill="purple", alpha=0.3, colour=NA) + stat_function(fun = dnorm, args = list(mean = prior_mean_skeptical, sd = sd_tilde/m0), xlim = c(-0.1,0), geom = "area", show.legend = F, fill="darkred", alpha=0.3, colour=NA) +scale_colour_manual("Prior type", values=c("purple", "orange", "blue", "darkred"))
 ```
 
+
 Let $$
 AP:=\int_{\Delta} P_{\delta}(D\leq D_{suc}^{\delta^*})p(\delta)d\delta,
 $$
@@ -189,6 +197,7 @@ $$ see for example @Grieve2022. Note that as $m \rightarrow \infty$, then $AP \r
 **Working example (continued)**
 
 We calculate the AP under the assumed prior distributions and parameters for the SAFE-SSPE trial.
+
 
 ```{r}
 #| echo: true
@@ -236,6 +245,7 @@ data_output <- rbind(data_output, data.frame(type="Noninformative", n_0, n_1, AP
 data.frame(data_output %>% arrange(type))
 ```
 
+
 Under an 'enthusiastic prior' we get an average power of 59%. For an 'skeptical prior' the average power decreases to 34%. These values are lower than the frequentist power of 80%.
 
 ------------------------------------------------------------------------
@@ -267,6 +277,7 @@ $$
 **Working example (continued)**
 
 We derive the probability densities for the different assumed priors for the SAFE-SSPE study.
+
 
 ```{r}
 #| echo: true
@@ -322,6 +333,7 @@ data_power$type <- factor(data_power$type, levels=c("Enthusiastic", "Skeptical",
 ggplot(data_power, aes(x, y, colour=type))+geom_line(linewidth=1)+geom_point(data=data_output2, aes(x=x, y=y, colour=type))+scale_colour_manual("Prior type", values=c("purple", "orange", "blue", "darkred"))+theme_bw()+theme(panel.grid = element_blank())+ylab("Density")+xlab("RPR")+ylim(c(0,2))+labs(caption="Dots indicate the AP.")
 ```
 
+
 ------------------------------------------------------------------------
 
 The cumulative distribution function of $RPR$ can the be calculated as
@@ -355,6 +367,7 @@ $$
 **Working example (continued)**
 
 With the above formula we calculate the probability $P(RPR>\gamma)$, $0<\gamma<1$, for the SAFE-SSPE study. We use an enthusiastic ($m=6.6$), an informative ($m=25$) and a noninformative prior ($m=0.5$) prior, all centered on $\delta=0$.
+
 
 ```{r}
 #| echo: true
@@ -401,7 +414,9 @@ data_rpr$type <- factor(data_rpr$type, levels=c("Enthusiastic", "Skeptical", "In
 ggplot(data_rpr, aes(x=gamma, y=p_rpr, colour=type))+geom_line(linewidth=1)+theme_bw()+theme(panel.grid.minor = element_blank())+scale_colour_manual("Prior type", values=c("purple", "orange", "blue", "darkred"))+xlab("Threshold gamma")+ylab("Probability that RPR is greater than threshold gamma")+scale_y_continuous(breaks=seq(0,1,0.1))+scale_x_continuous(breaks=seq(0,1,0.2))+labs(caption=str_glue("Calculated based on a planned total sample size of ", round(n_0_range+a*n_0_range,0), "."))
 ```
 
+
 For a specific threshold, say $\gamma=0.6$, and varying 'prior sample sizes' $m$ we obtain
+
 
 ```{r}
 #| echo: true
@@ -451,6 +466,7 @@ data_rpr$type <- factor(data_rpr$type, levels=c("Enthusiastic", "Skeptical", "In
 ggplot(data_rpr, aes(x=n_1_range+n_0_range, y=p_rpr, colour=type))+geom_line(linewidth=1)+theme_bw()+theme(panel.grid.minor = element_blank())+scale_colour_manual("Prior type", values=c("purple", "orange", "blue", "darkred"))+xlab("Planned total sample size")+ylab(str_glue("Probability that RPR is greater than ", gamma*100, "%"))+scale_x_continuous(breaks=c(0, 100, 200, 300, 400), limits=c(0,400))+geom_vline(xintercept=200, linetype="dashed")+scale_y_continuous(breaks=seq(0,1,0.1))
 ```
 
+
 ------------------------------------------------------------------------
 
 Note that the average power AP integrates over the whole $\Delta$ range. This might include also 'non-favorable' regions. To see that one can decompose AP as follows (see @Kunzmann2022, @Grieve2022): $$
@@ -483,6 +499,7 @@ $$ see formula (2.11) in @Grieve2022.
 
 For the SAFE-SSPE study the bivariate scatterplot of $p(\tilde\delta, \delta)$ under an enthusiastic prior can be visualised as:
 
+
 ```{r}
 #| echo: true
 
@@ -511,7 +528,9 @@ ggplot(data_sim, aes(x=delta, y=delta_pred, colour=factor(region)))+geom_point(s
 data.frame(data_sim %>% group_by(region) %>% summarise(prop=n()/nrow(data_sim)))
 ```
 
+
 For the noninferiority setting $\Delta\leq\delta^*$:
+
 
 ```{r}
 #| echo: true
@@ -565,6 +584,7 @@ data_ep$const <- round(data_ep$const, 4)
 
 data_ep
 ```
+
 
 ------------------------------------------------------------------------
 
@@ -624,6 +644,7 @@ $$
 
 We derive the Bayesian probability of rejection for the SAFE-SSPE study for differently assumed $\delta$ values.
 
+
 ```{r}
 #| echo: true
 
@@ -678,6 +699,7 @@ data_power$y <- round(data_power$y, 2)
 data_power %>% filter(delta%in%c("0", "0.035"))
 ```
 
+
 ------------------------------------------------------------------------
 
 The average (marginal) Bayesian probability of rejection (BAP) can be calculated as $$
@@ -706,6 +728,7 @@ $$
 **Working example (continued)**
 
 We derive the average Bayesian probability of rejection for the SAFE-SSPE study.
+
 
 ```{r class.source = 'fold-hide'}
 #| echo: true
@@ -797,4 +820,6 @@ data_output <- left_join(data_output, data_output2 %>% select(type, AP_bayes), b
 data_output %>% select(type, n_0, n_1, AP_hybrid=AP, AP_bayes)
 ```
 
+
 ------------------------------------------------------------------------
+

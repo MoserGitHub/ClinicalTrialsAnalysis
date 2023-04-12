@@ -107,8 +107,6 @@ div.csl-indent {
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
-<link href="./references.html" rel="next">
-<link href="./index.html" rel="prev">
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -151,7 +149,7 @@ div.csl-indent {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
@@ -181,10 +179,7 @@ div.csl-indent {
 </li>
     </ul>
     </div>
-</nav>
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
@@ -196,9 +191,12 @@ div.csl-indent {
   </ul></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page-right" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -652,16 +650,17 @@ p(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin{p
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>sigma_sim <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>((sd_0<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n_0<span class="sc">+</span>sd_1<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n_1<span class="sc">+</span>(sd_1<span class="sc">^</span><span class="dv">2</span><span class="sc">+</span>sd_0<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>m), (sd_1<span class="sc">^</span><span class="dv">2</span><span class="sc">+</span>sd_0<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>m, (sd_1<span class="sc">^</span><span class="dv">2</span><span class="sc">+</span>sd_0<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>m, (sd_1<span class="sc">^</span><span class="dv">2</span><span class="sc">+</span>sd_0<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>m), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>, <span class="at">byrow=</span>T)</span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>data_sim <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">rmvnorm</span>(<span class="at">n=</span><span class="dv">10000</span>, <span class="at">mean=</span><span class="fu">c</span>(prior_mean, prior_mean), sigma_sim))</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data_sim) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"delta_pred"</span>, <span class="st">"delta"</span>)</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>data_sim<span class="sc">$</span>region <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(data_sim<span class="sc">$</span>delta<span class="sc">&lt;=</span><span class="dv">0</span> <span class="sc">&amp;</span> data_sim<span class="sc">$</span>delta_pred<span class="sc">&lt;=-</span><span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha)<span class="sc">*</span>sd_tilde<span class="sc">/</span><span class="fu">sqrt</span>(n)<span class="sc">-</span>(prior_mean<span class="sc">-</span>delta_star), <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>data_sim<span class="sc">$</span>region <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(data_sim<span class="sc">$</span>delta<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span> data_sim<span class="sc">$</span>delta<span class="sc">&lt;=</span>delta_star <span class="sc">&amp;</span> data_sim<span class="sc">$</span>delta_pred<span class="sc">&lt;=-</span><span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha)<span class="sc">*</span>sd_tilde<span class="sc">/</span><span class="fu">sqrt</span>(n)<span class="sc">-</span>(prior_mean<span class="sc">-</span>delta_star), <span class="dv">2</span>, data_sim<span class="sc">$</span>region)</span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>data_sim<span class="sc">$</span>region <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(data_sim<span class="sc">$</span>delta<span class="sc">&gt;</span>delta_star <span class="sc">&amp;</span> data_sim<span class="sc">$</span>delta_pred<span class="sc">&lt;=-</span><span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha)<span class="sc">*</span>sd_tilde<span class="sc">/</span><span class="fu">sqrt</span>(n)<span class="sc">-</span>(prior_mean<span class="sc">-</span>delta_star), <span class="dv">3</span>, data_sim<span class="sc">$</span>region)</span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>data_sim<span class="sc">$</span>region <span class="ot">&lt;-</span> <span class="fu">factor</span>(data_sim<span class="sc">$</span>region, <span class="at">levels=</span><span class="dv">0</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"'Not significant'"</span>, <span class="st">"(3)"</span>, <span class="st">"(2)"</span>, <span class="st">"(1)"</span>))</span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_sim, <span class="fu">aes</span>(<span class="at">x=</span>delta, <span class="at">y=</span>delta_pred, <span class="at">colour=</span><span class="fu">factor</span>(region)))<span class="sc">+</span><span class="fu">geom_point</span>(<span class="at">size=</span><span class="fl">0.3</span>)<span class="sc">+</span><span class="fu">theme_bw</span>()<span class="sc">+</span><span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>())<span class="sc">+</span><span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="fl">0.035</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>)<span class="sc">+</span><span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha)<span class="sc">*</span>sd_tilde<span class="sc">/</span><span class="fu">sqrt</span>(n)<span class="sc">-</span>(prior_mean_enthusiastic<span class="sc">-</span>delta_star), <span class="at">linetype=</span><span class="st">"dotted"</span>)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">caption=</span><span class="st">"Dashed line: Noninferiority margin.</span><span class="sc">\n</span><span class="st">Dotted line: Upper confidence interval from mean of predicted delta &lt;= non-inferiority margin."</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Predictive distribution of Delta"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Delta"</span>)<span class="sc">+</span><span class="fu">scale_color_brewer</span>(<span class="st">"Region"</span>, <span class="at">palette=</span><span class="st">"Reds"</span>)<span class="sc">+</span><span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.2</span>, <span class="sc">-</span><span class="fl">0.1</span>, <span class="dv">0</span>, <span class="fl">0.035</span>, <span class="fl">0.2</span>), <span class="at">labels=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.2</span>, <span class="sc">-</span><span class="fl">0.1</span>, <span class="dv">0</span>, <span class="fl">0.035</span>, <span class="fl">0.2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>data_sim <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">rmvnorm</span>(<span class="at">n=</span><span class="dv">10000</span>, <span class="at">mean=</span><span class="fu">c</span>(prior_mean, prior_mean), sigma_sim))</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data_sim) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"delta_pred"</span>, <span class="st">"delta"</span>)</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>data_sim<span class="sc">$</span>region <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(data_sim<span class="sc">$</span>delta<span class="sc">&lt;=</span><span class="dv">0</span> <span class="sc">&amp;</span> data_sim<span class="sc">$</span>delta_pred<span class="sc">&lt;=-</span><span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha)<span class="sc">*</span>sd_tilde<span class="sc">/</span><span class="fu">sqrt</span>(n)<span class="sc">-</span>(prior_mean<span class="sc">-</span>delta_star), <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>data_sim<span class="sc">$</span>region <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(data_sim<span class="sc">$</span>delta<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span> data_sim<span class="sc">$</span>delta<span class="sc">&lt;=</span>delta_star <span class="sc">&amp;</span> data_sim<span class="sc">$</span>delta_pred<span class="sc">&lt;=-</span><span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha)<span class="sc">*</span>sd_tilde<span class="sc">/</span><span class="fu">sqrt</span>(n)<span class="sc">-</span>(prior_mean<span class="sc">-</span>delta_star), <span class="dv">2</span>, data_sim<span class="sc">$</span>region)</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>data_sim<span class="sc">$</span>region <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(data_sim<span class="sc">$</span>delta<span class="sc">&gt;</span>delta_star <span class="sc">&amp;</span> data_sim<span class="sc">$</span>delta_pred<span class="sc">&lt;=-</span><span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha)<span class="sc">*</span>sd_tilde<span class="sc">/</span><span class="fu">sqrt</span>(n)<span class="sc">-</span>(prior_mean<span class="sc">-</span>delta_star), <span class="dv">3</span>, data_sim<span class="sc">$</span>region)</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>data_sim<span class="sc">$</span>region <span class="ot">&lt;-</span> <span class="fu">factor</span>(data_sim<span class="sc">$</span>region, <span class="at">levels=</span><span class="dv">0</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"'Not significant'"</span>, <span class="st">"(3)"</span>, <span class="st">"(2)"</span>, <span class="st">"(1)"</span>))</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_sim, <span class="fu">aes</span>(<span class="at">x=</span>delta, <span class="at">y=</span>delta_pred, <span class="at">colour=</span><span class="fu">factor</span>(region)))<span class="sc">+</span><span class="fu">geom_point</span>(<span class="at">size=</span><span class="fl">0.3</span>)<span class="sc">+</span><span class="fu">theme_bw</span>()<span class="sc">+</span><span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>())<span class="sc">+</span><span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="fl">0.035</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>)<span class="sc">+</span><span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha)<span class="sc">*</span>sd_tilde<span class="sc">/</span><span class="fu">sqrt</span>(n)<span class="sc">-</span>(prior_mean_enthusiastic<span class="sc">-</span>delta_star), <span class="at">linetype=</span><span class="st">"dotted"</span>)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">caption=</span><span class="st">"Dashed line: Noninferiority margin.</span><span class="sc">\n</span><span class="st">Dotted line: Upper confidence interval from mean of predicted delta &lt;= non-inferiority margin."</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Predictive distribution of Delta"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Delta"</span>)<span class="sc">+</span><span class="fu">scale_color_brewer</span>(<span class="st">"Region"</span>, <span class="at">palette=</span><span class="st">"Reds"</span>)<span class="sc">+</span><span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.2</span>, <span class="sc">-</span><span class="fl">0.1</span>, <span class="dv">0</span>, <span class="fl">0.035</span>, <span class="fl">0.2</span>), <span class="at">labels=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.2</span>, <span class="sc">-</span><span class="fl">0.1</span>, <span class="dv">0</span>, <span class="fl">0.035</span>, <span class="fl">0.2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="01-NI_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
@@ -672,10 +671,10 @@ p(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin{p
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>             region   prop
-1 'Not significant' 0.4194
-2               (3) 0.4797
-3               (2) 0.0996
-4               (1) 0.0013</code></pre>
+1 'Not significant' 0.4148
+2               (3) 0.4909
+3               (2) 0.0920
+4               (1) 0.0023</code></pre>
 </div>
 </div>
 <p>For the noninferiority setting <span class="math inline">\(\Delta\leq\delta^*\)</span>:</p>
@@ -1129,18 +1128,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Background</span></span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 

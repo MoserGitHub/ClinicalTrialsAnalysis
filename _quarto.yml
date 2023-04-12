@@ -22,15 +22,18 @@ csl: plos-one.csl
 
 format:
   html:
+    page-layout: full
+    toc-location: left
     grid:
-      sidebar-width: 600px
-      body-width: 1000px
-      margin-width: 250px
+      sidebar-width: 300px
+      body-width: 800px
+      margin-width: 450px
     theme: cosmo
+    linestretch: 2
     code-fold: true
     code-summary: "Show R code"
   pdf:
     documentclass: scrreprt
 
-editor: visual
+editor: source
 
