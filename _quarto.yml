@@ -5,11 +5,11 @@ project:
 book:
   title: "Bayesian approaches in clinical trials"
   author: 
-    - name: "André Moser"
+    - name: "André Moser, CTU Bern, University of Bern"
       orcid: 0000-0001-7178-6539
       email: "andre.moser@unibe.ch"
-      affiliations: "CTU Bern"
   date: today
+  date-format: "DD/MM/YYYY"
   search: false
   downloads: pdf
   chapters:
@@ -22,7 +22,6 @@ csl: plos-one.csl
 
 format:
   html:
-    page-layout: full
     toc-location: left
     grid:
       sidebar-width: 300px
@@ -34,6 +33,13 @@ format:
     code-summary: "Show R code"
   pdf:
     documentclass: scrreprt
-
+    toc: true
+    toc-depth: 4  
+    geometry:
+      - top=30mm
+      - left=20mm
+      - right=20mm
+      - bottom=30mm
+      
 editor: source
 
