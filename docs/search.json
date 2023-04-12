@@ -12,5 +12,33 @@
     "title": "References",
     "section": "",
     "text": "1. Kunzmann K, Grayling MJ, Lee KM, Robertson DS,\nRufibach K, Wason JMS. A review of bayesian perspectives on sample size\nderivation for confirmatory trials. The American Statistician. 2021;75:\n424–432. doi:10.1080/00031305.2021.1901782\n\n\n2. Spiegelhalter DJ, Abrams KR, Myles JP. Bayesian\napproaches to clinical trials and health‐care evaluation. Wiley; 2003.\ndoi:10.1002/0470092602\n\n\n3. Baumgartner C, Klok FA, Carrier M, Limacher A,\nMoor J, Righini M, et al. Clinical surveillance vs. Anticoagulation for\nlow-risk patiEnts with isolated SubSegmental pulmonary embolism:\nProtocol for a multicentre randomised placebo-controlled non-inferiority\ntrial (SAFE-SSPE). BMJ Open. 2020;10: e040151. doi:10.1136/bmjopen-2020-040151\n\n\n4. Rufibach K, Burger HU, Abt M. Bayesian\npredictive power: Choice of prior and some recommendations for its use\nas probability of success in drug development. Pharmaceutical\nStatistics. 2016;15: 438–446. doi:10.1002/pst.1764\n\n\n5. O’Hagan A, Stevens JW, Campbell MJ. Assurance\nin clinical trial design. Pharmaceutical Statistics. 2005;4: 187–201.\ndoi:10.1002/pst.175\n\n\n6. Grieve AP. Hybrid frequentist/bayesian power\nand bayesian power in planning clinical trials. Chapman; Hall/CRC; 2022.\ndoi:10.1201/9781003218531"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Bayesian approaches in clinical trials",
+    "section": "",
+    "text": "1 Background\nThe terminology of ‘power’ is often imprecisely used [1]. Kunzmann et al. suggest to use the neutral term ‘probability of rejection’. The classical (frequentist) ‘power’ is defined as the probability of rejection given that the alternative hypothesis is true. Frequentist power calculations do not include uncertainties of the treatment effect, whereas Bayesian and hybrid approaches include such uncertainties in their calculations. In the following we use different approaches for the calculation of the ‘probability of rejection’ (frequentist, Bayesian and hybrid) for different clinical trial designs.\nDefinition ‘hybrid’ ([2], Section 6.5.2)\n‘[…] we have a prior distribution to use in our study design, but that the conclusions of the study will be entirely classical and will not make use of the prior […]’"
+  },
+  {
+    "objectID": "index.html#general-notation-and-abbreviations",
+    "href": "index.html#general-notation-and-abbreviations",
+    "title": "Bayesian approaches in clinical trials",
+    "section": "1.1 General notation and abbreviations",
+    "text": "1.1 General notation and abbreviations\n\niid: independent and identically distributed\npdf: probability density function\n\\(N_2\\): Bivariate cumulative Gaussian distribution function\n\\(\\phi\\): Probability density function of the standard Gaussian distribution\n\\(\\Phi\\): Cumulative distribution function of the standard Gaussian distribution\n\\(\\Phi^{-1}\\): Quantile function of the standard Gaussian distribution function"
+  },
+  {
+    "objectID": "index.html#power-vocabulary",
+    "href": "index.html#power-vocabulary",
+    "title": "Bayesian approaches in clinical trials",
+    "section": "1.2 ‘Power’ vocabulary",
+    "text": "1.2 ‘Power’ vocabulary\nIn their supplement Kunzmann et al. [1] provide a literature review of the terminology used in articles. We provide here a summary of this terminology:\n\nFrequentist power: Probability of rejection given that the alternative hypothesis is true.\nAverage power: Prior averaged probability of rejection. Often also called ‘probability of success’, ‘assurance’, ‘Bayesian predictive power’.\nPrior adjusted power: Joint probability of rejection and that the treatment effect is effective."
+  },
+  {
+    "objectID": "index.html#some-bayesian-concepts",
+    "href": "index.html#some-bayesian-concepts",
+    "title": "Bayesian approaches in clinical trials",
+    "section": "1.3 Some ‘Bayesian’ concepts",
+    "text": "1.3 Some ‘Bayesian’ concepts\n\nPrior predictive distribution: Situation before a sample was taken. Let \\(\\theta\\) be a realisation of a random variable \\(\\Theta\\) with pdf \\(p(\\theta)\\). Then for a future observation \\(\\tilde X\\)\n\n\\[\np(\\tilde x)=\\int_\\Theta p(\\tilde x, \\theta)d\\theta=\\int_\\Theta \\underbrace{p(\\tilde x | \\theta)}_{likelihood}\\underbrace{p(\\theta)}_{prior}d\\theta\n\\]\n\nPosterior predictive distribution: Situation after a sample was taken. Let \\(\\theta\\) be a realisation of a random variable \\(\\Theta\\) with pdf \\(p(\\theta)\\). Then for a future observation \\(\\tilde X\\) and observed \\(X\\)\n\n\\[\np(\\tilde x|x)=\\int_\\Theta p(\\tilde x | \\theta, x)p(\\theta|x)d\\theta=\\int_\\Theta \\underbrace{p(\\tilde x | \\theta)}_{likelihood}\\underbrace{p(\\theta|x)}_{prior}d\\theta,\n\\]\nsince \\(X\\) is independent \\(\\tilde X\\).\n\n\n\n\n1. Kunzmann K, Grayling MJ, Lee KM, Robertson DS, Rufibach K, Wason JMS. A review of bayesian perspectives on sample size derivation for confirmatory trials. The American Statistician. 2021;75: 424–432. doi:10.1080/00031305.2021.1901782\n\n\n2. Spiegelhalter DJ, Abrams KR, Myles JP. Bayesian approaches to clinical trials and health‐care evaluation. Wiley; 2003. doi:10.1002/0470092602"
   }
 ]
