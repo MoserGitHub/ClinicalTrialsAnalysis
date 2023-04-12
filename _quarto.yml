@@ -3,20 +3,32 @@ project:
   output-dir: docs
   
 book:
-  title: "BayesianCTApproaches"
-  author: "Jane Doe"
-  date: "4/12/2023"
+  title: "Bayesian approaches in clinical trials"
+  author: 
+    - name: "André Moser"
+      orcid: 0000-0001-7178-6539
+      email: "andre.moser@unibe.ch"
+      affiliations: "CTU Bern"
+  date: today
+  search: false
+  downloads: pdf
   chapters:
     - index.qmd
-    - intro.qmd
-    - summary.qmd
+    - 01-NI.qmd
     - references.qmd
 
 bibliography: references.bib
+csl: plos-one.csl
 
 format:
   html:
+    grid:
+      sidebar-width: 600px
+      body-width: 1000px
+      margin-width: 250px
     theme: cosmo
+    code-fold: true
+    code-summary: "Show R code"
   pdf:
     documentclass: scrreprt
 

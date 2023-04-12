@@ -1,9 +1,40 @@
-# Preface {.unnumbered}
+# Background
 
-This is a Quarto book.
+The terminology of 'power' is often imprecisely used @Kunzmann2022. Kunzmann et al. suggest to use the neutral term 'probability of rejection'. The classical (frequentist) 'power' is defined as the probability of rejection given that the alternative hypothesis is true. Frequentist power calculations do not include uncertainties of the treatment effect, whereas Bayesian and hybrid approaches include such uncertainties in their calculations. In the following we use different approaches for the calculation of the 'probability of rejection' (frequentist, Bayesian and hybrid) for different clinical trial designs.
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+**Definition 'hybrid'** (@Spiegelhalter2003, Section 6.5.2)
 
-```{r}
-1 + 1
-```
+*'\[...\] we have a prior distribution to use in our study design, but that the conclusions of the study will be entirely classical and will not make use of the prior \[...\]'*
+
+## General notation and abbreviations
+
+-   iid: independent and identically distributed
+-   pdf: probability density function
+-   $N_2$: Bivariate cumulative Gaussian distribution function
+-   $\phi$: Probability density function of the standard Gaussian distribution
+-   $\Phi$: Cumulative distribution function of the standard Gaussian distribution
+-   $\Phi^{-1}$: Quantile function of the standard Gaussian distribution function
+
+## 'Power' vocabulary
+
+In their supplement Kunzmann et al. @Kunzmann2022 provide a literature review of the terminology used in articles. We provide here a summary of this terminology:
+
+-   **Frequentist power**: Probability of rejection given that the alternative hypothesis is true.
+-   **Average power**: Prior averaged probability of rejection. Often also called 'probability of success', 'assurance', 'Bayesian predictive power'.
+-   **Prior adjusted power**: Joint probability of rejection and that the treatment effect is effective.
+
+## Some 'Bayesian' concepts
+
+-   **Prior predictive distribution**: Situation *before* a sample was taken. Let $\theta$ be a realisation of a random variable $\Theta$ with pdf $p(\theta)$. Then for a future observation $\tilde X$
+
+$$
+p(\tilde x)=\int_\Theta p(\tilde x, \theta)d\theta=\int_\Theta \underbrace{p(\tilde x | \theta)}_{likelihood}\underbrace{p(\theta)}_{prior}d\theta
+$$
+
+-   **Posterior predictive distribution**: Situation *after* a sample was taken. Let $\theta$ be a realisation of a random variable $\Theta$ with pdf $p(\theta)$. Then for a future observation $\tilde X$ and observed $X$
+
+$$
+p(\tilde x|x)=\int_\Theta p(\tilde x | \theta, x)p(\theta|x)d\theta=\int_\Theta \underbrace{p(\tilde x | \theta)}_{likelihood}\underbrace{p(\theta|x)}_{prior}d\theta,
+$$
+
+since $X$ is independent $\tilde X$.
