@@ -223,7 +223,7 @@ div.csl-indent {
 
 <section id="background" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="background"><span class="header-section-number">2.1</span> Background</h2>
-<p>The terminology of ‘power’ is often imprecisely used <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">1</a>]</span>. Kunzmann et al.&nbsp;suggest to use the neutral term ‘probability of rejection’. The classical (frequentist) ‘power’ is defined as the probability of rejection given that the alternative hypothesis is true. Frequentist power calculations do not include uncertainties of the treatment effect, whereas Bayesian and hybrid approaches include such uncertainties in their calculations. In the following we use different approaches for the calculation of the ‘probability of rejection’ (frequentist, Bayesian and hybrid) for different clinical trial designs.</p>
+<p>The terminology of ‘power’ is often imprecisely used <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">1</a>]</span>. Kunzmann et al.&nbsp;suggest to use the neutral term ‘probability to reject’. The classical (frequentist) ‘power’ is defined as the probability to reject given that the alternative hypothesis is true. Frequentist power calculations do not include uncertainties of the treatment effect, whereas Bayesian and hybrid approaches include such uncertainties in their calculations. In the following we use different approaches for the calculation of the ‘probability to reject’ (frequentist, Bayesian and hybrid) for different clinical trial designs.</p>
 <p><strong>Definition ‘hybrid’</strong> (<span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">2</a>]</span>, Section 6.5.2)</p>
 <p><em>‘[…] we have a prior distribution to use in our study design, but that the conclusions of the study will be entirely classical and will not make use of the prior […]’</em></p>
 </section>
@@ -260,7 +260,7 @@ P_\delta(D\leq D_{suc}^{\delta^*})&amp;=\Phi\left(-z_{1-\alpha}-\sqrt{\frac{n_1n
 \]</span> since under regularity conditions, <span class="math display">\[
 Z=\frac{D-\delta^*}{\sigma_{treat}} \rightarrow N(0,1), \quad \min(n_1,n_0) \rightarrow \infty.
 \]</span></p>
-<p>The conditional probability <span class="math inline">\(P_{\delta}(D\leq D_{suc}^{\delta^*})\)</span> is the <strong>probability of rejection given <span class="math inline">\(\delta\)</span></strong>. Under the null value <span class="math inline">\(\delta_0=p_1-p_0\)</span>, <span class="math inline">\(P_{\delta_0}(D\leq D_{suc}^{\delta^*})=\alpha\)</span> is the ‘type-I error’ and under an alternative value <span class="math inline">\(\delta_A\)</span>, <span class="math inline">\(P_{\delta_A}(D\leq D_{suc}^{\delta^*})=1-\beta\)</span> is the ‘frequentist power’.</p>
+<p>The conditional probability <span class="math inline">\(P_{\delta}(D\leq D_{suc}^{\delta^*})\)</span> is the <strong>probability to reject given <span class="math inline">\(\delta\)</span></strong>. For <span class="math inline">\(\delta&gt;\delta^*\)</span> this is the ‘type-I error’ and for <span class="math inline">\(\delta\leq\delta^*\)</span> this is the frequentist ‘power’.</p>
 <p>For a <span class="math inline">\(\delta_A\)</span> it holds that</p>
 <p><span class="math display">\[
 -z_{1-\alpha}-\sqrt{\frac{n_1n_0}{n_0\sigma_1^2+n_1\sigma_0^2}}(\delta_A-\delta^*)=\Phi^{-1}(1-\beta)=z_{1-\beta}
@@ -338,8 +338,8 @@ $power
 </section>
 <section id="hybrid-approach-prior-on-treatment-effect" class="level4" data-number="2.2.1.2">
 <h4 data-number="2.2.1.2" class="anchored" data-anchor-id="hybrid-approach-prior-on-treatment-effect"><span class="header-section-number">2.2.1.2</span> Hybrid approach: Prior on treatment effect</h4>
-<p>Suppose that the true treatment effect <span class="math inline">\(\delta\)</span> is a realization from a random variable <span class="math inline">\(\Delta\)</span> with <span class="math inline">\(p(\delta)\)</span>. In this subsection we assume that the prior comes from a Gaussian distribution function so that <span class="math inline">\(\Delta \sim N\left(d, \frac{\sigma_1^2+\sigma_0^2}{m}\right)\)</span>. Note that this prior can be thought as a realisation from <span class="math inline">\(m\)</span> Gaussian ‘prior observations’ with variance <span class="math inline">\(\sigma_1^2+\sigma_0^2\)</span>. Again for notational purposes we denote <span class="math inline">\(\sigma_{prior}^2=\frac{\sigma_1^2+\sigma_0^2}{m}\)</span> as the variance of the design prior on the treatment effect.</p>
-<p>In the following we will use the following priors:</p>
+<p>Suppose that the true treatment effect <span class="math inline">\(\delta\)</span> is a realization from a random variable <span class="math inline">\(\Delta\)</span> with <span class="math inline">\(p(\delta)\)</span>. In this subsection we assume that the design prior comes from a Gaussian distribution function so that <span class="math inline">\(\Delta \sim N\left(d, \frac{\sigma_1^2+\sigma_0^2}{m}\right)\)</span>. Note that this prior can be thought as a realisation from <span class="math inline">\(m\)</span> Gaussian ‘prior observations’ with variance <span class="math inline">\(\sigma_1^2+\sigma_0^2\)</span>. Again for notational purposes we denote <span class="math inline">\(\sigma_{prior}^2=\frac{\sigma_1^2+\sigma_0^2}{m}\)</span> as the variance of the design prior on the treatment effect.</p>
+<p>In the following we will use the following design priors:</p>
 <ul>
 <li><strong>Enthusiastic prior</strong> (favors non-inferiority): <span class="math inline">\(d=0\)</span>, <span class="math inline">\(m=6.6\)</span>, <span class="math inline">\(P(\Delta&gt;\delta^*)=0.05\)</span>. This prior is centered on the treatment effect such that there is a low probability (here 5%) of inferiority.</li>
 <li><strong>Skeptical prior</strong> (favors inferiority): <span class="math inline">\(d=\delta^*\)</span>, <span class="math inline">\(m=6.6\)</span>, <span class="math inline">\(P(\Delta&gt;0)=0.05\)</span>. This prior is centered on the non-inferiority margin such that there is a low probability (here 5%) of superiority.</li>
@@ -348,10 +348,10 @@ $power
 </ul>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+<p><img src="01-NI_files/figure-html/fig4-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
+<p><img src="01-NI_files/figure-html/fig4-2.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Let <span class="math display">\[
@@ -452,7 +452,7 @@ f(y)&amp;=\sqrt{\frac{m}{n}}\phi\left(\sqrt{\frac{m}{n}}\left[-z_{1-\alpha}-\sqr
 <hr>
 <hr>
 <p><strong>Working example (continued)</strong></p>
-<p>We derive the probability densities for the different assumed priors for the SAFE-SSPE study.</p>
+<p>We derive the probability densities for the different assumed design priors for the SAFE-SSPE study.</p>
 <div class="cell">
 <details>
 <summary>Show R code</summary>
@@ -524,7 +524,7 @@ f(y)&amp;=\sqrt{\frac{m}{n}}\phi\left(\sqrt{\frac{m}{n}}\left[-z_{1-\alpha}-\sqr
 <span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Density"</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"RPR"</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2</span>)) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">"Dots indicate the AP."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<p><img src="01-NI_files/figure-html/fig6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <hr>
@@ -609,7 +609,7 @@ P(RPR\leq y)=1-\Phi&amp;\left(\frac{\sigma_{treat}}{\sigma_{prior}}\left[-z_{1-\
 <span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Probability that RPR is greater than threshold gamma"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+<p><img src="01-NI_files/figure-html/fig7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>For a specific threshold, say <span class="math inline">\(\gamma=0.6\)</span>, and varying ‘prior sample sizes’ <span class="math inline">\(m\)</span> we obtain</p>
@@ -675,7 +675,7 @@ P(RPR\leq y)=1-\Phi&amp;\left(\frac{\sigma_{treat}}{\sigma_{prior}}\left[-z_{1-\
 <span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="fl">0.1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+<p><img src="01-NI_files/figure-html/fig8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <hr>
@@ -687,14 +687,14 @@ AP=\overbrace{P(D\leq D_{suc}^{\delta^*}, \Delta&gt;\delta^*)}^{(1)}+\overbrace{
 <li><span class="math inline">\((2)\)</span> ‘Non-inferior, but treatment effect not relevant’,</li>
 <li><span class="math inline">\((3)\)</span> ‘Non-inferior, treatment effect relevant’.</li>
 </ul>
-<p><span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">2</a>]</span> shows that <span class="math inline">\(AP \approx P(D\leq D_{suc}^{\delta^*}, \Delta\leq0)\)</span> because the type-I error is often small and one has strong believe for the alternative hypothesis <span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">2</a>]</span>. <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">1</a>]</span> and <span class="citation" data-cites="OHagan2005">[<a href="references.html#ref-OHagan2005" role="doc-biblioref">5</a>]</span> discuss the relevance of the AP decomposition. For example, pharmaceutical companies might (1)+(2)+(3) taking into account shortterm risk, wheras regulators are interested in (1) or (1)+(2), that is non-inferior outcomes with relevant treatment effects.</p>
-<p>For the non-inferiority setting we are interested in (2)+(3):</p>
+<p>Spiegelhalter et al.&nbsp;highlights that <span class="math inline">\(AP \approx P(D\leq D_{suc}^{\delta^*}, \Delta\leq0)\)</span> because the type-I error is often small and one has strong believe for the alternative hypothesis <span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">2</a>]</span>. <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">1</a>]</span> and <span class="citation" data-cites="OHagan2005">[<a href="references.html#ref-OHagan2005" role="doc-biblioref">5</a>]</span> discuss the relevance of the AP decomposition. For example, pharmaceutical companies might (1)+(2)+(3) taking into account shortterm risk, wheras regulators are interested in (1) or (1)+(2), that is non-inferior outcomes with relevant treatment effects.</p>
+<p>For the non-inferiority setting we are interested in (2)+(3), that is <span class="math inline">\(\Delta\leq\delta^*\)</span>:</p>
 <p><span class="math display">\[
 P(D\leq D_{suc}^{\delta^*}, \Delta\leq\delta^*)=P(D\leq D_{suc}^{\delta^*}|\Delta\leq\delta^*)P(\Delta\leq\delta^*)=\underbrace{E\left[P_{\Delta\leq\delta^*}(D\leq D_{suc}^{\delta^*})\right]}_{EP}P(\Delta\leq\delta^*),
-\]</span> Kunzmann et al.&nbsp;denote EP the <strong>‘expected power’</strong> (<span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">1</a>]</span>). Note that</p>
+\]</span> Kunzmann et al.&nbsp;denote EP the <strong>‘expected power’</strong> <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">1</a>]</span>. Note that</p>
 <p><span class="math display">\[
 \underbrace{P(D\leq D_{suc}^{\delta^*}, \Delta\leq\delta^*)}_{PAP}=\underbrace{E\left[P_{\Delta\leq\delta^*}(D\leq D_{suc}^{\delta^*})\right]}_{EP}\underbrace{P(\Delta\leq\delta^*)}_{constant}.
-\]</span> Spiegelhalter calls <span class="math inline">\(P(P(D\leq D_{suc}^{\delta^*}, \Delta\leq\delta^*)\)</span> the <strong>‘prior adjusted power’</strong> (PAP):</p>
+\]</span> Spiegelhalter calls <span class="math inline">\(P(D\leq D_{suc}^{\delta^*}, \Delta\leq\delta^*)\)</span> the <strong>‘prior adjusted power’</strong> (PAP).</p>
 <p>The AP decomposition can be visualised using the posterior predictive distribution. Let <span class="math inline">\(p(\tilde\delta)\)</span> be the pdf of the posterior predictive distribution then <span class="math display">\[
 p(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin{pmatrix} \sigma^2_{treat}+\sigma^2_{prior} \quad \sigma^2_{prior} \\ \quad \quad \sigma^2_{prior} \quad \ \quad  \sigma^2_{prior}\end{pmatrix}\right),
 \]</span> see formula (2.11) in <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span>.</p>
@@ -722,13 +722,13 @@ p(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin{p
 <span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data_sim) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"delta_pred"</span>, <span class="st">"delta"</span>)</span>
 <span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>data_sim<span class="sc">$</span>region <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(data_sim<span class="sc">$</span>delta <span class="sc">&lt;=</span> <span class="dv">0</span> <span class="sc">&amp;</span> data_sim<span class="sc">$</span>delta_pred <span class="sc">&lt;=</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sd_tilde<span class="sc">/</span><span class="fu">sqrt</span>(m) <span class="sc">-</span> (prior_mean <span class="sc">-</span> delta_star),</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> <span class="fu">sqrt</span>(sd_1<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n_1<span class="sc">+</span>sd_0<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n_0) <span class="sc">-</span> (prior_mean <span class="sc">-</span> delta_star),</span>
 <span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="dv">0</span>)</span>
 <span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>data_sim<span class="sc">$</span>region <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(data_sim<span class="sc">$</span>delta <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> data_sim<span class="sc">$</span>delta <span class="sc">&lt;=</span></span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    delta_star <span class="sc">&amp;</span> data_sim<span class="sc">$</span>delta_pred <span class="sc">&lt;=</span> <span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sd_tilde<span class="sc">/</span><span class="fu">sqrt</span>(m) <span class="sc">-</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    delta_star <span class="sc">&amp;</span> data_sim<span class="sc">$</span>delta_pred <span class="sc">&lt;=</span> <span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> <span class="fu">sqrt</span>(sd_1<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n_1<span class="sc">+</span>sd_0<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n_0) <span class="sc">-</span></span>
 <span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    (prior_mean <span class="sc">-</span> delta_star), <span class="dv">2</span>, data_sim<span class="sc">$</span>region)</span>
 <span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>data_sim<span class="sc">$</span>region <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(data_sim<span class="sc">$</span>delta <span class="sc">&gt;</span> delta_star <span class="sc">&amp;</span> data_sim<span class="sc">$</span>delta_pred <span class="sc">&lt;=</span></span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sd_tilde<span class="sc">/</span><span class="fu">sqrt</span>(m) <span class="sc">-</span> (prior_mean <span class="sc">-</span> delta_star),</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> <span class="fu">sqrt</span>(sd_1<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n_1<span class="sc">+</span>sd_0<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n_0) <span class="sc">-</span> (prior_mean <span class="sc">-</span> delta_star),</span>
 <span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    <span class="dv">3</span>, data_sim<span class="sc">$</span>region)</span>
 <span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>data_sim<span class="sc">$</span>region <span class="ot">&lt;-</span> <span class="fu">factor</span>(data_sim<span class="sc">$</span>region, <span class="at">levels =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"'Not significant'"</span>,</span>
@@ -737,28 +737,33 @@ p(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin{p
 <span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_sim, <span class="fu">aes</span>(<span class="at">x =</span> delta, <span class="at">y =</span> delta_pred, <span class="at">colour =</span> <span class="fu">factor</span>(region))) <span class="sc">+</span></span>
 <span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.3</span>) <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
 <span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.035</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span> <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span></span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    alpha) <span class="sc">*</span> sd_tilde<span class="sc">/</span><span class="fu">sqrt</span>(m) <span class="sc">-</span> (prior_mean <span class="sc">-</span> delta_star), <span class="at">linetype =</span> <span class="st">"dotted"</span>) <span class="sc">+</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    alpha) <span class="sc">*</span> <span class="fu">sqrt</span>(sd_1<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n_1<span class="sc">+</span>sd_0<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n_0) <span class="sc">-</span> (prior_mean <span class="sc">-</span> delta_star), <span class="at">linetype =</span> <span class="st">"dotted"</span>) <span class="sc">+</span></span>
 <span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Predictive distribution of Delta"</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Delta"</span>) <span class="sc">+</span></span>
 <span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="st">"Region"</span>, <span class="at">palette =</span> <span class="st">"Reds"</span>) <span class="sc">+</span> <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.2</span>,</span>
 <span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span><span class="fl">0.1</span>, <span class="dv">0</span>, <span class="fl">0.035</span>, <span class="fl">0.2</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.2</span>, <span class="sc">-</span><span class="fl">0.1</span>, <span class="dv">0</span>, <span class="fl">0.035</span>, <span class="fl">0.2</span>)) <span class="sc">+</span></span>
 <span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">"Dashed line: Noninferiority margin.</span><span class="sc">\n</span><span class="st">Dotted line: Upper CI from predicted delta &lt;= non-inferiority margin."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+<p><img src="01-NI_files/figure-html/fig9-1.png" class="img-fluid" width="672"></p>
 </div>
 <details>
 <summary>Show R code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(data_sim <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>data_output <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(data_sim <span class="sc">%&gt;%</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(region) <span class="sc">%&gt;%</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">prop =</span> <span class="fu">n</span>()<span class="sc">/</span><span class="fu">nrow</span>(data_sim)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">prop =</span> <span class="fu">n</span>()<span class="sc">/</span><span class="fu">nrow</span>(data_sim)))</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>data_output</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>             region   prop
-1 'Not significant' 0.8286
-2               (3) 0.1714</code></pre>
+1 'Not significant' 0.4148
+2               (3) 0.4909
+3               (2) 0.0920
+4               (1) 0.0023</code></pre>
 </div>
 </div>
-<p>For the noninferiority setting <span class="math inline">\(\Delta\leq\delta^*\)</span>:</p>
+<p>From the above values the average power can be calculated as (1) 0.0023 + (2) 0.092 + (3) 0.4909, which is equal to 0.5852. This is the value we reported above (59%).</p>
+<p>The results of EP, PAP and AP are shown in the table below:</p>
 <div class="cell">
 <details>
 <summary>Show R code</summary>
@@ -843,19 +848,22 @@ p(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin{p
 </section>
 <section id="proper-bayesian-approach" class="level4" data-number="2.2.1.3">
 <h4 data-number="2.2.1.3" class="anchored" data-anchor-id="proper-bayesian-approach"><span class="header-section-number">2.2.1.3</span> Proper Bayesian approach</h4>
-<p>A proper Bayesian approach uses the posterior distribution to define ‘Bayesian significance’: <span class="math inline">\(S^B:=P(\Delta\leq\delta^*|data)=1-\epsilon\)</span>. Remember <span class="math inline">\(D=p_1-p_0\)</span> with <span class="math inline">\(D \sim N(\delta, \sigma^2_{treat})\)</span>. Suppose that <span class="math inline">\(\Delta \sim N(d, \sigma^2_{prior})\)</span> then the posterior distribution given <span class="math inline">\(D\)</span> is distributed as <span class="math display">\[
+<p>A proper Bayesian approach uses the posterior distribution to define ‘a successful trial result’. Remember that <span class="math inline">\(D=\overline{p}_1-\overline{p}_0\)</span> with <span class="math inline">\(D \sim N(\delta, \sigma^2_{treat})\)</span>. Suppose that <span class="math inline">\(\Delta \sim N(d, \sigma^2_{prior})\)</span> is an analysis prior, then the posterior distribution is given as <span class="math display">\[
 \begin{aligned}
-\Delta|D \sim N\left(\frac{\frac{d}{\sigma^2_{prior}}+\frac{D}{\sigma^2_{treat}}}{\frac{1}{\sigma^2_{prior}}+\frac{1}{\sigma^2_{treat}}}, \frac{1}{\frac{1}{\sigma^2_{prior}}+\frac{1}{\sigma^2_{treat}}}\right)=N\left( \frac{\sigma^2_{treat}d+\sigma^2_{prior}D}{\sigma^2_{treat}+\sigma^2_{prior}}, \frac{\sigma^2_{treat}\sigma^2_{prior}}{\sigma^2_{treat}+\sigma^2_{prior}}  \right)
+\Delta|D \sim N\left(\frac{\frac{d}{\sigma^2_{prior}}+\frac{D}{\sigma^2_{treat}}}{\frac{1}{\sigma^2_{prior}}+\frac{1}{\sigma^2_{treat}}}, \frac{1}{\frac{1}{\sigma^2_{prior}}+\frac{1}{\sigma^2_{treat}}}\right)=N\left( \frac{\sigma^2_{treat}d+\sigma^2_{prior}D}{\sigma^2_{treat}+\sigma^2_{prior}}, \frac{\sigma^2_{treat}\sigma^2_{prior}}{\sigma^2_{treat}+\sigma^2_{prior}}  \right),
 \end{aligned}
-\]</span></p>
+\]</span> see for example <span class="citation" data-cites="Gelman2013">[<a href="references.html#ref-Gelman2013" role="doc-biblioref">7</a>]</span>.</p>
 <hr>
 <p><strong>Special case</strong></p>
 <p>If <span class="math inline">\(n_0=n_1=n\)</span> and <span class="math inline">\(\sigma_1^2=\sigma_0^2=\sigma^2\)</span>, then <span class="math inline">\(\sigma_{treat}^2=\frac{2\sigma^2}{n}\)</span> and <span class="math inline">\(\sigma_{prior}^2=\frac{2\sigma^2}{m}\)</span>, and the formula above reduces to</p>
 <p><span class="math display">\[
-\Delta|D \sim N\left(\frac{m\delta+nD}{n+m}, \frac{\sigma^2}{n+m} \right).
+\Delta|D \sim N\left(\frac{m\delta+nD}{n+m}, \frac{2\sigma^2}{n+m} \right).
 \]</span></p>
 <hr>
-<p>One is interested whether the upper <span class="math inline">\((1-\epsilon)\)</span> credible interval is smaller than the non-inferiority margin, that is</p>
+<p>A trial success can then be defined as <span class="math display">\[
+P(\Delta\leq\delta^*|D)=1-\epsilon,
+\]</span> where <span class="math inline">\(\epsilon\)</span> is small, say <span class="math inline">\(\epsilon=0.05\)</span>.</p>
+<p>Similar to the frequentist approach, one is interested whether the upper <span class="math inline">\((1-\epsilon)\)</span> credible interval is smaller than the non-inferiority margin, that is</p>
 <p><span class="math display">\[
 \frac{\sigma^2_{treat}d+\sigma^2_{prior}D}{\sigma^2_{treat}+\sigma^2_{prior}}+z_{1-\epsilon}\frac{\sigma_{treat}\sigma_{prior}}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}\leq \delta^*.
 \]</span> A simple algebraic step gives</p>
@@ -868,18 +876,18 @@ D\leq -z_{1-\epsilon}&amp;\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{t
 \begin{aligned}
 P(D\leq D_{suc}^{d,\delta^*}|\delta)&amp;=\Phi\left(-z_{1-\epsilon}\sqrt{1+\frac{\sigma^2_{treat}}{\sigma_{prior}^2}}-\frac{1}{\sigma_{treat}}\left[\delta-\delta^*\left\{ 1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2} \right\} \right]-\frac{\sigma_{treat}}{\sigma_{prior}^2}d \right).
 \end{aligned}
-\]</span> This is the Bayesian power (or probability of rejection) assuming one knows the true treatment effect <span class="math inline">\(\delta\)</span>. Note that this is a conditional probability.</p>
+\]</span> This is the <strong>Bayesian probability to reject</strong> (or Bayesian power) assuming one knows the true treatment effect <span class="math inline">\(\delta\)</span>. Note that this is a conditional probability (given one knows <span class="math inline">\(\delta\)</span>).</p>
 <hr>
 <p><strong>Special case</strong></p>
 <p>If <span class="math inline">\(n_0=n_1=n\)</span> and <span class="math inline">\(\sigma_1^2=\sigma_0^2=\sigma^2\)</span>, then <span class="math inline">\(\sigma_{treat}^2=\frac{2\sigma^2}{n}\)</span> and <span class="math inline">\(\sigma_{prior}^2=\frac{2\sigma^2}{m}\)</span>, and the formula above reduces to <span class="math display">\[
 \begin{aligned}
-P(S^B|\delta)&amp;=\Phi\left(-z_{1-\epsilon}\sqrt{\frac{n+m}{n}}- \frac{m}{\sqrt{2n\sigma^2}}d-\sqrt{\frac{n}{2n\sigma^2}}\left\{\delta-\delta^*\left(\frac{n+m}{n} \right)\right\} \right).
+P(D\leq D_{suc}^{d,\delta^*}|\delta)&amp;=\Phi\left(-z_{1-\epsilon}\sqrt{\frac{n+m}{n}}- \frac{m}{\sqrt{2n\sigma^2}}d-\sqrt{\frac{n}{2n\sigma^2}}\left\{\delta-\delta^*\left(\frac{n+m}{n} \right)\right\} \right).
 \end{aligned}
 \]</span></p>
 <hr>
 <hr>
 <p><strong>Working example (continued)</strong></p>
-<p>We derive the Bayesian probability of rejection for the SAFE-SSPE study for differently assumed <span class="math inline">\(\delta\)</span> values.</p>
+<p>We derive the Bayesian probability to reject for the SAFE-SSPE study for different <span class="math inline">\(\delta\)</span> values and analysis priors.</p>
 <div class="cell">
 <details>
 <summary>Show R code</summary>
@@ -958,7 +966,7 @@ P(S^B|\delta)&amp;=\Phi\left(-z_{1-\epsilon}\sqrt{\frac{n+m}{n}}- \frac{m}{\sqrt
 <span id="cb17-73"><a href="#cb17-73" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_power, <span class="fu">aes</span>(<span class="at">x =</span> delta, <span class="at">y =</span> y, <span class="at">colour =</span> type)) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span></span>
 <span id="cb17-74"><a href="#cb17-74" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
 <span id="cb17-75"><a href="#cb17-75" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_colour_manual</span>(<span class="st">"Type"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"purple"</span>, <span class="st">"orange"</span>,</span>
-<span id="cb17-76"><a href="#cb17-76" aria-hidden="true" tabindex="-1"></a>        <span class="st">"blue"</span>, <span class="st">"darkred"</span>, <span class="st">"green"</span>)) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Probability of rejection"</span>) <span class="sc">+</span></span>
+<span id="cb17-76"><a href="#cb17-76" aria-hidden="true" tabindex="-1"></a>        <span class="st">"blue"</span>, <span class="st">"darkred"</span>, <span class="st">"green"</span>)) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Probability to reject"</span>) <span class="sc">+</span></span>
 <span id="cb17-77"><a href="#cb17-77" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Probability to reject"</span>) <span class="sc">+</span> <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.025</span>,</span>
 <span id="cb17-78"><a href="#cb17-78" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>, <span class="fl">0.035</span>, <span class="fl">0.05</span>)) <span class="sc">+</span> <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>,</span>
 <span id="cb17-79"><a href="#cb17-79" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.8</span>, <span class="dv">1</span>)) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="fu">str_glue</span>(<span class="st">"For treatment arm sample sizes: n0="</span>,</span>
@@ -966,7 +974,7 @@ P(S^B|\delta)&amp;=\Phi\left(-z_{1-\epsilon}\sqrt{\frac{n+m}{n}}- \frac{m}{\sqrt
 <span id="cb17-81"><a href="#cb17-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.035</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<p><img src="01-NI_files/figure-html/fig11-1.png" class="img-fluid" width="672"></p>
 </div>
 <details>
 <summary>Show R code</summary>
@@ -988,15 +996,16 @@ P(S^B|\delta)&amp;=\Phi\left(-z_{1-\epsilon}\sqrt{\frac{n+m}{n}}- \frac{m}{\sqrt
 10 0.035 0.05           Frequentist</code></pre>
 </div>
 </div>
+<p>The Bayesian probability to reject for <span class="math inline">\(\delta_A=0\)</span> under an informative prior is 90%. This is higher than the frequentist probability to reject of 80%. In contrast, the probability to reject for <span class="math inline">\(\delta_0=0.035\)</span> under an informative prior is 11%. This is higher than the frequentist type-I error of 5%.</p>
 <hr>
-<p>The average (marginal) Bayesian probability of rejection (BAP) can be calculated as <span class="math display">\[
+<p>The average (marginal) Bayesian probability to reject (BAP) can be calculated as <span class="math display">\[
 \begin{aligned}
 BAP&amp;=\int_{-\infty}^{-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d} f(\tilde \delta)d\tilde \delta
 \\&amp;=\Phi\left( -z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\frac{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}+\frac{\delta^*}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}\left\{1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right\} \right. \\
   &amp; \left. \quad \quad \quad-\frac{d}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}\left\{1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right\}\right) \\
 &amp;=\Phi\left(-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}-\frac{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}{\sigma^2_{prior}}(d-\delta^*)\right),
 \end{aligned}
-\]</span> since for the posterior predictive distribution <span class="math inline">\(\tilde D \sim N(d, \sigma_{treat}^2+\sigma_{prior}^2)\)</span>.</p>
+\]</span> since the posterior predictive distribution <span class="math inline">\(\tilde D \sim N(d, \sigma_{treat}^2+\sigma_{prior}^2)\)</span>.</p>
 <hr>
 <p><strong>Special case</strong></p>
 <p>If <span class="math inline">\(n_0=n_1=n\)</span> and <span class="math inline">\(\sigma_1^2=\sigma_0^2=\sigma^2\)</span>, then <span class="math inline">\(\sigma_{treat}^2=\frac{2\sigma^2}{n}\)</span> and <span class="math inline">\(\sigma_{prior}^2=\frac{2\sigma^2}{m}\)</span>, and the formula above reduces to <span class="math display">\[
@@ -1007,127 +1016,129 @@ BAP&amp;=-z_{1-\epsilon}\sqrt{\frac{m}{n}}-\sqrt{\frac{(m+n)m}{2n\sigma^2}}(d-\d
 <hr>
 <hr>
 <p><strong>Working example (continued)</strong></p>
-<p>We derive the average Bayesian probability of rejection for the SAFE-SSPE study.</p>
+<p>We derive the average Bayesian probability to reject for the SAFE-SSPE study.</p>
 <div class="cell">
 <details>
 <summary>Show R code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r fold-hide code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Hybrid AP</span></span>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Hybrid AP</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>sigma_treat <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n_0 <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n_1))</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Enthusiastic prior</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fl">6.6</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>sigma_prior <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="fu">sqrt</span>(m)</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>AP <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="dv">1</span><span class="sc">/</span>sigma_prior <span class="sc">*</span> (<span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sigma_treat <span class="sc">-</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    (prior_mean <span class="sc">-</span> delta_star)))</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>data_output <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Enthusiastic"</span>, n_0, n_1, <span class="at">AP =</span> <span class="fu">round</span>(AP,</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="dv">3</span>))</span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Skeptical prior</span></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fl">6.6</span></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> delta_star</span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>sigma_prior <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="fu">sqrt</span>(m)</span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>AP <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="dv">1</span><span class="sc">/</span>sigma_prior <span class="sc">*</span> (<span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sigma_treat <span class="sc">-</span></span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>    (prior_mean <span class="sc">-</span> delta_star)))</span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>data_output <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data_output, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Skeptical"</span>,</span>
-<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>    n_0, n_1, <span class="at">AP =</span> <span class="fu">round</span>(AP, <span class="dv">3</span>)))</span>
-<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Informative prior</span></span>
-<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="dv">25</span></span>
-<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>sigma_prior <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="fu">sqrt</span>(m)</span>
-<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>AP <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="dv">1</span><span class="sc">/</span>sigma_prior <span class="sc">*</span> (<span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sigma_treat <span class="sc">-</span></span>
-<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>    (prior_mean <span class="sc">-</span> delta_star)))</span>
-<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>data_output <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data_output, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Informative"</span>,</span>
-<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>    n_0, n_1, <span class="at">AP =</span> <span class="fu">round</span>(AP, <span class="dv">3</span>)))</span>
-<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Noninformative prior</span></span>
-<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>sigma_prior <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="fu">sqrt</span>(m)</span>
-<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a>AP <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="dv">1</span><span class="sc">/</span>sigma_prior <span class="sc">*</span> (<span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sigma_treat <span class="sc">-</span></span>
-<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a>    (prior_mean <span class="sc">-</span> delta_star)))</span>
-<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>data_output <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data_output, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Noninformative"</span>,</span>
-<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>    n_0, n_1, <span class="at">AP =</span> <span class="fu">round</span>(AP, <span class="dv">3</span>)))</span>
-<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a>data_output <span class="ot">&lt;-</span> data_output <span class="sc">%&gt;%</span></span>
-<span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(type, n_0, n_1, AP)</span>
-<span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a><span class="do">### Bayesian AP</span></span>
-<span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a>sigma_treat <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n_0 <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n_1))</span>
-<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a><span class="co"># Enthusiastic prior</span></span>
-<span id="cb20-57"><a href="#cb20-57" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fl">6.6</span></span>
-<span id="cb20-59"><a href="#cb20-59" aria-hidden="true" tabindex="-1"></a>sigma_prior <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="fu">sqrt</span>(m)</span>
-<span id="cb20-60"><a href="#cb20-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-61"><a href="#cb20-61" aria-hidden="true" tabindex="-1"></a>ap_bayes <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sigma_treat<span class="sc">/</span>sigma_prior <span class="sc">-</span></span>
-<span id="cb20-62"><a href="#cb20-62" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>(sigma_treat<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sigma_prior<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>sigma_prior<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (prior_mean <span class="sc">-</span></span>
-<span id="cb20-63"><a href="#cb20-63" aria-hidden="true" tabindex="-1"></a>        delta_star))</span>
-<span id="cb20-64"><a href="#cb20-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-65"><a href="#cb20-65" aria-hidden="true" tabindex="-1"></a>data_output2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Enthusiastic"</span>, n_0, n_1, <span class="at">AP_bayes =</span> <span class="fu">round</span>(ap_bayes,</span>
-<span id="cb20-66"><a href="#cb20-66" aria-hidden="true" tabindex="-1"></a>    <span class="dv">3</span>))</span>
-<span id="cb20-67"><a href="#cb20-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-68"><a href="#cb20-68" aria-hidden="true" tabindex="-1"></a><span class="co"># Skeptical prior</span></span>
-<span id="cb20-69"><a href="#cb20-69" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> delta_star</span>
-<span id="cb20-70"><a href="#cb20-70" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fl">6.6</span></span>
-<span id="cb20-71"><a href="#cb20-71" aria-hidden="true" tabindex="-1"></a>sigma_prior <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="fu">sqrt</span>(m)</span>
-<span id="cb20-72"><a href="#cb20-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-73"><a href="#cb20-73" aria-hidden="true" tabindex="-1"></a>ap_bayes <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sigma_treat<span class="sc">/</span>sigma_prior <span class="sc">-</span></span>
-<span id="cb20-74"><a href="#cb20-74" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>(sigma_treat<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sigma_prior<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>sigma_prior<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (prior_mean <span class="sc">-</span></span>
-<span id="cb20-75"><a href="#cb20-75" aria-hidden="true" tabindex="-1"></a>        delta_star))</span>
-<span id="cb20-76"><a href="#cb20-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-77"><a href="#cb20-77" aria-hidden="true" tabindex="-1"></a>data_output2 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data_output2, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Skeptical"</span>,</span>
-<span id="cb20-78"><a href="#cb20-78" aria-hidden="true" tabindex="-1"></a>    n_0, n_1, <span class="at">AP_bayes =</span> <span class="fu">round</span>(ap_bayes, <span class="dv">3</span>)))</span>
-<span id="cb20-79"><a href="#cb20-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-80"><a href="#cb20-80" aria-hidden="true" tabindex="-1"></a><span class="co"># Informative prior</span></span>
-<span id="cb20-81"><a href="#cb20-81" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb20-82"><a href="#cb20-82" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="dv">25</span></span>
-<span id="cb20-83"><a href="#cb20-83" aria-hidden="true" tabindex="-1"></a>sigma_prior <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="fu">sqrt</span>(m)</span>
-<span id="cb20-84"><a href="#cb20-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-85"><a href="#cb20-85" aria-hidden="true" tabindex="-1"></a>ap_bayes <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sigma_treat<span class="sc">/</span>sigma_prior <span class="sc">-</span></span>
-<span id="cb20-86"><a href="#cb20-86" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>(sigma_treat<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sigma_prior<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>sigma_prior<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (prior_mean <span class="sc">-</span></span>
-<span id="cb20-87"><a href="#cb20-87" aria-hidden="true" tabindex="-1"></a>        delta_star))</span>
-<span id="cb20-88"><a href="#cb20-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-89"><a href="#cb20-89" aria-hidden="true" tabindex="-1"></a>data_output2 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data_output2, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Informative"</span>,</span>
-<span id="cb20-90"><a href="#cb20-90" aria-hidden="true" tabindex="-1"></a>    n_0, n_1, <span class="at">AP_bayes =</span> <span class="fu">round</span>(ap_bayes, <span class="dv">3</span>)))</span>
-<span id="cb20-91"><a href="#cb20-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-92"><a href="#cb20-92" aria-hidden="true" tabindex="-1"></a><span class="co"># Noninformative prior</span></span>
-<span id="cb20-93"><a href="#cb20-93" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb20-94"><a href="#cb20-94" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb20-95"><a href="#cb20-95" aria-hidden="true" tabindex="-1"></a>sigma_prior <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="fu">sqrt</span>(m)</span>
-<span id="cb20-96"><a href="#cb20-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-97"><a href="#cb20-97" aria-hidden="true" tabindex="-1"></a>ap_bayes <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sigma_treat<span class="sc">/</span>sigma_prior <span class="sc">-</span></span>
-<span id="cb20-98"><a href="#cb20-98" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>(sigma_treat<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sigma_prior<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>sigma_prior<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (prior_mean <span class="sc">-</span></span>
-<span id="cb20-99"><a href="#cb20-99" aria-hidden="true" tabindex="-1"></a>        delta_star))</span>
-<span id="cb20-100"><a href="#cb20-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-101"><a href="#cb20-101" aria-hidden="true" tabindex="-1"></a>data_output2 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data_output2, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Noninformative"</span>,</span>
-<span id="cb20-102"><a href="#cb20-102" aria-hidden="true" tabindex="-1"></a>    n_0, n_1, <span class="at">AP_bayes =</span> <span class="fu">round</span>(ap_bayes, <span class="dv">3</span>)))</span>
-<span id="cb20-103"><a href="#cb20-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-104"><a href="#cb20-104" aria-hidden="true" tabindex="-1"></a>data_output <span class="ot">&lt;-</span> <span class="fu">left_join</span>(data_output, data_output2 <span class="sc">%&gt;%</span></span>
-<span id="cb20-105"><a href="#cb20-105" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(type, AP_bayes), <span class="at">by =</span> <span class="st">"type"</span>)</span>
-<span id="cb20-106"><a href="#cb20-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-107"><a href="#cb20-107" aria-hidden="true" tabindex="-1"></a>data_output <span class="sc">%&gt;%</span></span>
-<span id="cb20-108"><a href="#cb20-108" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(type, n_0, n_1, <span class="at">AP_hybrid =</span> AP, AP_bayes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>digit_round <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Enthusiastic prior</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fl">6.6</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>sigma_prior <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="fu">sqrt</span>(m)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>AP <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="dv">1</span><span class="sc">/</span>sigma_prior <span class="sc">*</span> (<span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sigma_treat <span class="sc">-</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    (prior_mean <span class="sc">-</span> delta_star)))</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>data_output <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Enthusiastic"</span>, n_0, n_1, <span class="at">AP =</span> <span class="fu">round</span>(AP,</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    digit_round))</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Skeptical prior</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fl">6.6</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> delta_star</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>sigma_prior <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="fu">sqrt</span>(m)</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>AP <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="dv">1</span><span class="sc">/</span>sigma_prior <span class="sc">*</span> (<span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sigma_treat <span class="sc">-</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>    (prior_mean <span class="sc">-</span> delta_star)))</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>data_output <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data_output, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Skeptical"</span>,</span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>    n_0, n_1, <span class="at">AP =</span> <span class="fu">round</span>(AP, digit_round)))</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Informative prior</span></span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="dv">25</span></span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>sigma_prior <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="fu">sqrt</span>(m)</span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>AP <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="dv">1</span><span class="sc">/</span>sigma_prior <span class="sc">*</span> (<span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sigma_treat <span class="sc">-</span></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>    (prior_mean <span class="sc">-</span> delta_star)))</span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>data_output <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data_output, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Informative"</span>,</span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>    n_0, n_1, <span class="at">AP =</span> <span class="fu">round</span>(AP, digit_round)))</span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Noninformative prior</span></span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>sigma_prior <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="fu">sqrt</span>(m)</span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a>AP <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="dv">1</span><span class="sc">/</span>sigma_prior <span class="sc">*</span> (<span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sigma_treat <span class="sc">-</span></span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a>    (prior_mean <span class="sc">-</span> delta_star)))</span>
+<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>data_output <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data_output, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Noninformative"</span>,</span>
+<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a>    n_0, n_1, <span class="at">AP =</span> <span class="fu">round</span>(AP, digit_round)))</span>
+<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a>data_output <span class="ot">&lt;-</span> data_output <span class="sc">%&gt;%</span></span>
+<span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(type, n_0, n_1, AP)</span>
+<span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a><span class="do">### Bayesian AP</span></span>
+<span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a>sigma_treat <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n_0 <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n_1))</span>
+<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-57"><a href="#cb20-57" aria-hidden="true" tabindex="-1"></a><span class="co"># Enthusiastic prior</span></span>
+<span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb20-59"><a href="#cb20-59" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fl">6.6</span></span>
+<span id="cb20-60"><a href="#cb20-60" aria-hidden="true" tabindex="-1"></a>sigma_prior <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="fu">sqrt</span>(m)</span>
+<span id="cb20-61"><a href="#cb20-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-62"><a href="#cb20-62" aria-hidden="true" tabindex="-1"></a>ap_bayes <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sigma_treat<span class="sc">/</span>sigma_prior <span class="sc">-</span></span>
+<span id="cb20-63"><a href="#cb20-63" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>(sigma_treat<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sigma_prior<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>sigma_prior<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (prior_mean <span class="sc">-</span></span>
+<span id="cb20-64"><a href="#cb20-64" aria-hidden="true" tabindex="-1"></a>        delta_star))</span>
+<span id="cb20-65"><a href="#cb20-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-66"><a href="#cb20-66" aria-hidden="true" tabindex="-1"></a>data_output2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Enthusiastic"</span>, n_0, n_1, <span class="at">AP_bayes =</span> <span class="fu">round</span>(ap_bayes,</span>
+<span id="cb20-67"><a href="#cb20-67" aria-hidden="true" tabindex="-1"></a>    digit_round))</span>
+<span id="cb20-68"><a href="#cb20-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-69"><a href="#cb20-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Skeptical prior</span></span>
+<span id="cb20-70"><a href="#cb20-70" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> delta_star</span>
+<span id="cb20-71"><a href="#cb20-71" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fl">6.6</span></span>
+<span id="cb20-72"><a href="#cb20-72" aria-hidden="true" tabindex="-1"></a>sigma_prior <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="fu">sqrt</span>(m)</span>
+<span id="cb20-73"><a href="#cb20-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-74"><a href="#cb20-74" aria-hidden="true" tabindex="-1"></a>ap_bayes <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sigma_treat<span class="sc">/</span>sigma_prior <span class="sc">-</span></span>
+<span id="cb20-75"><a href="#cb20-75" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>(sigma_treat<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sigma_prior<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>sigma_prior<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (prior_mean <span class="sc">-</span></span>
+<span id="cb20-76"><a href="#cb20-76" aria-hidden="true" tabindex="-1"></a>        delta_star))</span>
+<span id="cb20-77"><a href="#cb20-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-78"><a href="#cb20-78" aria-hidden="true" tabindex="-1"></a>data_output2 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data_output2, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Skeptical"</span>,</span>
+<span id="cb20-79"><a href="#cb20-79" aria-hidden="true" tabindex="-1"></a>    n_0, n_1, <span class="at">AP_bayes =</span> <span class="fu">round</span>(ap_bayes, digit_round)))</span>
+<span id="cb20-80"><a href="#cb20-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-81"><a href="#cb20-81" aria-hidden="true" tabindex="-1"></a><span class="co"># Informative prior</span></span>
+<span id="cb20-82"><a href="#cb20-82" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb20-83"><a href="#cb20-83" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="dv">25</span></span>
+<span id="cb20-84"><a href="#cb20-84" aria-hidden="true" tabindex="-1"></a>sigma_prior <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="fu">sqrt</span>(m)</span>
+<span id="cb20-85"><a href="#cb20-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-86"><a href="#cb20-86" aria-hidden="true" tabindex="-1"></a>ap_bayes <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sigma_treat<span class="sc">/</span>sigma_prior <span class="sc">-</span></span>
+<span id="cb20-87"><a href="#cb20-87" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>(sigma_treat<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sigma_prior<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>sigma_prior<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (prior_mean <span class="sc">-</span></span>
+<span id="cb20-88"><a href="#cb20-88" aria-hidden="true" tabindex="-1"></a>        delta_star))</span>
+<span id="cb20-89"><a href="#cb20-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-90"><a href="#cb20-90" aria-hidden="true" tabindex="-1"></a>data_output2 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data_output2, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Informative"</span>,</span>
+<span id="cb20-91"><a href="#cb20-91" aria-hidden="true" tabindex="-1"></a>    n_0, n_1, <span class="at">AP_bayes =</span> <span class="fu">round</span>(ap_bayes, digit_round)))</span>
+<span id="cb20-92"><a href="#cb20-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-93"><a href="#cb20-93" aria-hidden="true" tabindex="-1"></a><span class="co"># Noninformative prior</span></span>
+<span id="cb20-94"><a href="#cb20-94" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb20-95"><a href="#cb20-95" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb20-96"><a href="#cb20-96" aria-hidden="true" tabindex="-1"></a>sigma_prior <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((sd_0<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sd_1<span class="sc">^</span><span class="dv">2</span>))<span class="sc">/</span><span class="fu">sqrt</span>(m)</span>
+<span id="cb20-97"><a href="#cb20-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-98"><a href="#cb20-98" aria-hidden="true" tabindex="-1"></a>ap_bayes <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">*</span> sigma_treat<span class="sc">/</span>sigma_prior <span class="sc">-</span></span>
+<span id="cb20-99"><a href="#cb20-99" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>(sigma_treat<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sigma_prior<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>sigma_prior<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (prior_mean <span class="sc">-</span></span>
+<span id="cb20-100"><a href="#cb20-100" aria-hidden="true" tabindex="-1"></a>        delta_star))</span>
+<span id="cb20-101"><a href="#cb20-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-102"><a href="#cb20-102" aria-hidden="true" tabindex="-1"></a>data_output2 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data_output2, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Noninformative"</span>,</span>
+<span id="cb20-103"><a href="#cb20-103" aria-hidden="true" tabindex="-1"></a>    n_0, n_1, <span class="at">AP_bayes =</span> <span class="fu">round</span>(ap_bayes, digit_round)))</span>
+<span id="cb20-104"><a href="#cb20-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-105"><a href="#cb20-105" aria-hidden="true" tabindex="-1"></a>data_output <span class="ot">&lt;-</span> <span class="fu">left_join</span>(data_output, data_output2 <span class="sc">%&gt;%</span></span>
+<span id="cb20-106"><a href="#cb20-106" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(type, AP_bayes), <span class="at">by =</span> <span class="st">"type"</span>)</span>
+<span id="cb20-107"><a href="#cb20-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-108"><a href="#cb20-108" aria-hidden="true" tabindex="-1"></a>data_output <span class="sc">%&gt;%</span></span>
+<span id="cb20-109"><a href="#cb20-109" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(type, n_0, n_1, <span class="at">AP_hybrid =</span> AP, AP_bayes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>            type      n_0      n_1 AP_hybrid AP_bayes
-1   Enthusiastic 99.93031 99.93031     0.586    0.594
-2      Skeptical 99.93031 99.93031     0.336    0.336
-3    Informative 99.93031 99.93031     0.663    0.715
-4 Noninformative 99.93031 99.93031     0.524    0.524</code></pre>
+1   Enthusiastic 99.93031 99.93031    0.5856   0.5937
+2      Skeptical 99.93031 99.93031    0.3363   0.3363
+3    Informative 99.93031 99.93031    0.6631   0.7149
+4 Noninformative 99.93031 99.93031    0.5237   0.5239</code></pre>
 </div>
 </div>
+<p>The average Bayesian power under an informative prior is 72% compared to 66% from a hybrid approach.</p>
 <hr>
 
 
@@ -1149,6 +1160,9 @@ BAP&amp;=-z_{1-\epsilon}\sqrt{\frac{m}{n}}-\sqrt{\frac{(m+n)m}{2n\sigma^2}}(d-\d
 </div>
 <div id="ref-Rufibach2016" class="csl-entry" role="doc-biblioentry">
 <div class="csl-left-margin">6. </div><div class="csl-right-inline">Rufibach K, Burger HU, Abt M. Bayesian predictive power: Choice of prior and some recommendations for its use as probability of success in drug development. Pharmaceutical Statistics. 2016;15: 438–446. doi:<a href="https://doi.org/10.1002/pst.1764">10.1002/pst.1764</a></div>
+</div>
+<div id="ref-Gelman2013" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">7. </div><div class="csl-right-inline">Gelman A, Carlin JB, Stern HS, Dunson DB, Vehtari A, Rubin DB. Bayesian data analysis. Chapman; Hall/CRC; 2013. doi:<a href="https://doi.org/10.1201/b16018">10.1201/b16018</a></div>
 </div>
 </div>
 </section>
