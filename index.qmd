@@ -32,3 +32,16 @@ $$
 $$
 p(\tilde x|x)=\int_\Theta p(\tilde x | \theta, x)p(\theta|x)d\theta=\int_\Theta \underbrace{p(\tilde x | \theta)}_{likelihood}\underbrace{p(\theta|x)}_{prior}d\theta.
 $$
+
+## Used R libraries
+
+```{r lib}
+#| echo: true
+#| message: false
+#| warning: false
+
+library(ggplot2)
+library(tidyverse)
+library(epiR)
+library(mvtnorm)
+```
