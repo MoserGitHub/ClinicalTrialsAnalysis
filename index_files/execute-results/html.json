@@ -1,0 +1,16 @@
+{
+  "hash": "5f75fefc82cd64b9599e9a1c00108d72",
+  "result": {
+    "markdown": "# Introduction\n\n## General notation and abbreviations\n\n-   iid: independent and identically distributed\n-   pdf: probability density function\n-   $N_2$: Bivariate cumulative Gaussian distribution function\n-   $\\phi$: Probability density function of the standard Gaussian distribution\n-   $\\Phi$: Cumulative distribution function of the standard Gaussian distribution\n-   $\\Phi^{-1}$: Quantile function of the standard Gaussian distribution function\n\n## 'Power' vocabulary\n\nIn their supplement Kunzmann et al. @Kunzmann2022 provide a literature review of the terminology used in articles. We provide here a summary of this terminology:\n\n-   **Frequentist power**: Probability of rejection given that the alternative hypothesis is true.\n-   **Average power**: Prior averaged probability of rejection. Often also called 'probability of success', 'assurance', 'Bayesian predictive power'.\n-   **Prior adjusted power**: Joint probability of rejection and that the treatment effect is effective.\n\n## Some 'Bayesian' concepts\n\n- **Design prior**: Priors used before data collection as data generating mode @Stefan2019.\n- **Analysis prior**: Priors used for Bayesian analysis of the collected data @Stefan2019.\n-   **Prior predictive distribution**: Situation *before* a sample was taken. Let $\\theta$ be a realisation of a random variable $\\Theta$ with pdf $p(\\theta)$. Then for a future observation $\\tilde X$\n\n$$\np(\\tilde x)=\\int_\\Theta p(\\tilde x, \\theta)d\\theta=\\int_\\Theta \\underbrace{p(\\tilde x | \\theta)}_{likelihood}\\underbrace{p(\\theta)}_{prior}d\\theta\n$$\n\n-   **Posterior predictive distribution**: Situation *after* a sample was taken. Let $\\theta$ be a realisation of a random variable $\\Theta$ with pdf $p(\\theta)$. Then for a future observation $\\tilde X$ and observed $X$ (since $X$ is independent $\\tilde X$)\n\n$$\np(\\tilde x|x)=\\int_\\Theta p(\\tilde x | \\theta, x)p(\\theta|x)d\\theta=\\int_\\Theta \\underbrace{p(\\tilde x | \\theta)}_{likelihood}\\underbrace{p(\\theta|x)}_{prior}d\\theta.\n$$\n\n## Used R libraries\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(ggplot2)\nlibrary(tidyverse)\nlibrary(epiR)\nlibrary(mvtnorm)\n```\n:::",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

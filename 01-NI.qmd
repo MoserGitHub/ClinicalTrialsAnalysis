@@ -1030,11 +1030,10 @@ The average Bayesian power under an informative prior is 72% compared to 66% fro
 
 #### Hybrid approach: Prior on event probabilities
 
-In the former subsection we assumed that the prior was directly specified on the treatment effect. In this subsection we assume that that design prior is specified on the event probabilities $p_i$, $i=\{0,1\}$. Suppose that the design priors on the event probabilities are beta distributed $\pi_i \sim Beta(a_i,b_i)$. It is well known (see for example @Spiegelhalter2003 or @Grieve2022) that the prior predictive distribution of $n_i$ new Bernoulli observations is beta-binomial distributed with
+In the former subsections we assumed that the prior was directly specified on the treatment effect. In this subsection we assume that that design prior is specified on the event probabilities $p_i$, $i=\{0,1\}$, itselfs. Suppose that the design priors on the event probabilities are beta distributed $\pi_i \sim Beta(a_i,b_i)$, $i=\{0,1\}$. It is well known (see for example @Spiegelhalter2003 or @Grieve2022) that the prior predictive distribution of the number of events $R_i$, $i=\{0,1\}$, from $n_i$ Bernoulli observations is beta-binomial distributed with $R_i \sim betabinom(r_i|n_i, a_i, b_i)$ and 
 $$
-E(\tilde Y_i)=n_i\frac{a_i}{a_i+b_i}, \quad \sigma_{i,\pi_i}^2=\frac{\left(a_i+\sum_{k\leq n_i}Y_{i,k}\right)\left(b_i+n_i-\sum_{k\leq n_i}Y_{i,k}\right)}{(a_i+b_i+n_i)^2(a_i+b_i+n_i+1)}.
+E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i+b_i)^2(a_i+b_i+1)}.
 $$
-
 
 ------------------------------------------------------------------------
 
@@ -1042,7 +1041,107 @@ $$
 
 For the SAFE-SSPE trial we specify the following design beta priors for the expected event probabilites $p_1=p_0=0.01$.
 
-**Enthusiastic prior**: The beta prior for the active treatment arm and control arm is centered at 0.01 (the expected event proportion) with $P(\pi_1\leq 0.05)=0.01$ and $P(\pi_1\leq 0.05)=0.05$.
+**Enthusiastic prior**: The beta prior for the active treatment arm is centered at 0.01 (the expected event proportion) with $P(\pi_1> 0.05)=0.025$, that is, the probability that the prior is greater than the safety margin is 2.5%. The mean of the beta prior for the control arm is centered at 0.05 (the safety margin) with $P(\pi_0\leq 0.01)=0.025$.
+
+- Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=49.5$.
+- Parameters of beta prior for control treatment arm: $a_0=3.14$, $b_0=59.66$.
+
+```{r fig13}
+#| echo: true
+#| warning: false
+#| fig-height: 8
+
+library(extraDistr)
+
+p_1 <- 0.01
+x <- seq(0.001, 0.999, 0.001)
+
+## Enthusiastic prior
+a_1 <- 0.5
+b_1 <- (1 - p_1)/p_1 * a_1
+a_0 <- 3.14
+b_0 <- (1 - 0.05)/0.05 * a_0
+
+prior_0 <- dbeta(x, a_0, b_0)
+prior_1 <- dbeta(x, a_1, b_1)
+
+prior_plot <- data.frame(x, prior_0, prior_1)
+prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0, prior_1))
+
+prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name, "_0") ==
+    T, "Treatment arm 0", "Treatment arm 1")
+
+fig1 <- ggplot(prior_plot_long, aes(x = x, y = value, colour = group)) +
+    geom_line(linewidth = 1.5) + theme_bw() + theme(panel.grid.minor = element_blank(),
+    legend.position = "bottom", legend.direction = "horizontal") + scale_x_continuous(limits = c(0,
+    0.1)) + ylab("Density") + labs(caption = str_glue("Assumed event probabilities: Arm 0 (p_0=",
+    p_0, "), ", "Arm 1 (p_1=", p_1, ")")) + scale_color_brewer("Treatment arm",
+    palette = "Set2") + scale_linetype("Type") + ggtitle("Enthusiastic prior")
+
+diff_prior <- data.frame(x = rbbinom(1e+06, size = ceiling(n_1), a_1,
+    b_1)/ceiling(n_1) - rbbinom(1e+06, size = ceiling(n_0), a_0, b_0)/ceiling(n_0))
+
+fig2 <- ggplot(diff_prior, aes(x), group=x) + geom_density(linewidth = 1.5, bw=0.1) + 
+    theme_bw() + theme(panel.grid.minor = element_blank()) +
+    xlab("Difference from prior predictive distribution") + ggtitle("Distribution of difference from prior predictive distribution") +
+    ylab("Density") + geom_vline(xintercept=delta_star, linetype="dashed") +
+    scale_x_continuous(breaks=c(-0.5, -0.25, 0.035, 0.25, 0.5), 
+                       labels=c(-0.5, -0.25, 0.035, 0.25, 0.5),
+                       limits=c(-0.5, 0.5))
+
+cowplot::plot_grid(fig1, fig2, align = "h", ncol = 1)
+```
+
+**Skeptical prior**: The beta prior for the active treatment arm is centered at 0.05 (the safety margin) with $P(\pi_1\leq 0.01)=0.025$, that is the probability that the prior is smaller or equal than the expected event proportion is 2.5%. The mean of the beta prior for the control arm is is centered at 0.01 (the expected event proportion) with $P(\pi_0> 0.05)=0.025$.
+
+- Parameters of beta prior for active treatment arm: $a_1=2.84$, $b_1=53.96$.
+- Parameters of beta prior for control treatment arm: $a_i=1.24$, $b_i=122.76$.
+
+```{r fig14}
+#| echo: true
+#| warning: false
+#| fig-height: 8
+
+
+x <- seq(0.001, 0.999, 0.001)
+
+# Skeptical
+a_1 <- 2.84
+b_1 <- (1 - 0.05)/0.05 * a_1
+a_0 <- 1.24
+b_0 <- (1 - 0.01)/0.01 * a_0
+
+prior_0 <- dbeta(x, a_0, b_0)
+prior_1 <- dbeta(x, a_1, b_1)
+
+prior_plot <- data.frame(x, prior_0, prior_1)
+prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0, prior_1))
+
+prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name, "_0") ==
+    T, "Treatment arm 0", "Treatment arm 1")
+
+fig1 <- ggplot(prior_plot_long, aes(x = x, y = value, colour = group)) +
+    geom_line(linewidth = 1.5) + theme_bw() + theme(panel.grid.minor = element_blank(),
+    legend.position = "bottom", legend.direction = "horizontal") + scale_x_continuous(limits = c(0,
+    0.1)) + ylab("Density") + labs(caption = str_glue("Assumed event probabilities: Arm 0 (p_0=",
+    p_0, "), ", "Arm 1 (p_1=", p_1, ")")) + scale_color_brewer("Treatment arm",
+    palette = "Set2") + scale_linetype("Type") + ggtitle("Skeptical prior")
+
+diff_prior <- data.frame(x = rbbinom(1e+06, size = ceiling(n_1), a_1,
+    b_1)/ceiling(n_1) - rbbinom(1e+06, size = ceiling(n_0), a_0, b_0)/ceiling(n_0))
+
+fig2 <- ggplot(diff_prior, aes(x)) + geom_density(linewidth = 1.5, bw=0.1) + theme_bw() + 
+    theme(panel.grid.minor = element_blank()) +
+    xlab("Difference from prior predictive distribution") + ggtitle("Distribution of difference from prior predictive distribution") +
+    ylab("Density") + geom_vline(xintercept=delta_star, linetype="dashed") +
+    scale_x_continuous(breaks=c(-0.5, -0.25, 0.035, 0.25, 0.5), 
+                       labels=c(-0.5, -0.25, 0.035, 0.25, 0.5),
+                       limits=c(-0.5, 0.5))
+
+cowplot::plot_grid(fig1, fig2, align = "h", ncol = 1)
+```
+
+**Informative prior**: The beta prior for the active treatment arm and control arm is centered at 0.01 (the expected event proportion) with $P(\pi_1\leq 0.05)=0.01$ and $P(\pi_1\leq 0.05)=0.05$.
 
 - Parameters of beta prior for active treatment arm: $a_1=0.8$, $b_1=79.2$.
 - Parameters of beta prior for control treatment arm: $a_0=0.03$, $b_0=2.97$.
@@ -1050,74 +1149,58 @@ For the SAFE-SSPE trial we specify the following design beta priors for the expe
 ```{r fig15}
 #| echo: true
 #| warning: false
+#| fig-height: 8
 
 x <- seq(0.001, 0.999, 0.001)
 
-## Enthusiastic
+## Informative prior
 a_1 <- 0.8
-b_1 <- (1-p_1)/p_1*a_1
+b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 0.03
-b_0 <- (1-p_0)/p_0*a_0
+b_0 <- (1 - p_0)/p_0 * a_0
 
 prior_0 <- dbeta(x, a_0, b_0)
 prior_1 <- dbeta(x, a_1, b_1)
-posterior_0 <- dbeta(x, a_0+n_0*p_0, b_0+n_0-n_0*p_0)
-posterior_1 <- dbeta(x, a_1+n_1*p_1, b_1+n_1-n_1*p_1)
-var_posterior_0 <- ((a_0+n_0*p_0)*(b_0+n_0-n_0*p_0))/((a_0+b_0+n_0)^2*(a_0+b_0+n_0+1))
-var_posterior_1 <- ((a_1+n_1*p_1)*(b_1+n_1-n_1*p_1))/((a_1+b_1+n_1)^2*(a_1+b_1+n_1+1))
 
-prior_plot <- data.frame(x, prior_0, prior_1, posterior_0, posterior_1)
-prior_plot_long <- pivot_longer(prior_plot, cols=c(prior_0, prior_1, posterior_0, posterior_1))
-prior_plot_long$type <- ifelse(str_detect(prior_plot_long$name, "posterior")==T, "Posterior", "Prior")
-prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name, "_0")==T, "Treatment arm 0", "Treatment arm 1")
+prior_plot <- data.frame(x, prior_0, prior_1)
+prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0, prior_1))
 
-ggplot(prior_plot_long, aes(x=x, y=value, linetype=type, colour=group))+geom_line()+theme_bw()+theme(panel.grid.minor = element_blank(), legend.position = "bottom", legend.direction = "vertical")+scale_x_continuous(limits=c(0,0.1))+ylab("Density")+labs(caption=str_glue("Assumed event probabilities: Arm 0 (p_0=", p_0, "), ", "Arm 1 (p_1=", p_1, ")\nPosterior standard deviation: Arm 0=", round(sqrt(var_posterior_0), 3), ", ", "Arm 1=", round(sqrt(var_posterior_1), 3)))+scale_color_brewer("Treatment arm", palette="Set2")+scale_linetype("Type")+ggtitle("Enthusiastic prior")
+prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name, "_0") ==
+    T, "Treatment arm 0", "Treatment arm 1")
+
+fig1 <- ggplot(prior_plot_long, aes(x = x, y = value, colour = group)) +
+    geom_line(linewidth = 1.5) + theme_bw() + theme(panel.grid.minor = element_blank(),
+    legend.position = "bottom", legend.direction = "horizontal") + scale_x_continuous(limits = c(0,
+    0.1)) + ylab("Density") + labs(caption = str_glue("Assumed event probabilities: Arm 0 (p_0=",
+    p_0, "), ", "Arm 1 (p_1=", p_1, ")")) + scale_color_brewer("Treatment arm",
+    palette = "Set2") + scale_linetype("Type") + ggtitle("Informative prior")
+
+diff_prior <- data.frame(x = rbbinom(1e+06, size = ceiling(n_1), a_1,
+    b_1)/ceiling(n_1) - rbbinom(1e+06, size = ceiling(n_0), a_0, b_0)/ceiling(n_0))
+
+fig2 <- ggplot(diff_prior, aes(x)) + geom_density(linewidth = 1.5, bw=0.1) + theme_bw() + 
+    theme(panel.grid.minor = element_blank()) +
+    xlab("Difference from prior predictive distribution") + ggtitle("Distribution of difference from prior predictive distribution") +
+    ylab("Density") + geom_vline(xintercept=delta_star, linetype="dashed") +
+    scale_x_continuous(breaks=c(-0.5, -0.25, 0.035, 0.25, 0.5), 
+                       labels=c(-0.5, -0.25, 0.035, 0.25, 0.5),
+                       limits=c(-0.5, 0.5))
+
+cowplot::plot_grid(fig1, fig2, align = "h", ncol = 1)
 ```
-
-**Skeptical prior**: The beta prior for the active treatment arm is centered at 0.05 (the upper margin for safety) with $P(\pi_1\leq 0.01)=0.025$. The mean of the beta prior for the control arm is chosen such that the mean difference between both priors lies on the non-inferiority margin and $P(\pi_0> 0.05)=0.025$.
-
-- Parameters of beta prior for active treatment arm: $a_1=2.84$, $b_1=53.96$.
-- Parameters of beta prior for control treatment arm: $a_i=1.24$, $b_i=81.43$.
-
-```{r fig16}
-#| echo: true
-#| warning: false
-
-x <- seq(0.001,0.999,0.001)
-
-# Skeptical
-a_1 <- 2.84
-b_1 <- (1-0.05)/0.05*a_1
-a_0 <- 1.24
-b_0 <- (1-0.015)/0.015*a_0
-
-prior_0 <- dbeta(x, a_0, b_0)
-prior_1 <- dbeta(x, a_1, b_1)
-posterior_0 <- dbeta(x, a_0+n_0*p_0, b_0+n_0-n_0*p_0)
-posterior_1 <- dbeta(x, a_1+n_1*p_1, b_1+n_1-n_1*p_1)
-var_posterior_0 <- ((a_0+n_0*p_0)*(b_0+n_0-n_0*p_0))/((a_0+b_0+n_0)^2*(a_0+b_0+n_0+1))
-var_posterior_1 <- ((a_1+n_1*p_1)*(b_1+n_1-n_1*p_1))/((a_1+b_1+n_1)^2*(a_1+b_1+n_1+1))
-
-prior_plot <- data.frame(x, prior_0, prior_1, posterior_0, posterior_1)
-prior_plot_long <- pivot_longer(prior_plot, cols=c(prior_0, prior_1, posterior_0, posterior_1))
-prior_plot_long$type <- ifelse(str_detect(prior_plot_long$name, "posterior")==T, "Posterior", "Prior")
-prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name, "_0")==T, "Treatment arm 0", "Treatment arm 1")
-
-ggplot(prior_plot_long, aes(x=x, y=value, linetype=type, colour=group))+geom_line()+theme_bw()+theme(panel.grid.minor = element_blank(), legend.position = "bottom", legend.direction = "vertical")+scale_x_continuous(limits=c(0,0.1))+ylab("Density")+labs(caption=str_glue("Expected event probabilities: Arm 0 (p_0=", p_0, "), ", "Arm 1 (p_1=", p_1, ")\nPosterior standard deviation: Arm 0=", round(sqrt(var_posterior_0), 3), ", ", "Arm 1=", round(sqrt(var_posterior_1), 3)))+scale_color_brewer("Treatment arm", palette="Set2")+scale_linetype("Type")+ggtitle("Skeptical prior")
-```
-
-
 
 **Noninformative prior**: Uniform prior for both, the active treatment arm and control arm.
 
 - Parameters of beta prior for active treatment arm: $a_1=1$, $b_1=1$.
 - Parameters of beta prior for control treatment arm: $a_0=1$, $b_0=1$.
 
-```{r fig17}
+```{r fig16}
 #| echo: true
 #| warning: false
+#| fig-height: 8
 
-## Uniform
+
+## Noninformative prior
 a_0 <- 1
 b_0 <- 1
 a_1 <- 1
@@ -1125,28 +1208,50 @@ b_1 <- 1
 
 prior_0 <- dbeta(x, a_0, b_0)
 prior_1 <- dbeta(x, a_1, b_1)
-posterior_0 <- dbeta(x, a_0+n_0*p_0, b_0+n_0-n_0*p_0)
-posterior_1 <- dbeta(x, a_1+n_1*p_1, b_1+n_1-n_1*p_1)
-var_posterior_0 <- ((a_0+n_0*p_0)*(b_0+n_0-n_0*p_0))/((a_0+b_0+n_0)^2*(a_0+b_0+n_0+1))
-var_posterior_1 <- ((a_1+n_1*p_1)*(b_1+n_1-n_1*p_1))/((a_1+b_1+n_1)^2*(a_1+b_1+n_1+1))
 
-prior_plot <- data.frame(x, prior_0, prior_1, posterior_0, posterior_1)
-prior_plot_long <- pivot_longer(prior_plot, cols=c(prior_0, prior_1, posterior_0, posterior_1))
-prior_plot_long$type <- ifelse(str_detect(prior_plot_long$name, "posterior")==T, "Posterior", "Prior")
-prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name, "_0")==T, "Treatment arm 0", "Treatment arm 1")
+prior_plot <- data.frame(x, prior_0, prior_1)
+prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0, prior_1))
 
-ggplot(prior_plot_long, aes(x=x, y=value, linetype=type, colour=group))+geom_line()+theme_bw()+theme(panel.grid.minor = element_blank(), legend.position = "bottom", legend.direction = "vertical")+scale_x_continuous(limits=c(0,0.1))+ylab("Density")+labs(caption=str_glue("Assumed event probabilities: Arm 0 (p_0=", p_0, "), ", "Arm 1 (p_1=", p_1, ")\nPosterior standard deviation: Arm 0=", round(sqrt(var_posterior_0), 3), ", ", "Arm 1=", round(sqrt(var_posterior_1), 3)))+scale_color_brewer("Treatment arm", palette="Set2")+scale_linetype("Type")+ggtitle("Noninformative prior")
+prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name, "_0") ==
+    T, "Treatment arm 0", "Treatment arm 1")
+
+fig1 <- ggplot(prior_plot_long, aes(x = x, y = value, colour = group)) +
+    geom_line(linewidth = 1.5) + theme_bw() + theme(panel.grid.minor = element_blank(),
+    legend.position = "bottom", legend.direction = "horizontal") + scale_x_continuous(limits = c(0,
+    0.1)) + ylab("Density") + labs(caption = str_glue("Assumed event probabilities: Arm 0 (p_0=",
+    p_0, "), ", "Arm 1 (p_1=", p_1, ")")) + scale_color_brewer("Treatment arm",
+    palette = "Set2") + scale_linetype("Type") + ggtitle("Noninformative prior")
+
+diff_prior <- data.frame(x = rbbinom(1e+06, size = ceiling(n_1), a_1,
+    b_1)/ceiling(n_1) - rbbinom(1e+06, size = ceiling(n_0), a_0, b_0)/ceiling(n_0))
+
+fig2 <- ggplot(diff_prior, aes(x)) + geom_density(linewidth = 1.5, bw=0.05) + theme_bw() + 
+    theme(panel.grid.minor = element_blank()) +
+    xlab("Difference from prior predictive distribution") + ggtitle("Distribution of difference from prior predictive distribution") +
+    ylab("Density") + geom_vline(xintercept=delta_star, linetype="dashed") +
+    scale_x_continuous(breaks=c(-1, -0.5, 0.035, 0.5, 1), 
+                       labels=c(-1, -0.5, 0.035, 0.5, 1),
+                       limits=c(-1, 1))
+
+cowplot::plot_grid(fig1, fig2, align = "h", ncol = 1)
 ```
 
 ------------------------------------------------------------------------
 
+The calculation of the average power is easily done by simulation.
 
 ##### Simulation approach 1: Joint probability
 
-```{r fig13}
+The joint probability approach has been described in @Grieve2022 and includes the following steps:
+
+- Calculate the joint pdf $p(r_1, r_0|n_1, n_0, a_1, a_0, b_1, b_0)=betabinom(r_1|n_1, a_1, b_1)\cdot betabinom(r_0|n_0, a_0, b_i0)$ for all pairs $r_i\in\{0, 1, \cdots, n_i\}$, $i\in\{0,1\}$.
+- The sum of the joint predictive probabilites over $r_i$ pairs where the $(1-\alpha)$-upper confidence limit of the risk difference is smaller than the non-inferiority margin is the average power.
+
+Here we use Agresti-Caffo confidence intervals for the risk difference @Agresti2000.
+
+```{r fig17}
 #| echo: true
 #| warning: false
-
 
 library(extraDistr)
 library(PropCIs)
@@ -1155,58 +1260,95 @@ res_ap <- c()
 
 ## Enthusiastic prior
 
-p_1 <- 0.01
-p_0 <- 0.01
-
-a_1 <- 0.8
-b_1 <- (1-p_1)/p_1*a_1
-a_0 <- 0.03
-b_0 <- (1-p_0)/p_0*a_0
+a_1 <- 0.5
+b_1 <- (1 - p_1)/p_1 * a_1
+a_0 <- 3.14
+b_0 <- (1 - 0.05)/0.05 * a_0
 
 r_0 <- 0:100
 r_1 <- 0:100
 
-data_points <- expand.grid(r_1=r_1, r_0=r_0)
+data_points <- expand.grid(r_1 = r_1, r_0 = r_0)
 
 set.seed(1)
-data_points$pdf_r_1 <- dbbinom(data_points$r_1, size=ceiling(n_1), a_1, b_1)
-data_points$pdf_r_0 <- dbbinom(data_points$r_0, size=ceiling(n_0), a_0, b_0)
-data_points$joint_pdf <- data_points$pdf_r_1*data_points$pdf_r_0
+data_points$pdf_r_1 <- dbbinom(data_points$r_1, size = ceiling(n_1), a_1,
+    b_1)
+data_points$pdf_r_0 <- dbbinom(data_points$r_0, size = ceiling(n_0), a_0,
+    b_0)
+data_points$joint_pdf <- data_points$pdf_r_1 * data_points$pdf_r_0
 
 data_points$sig <- NA
 
 for (i in 1:nrow(data_points)) {
-data_points$sig[i] <- ifelse(wald2ci(data_points$r_1[i], n_1, data_points$r_0[i], n_0, conf.level=0.95, adjust="AC")$conf.int[2]<=delta_star, 1, 0)
+    data_points$sig[i] <- ifelse(wald2ci(data_points$r_1[i], n_1, data_points$r_0[i],
+        n_0, conf.level = 0.95, adjust = "AC")$conf.int[2] <= delta_star,
+        1, 0)
 }
 
-res_ap <- data.frame(type="Enthusiastic", ap=sum(data_points$joint_pdf[data_points$sig==1]))
+res_ap <- data.frame(type = "Enthusiastic", 
+                            ap = sum(data_points$joint_pdf[data_points$sig == 1]))
 
 ## Skeptical prior
 
 a_1 <- 2.84
-b_1 <- (1-0.05)/0.05*a_1
+b_1 <- (1 - 0.05)/0.05 * a_1
 a_0 <- 1.24
-b_0 <- (1-0.015)/0.015*a_0
+b_0 <- (1 - 0.01)/0.01 * a_0
 
 r_0 <- 0:100
 r_1 <- 0:100
 
-data_points <- expand.grid(r_1=r_1, r_0=r_0)
+data_points <- expand.grid(r_1 = r_1, r_0 = r_0)
 
 set.seed(1)
-data_points$pdf_r_1 <- dbbinom(data_points$r_1, size=ceiling(n_1), a_1, b_1)
-data_points$pdf_r_0 <- dbbinom(data_points$r_0, size=ceiling(n_0), a_0, b_0)
-data_points$joint_pdf <- data_points$pdf_r_1*data_points$pdf_r_0
+data_points$pdf_r_1 <- dbbinom(data_points$r_1, size = ceiling(n_1), a_1,
+    b_1)
+data_points$pdf_r_0 <- dbbinom(data_points$r_0, size = ceiling(n_0), a_0,
+    b_0)
+data_points$joint_pdf <- data_points$pdf_r_1 * data_points$pdf_r_0
 
 data_points$sig <- NA
 
 for (i in 1:nrow(data_points)) {
-data_points$sig[i] <- ifelse(wald2ci(data_points$r_1[i], n_1, data_points$r_0[i], n_0, conf.level=0.95, adjust="AC")$conf.int[2]<=delta_star, 1, 0)
+    data_points$sig[i] <- ifelse(wald2ci(data_points$r_1[i], n_1, data_points$r_0[i],
+        n_0, conf.level = 0.95, adjust = "AC")$conf.int[2] <= delta_star,
+        1, 0)
 }
 
-res_ap <- rbind(res_ap, data.frame(type="Skeptical", ap=sum(data_points$joint_pdf[data_points$sig==1])))
+res_ap <- rbind(res_ap, data.frame(type = "Skeptical", 
+                          ap = sum(data_points$joint_pdf[data_points$sig == 1])))
 
-## Noninformative prior 
+## Informative prior
+
+a_1 <- 0.8
+b_1 <- (1 - p_1)/p_1 * a_1
+a_0 <- 0.03
+b_0 <- (1 - p_0)/p_0 * a_0
+
+r_0 <- 0:100
+r_1 <- 0:100
+
+data_points <- expand.grid(r_1 = r_1, r_0 = r_0)
+
+set.seed(1)
+data_points$pdf_r_1 <- dbbinom(data_points$r_1, size = ceiling(n_1), a_1,
+    b_1)
+data_points$pdf_r_0 <- dbbinom(data_points$r_0, size = ceiling(n_0), a_0,
+    b_0)
+data_points$joint_pdf <- data_points$pdf_r_1 * data_points$pdf_r_0
+
+data_points$sig <- NA
+
+for (i in 1:nrow(data_points)) {
+    data_points$sig[i] <- ifelse(wald2ci(data_points$r_1[i], n_1, data_points$r_0[i],
+        n_0, conf.level = 0.95, adjust = "AC")$conf.int[2] <= delta_star,
+        1, 0)
+}
+
+res_ap <- rbind(res_ap, data.frame(type = "Informative", 
+                          ap = sum(data_points$joint_pdf[data_points$sig == 1])))
+
+## Noninformative prior
 
 a_1 <- 1
 b_1 <- 1
@@ -1216,69 +1358,102 @@ b_0 <- 1
 r_0 <- 0:100
 r_1 <- 0:100
 
-data_points <- expand.grid(r_1=r_1, r_0=r_0)
+data_points <- expand.grid(r_1 = r_1, r_0 = r_0)
 
 set.seed(1)
-data_points$pdf_r_1 <- dbbinom(data_points$r_1, size=ceiling(n_1), a_1, b_1)
-data_points$pdf_r_0 <- dbbinom(data_points$r_0, size=ceiling(n_0), a_0, b_0)
-data_points$joint_pdf <- data_points$pdf_r_1*data_points$pdf_r_0
+data_points$pdf_r_1 <- dbbinom(data_points$r_1, size = ceiling(n_1), a_1,
+    b_1)
+data_points$pdf_r_0 <- dbbinom(data_points$r_0, size = ceiling(n_0), a_0,
+    b_0)
+data_points$joint_pdf <- data_points$pdf_r_1 * data_points$pdf_r_0
 
 data_points$sig <- NA
 
 for (i in 1:nrow(data_points)) {
-data_points$sig[i] <- ifelse(wald2ci(data_points$r_1[i], n_1, data_points$r_0[i], n_0, conf.level=0.95, adjust="AC")$conf.int[2]<=delta_star, 1, 0)
+    data_points$sig[i] <- ifelse(wald2ci(data_points$r_1[i], n_1, data_points$r_0[i],
+        n_0, conf.level = 0.95, adjust = "AC")$conf.int[2] <= delta_star,
+        1, 0)
 }
 
-res_ap <- rbind(res_ap, data.frame(type="Noninformative prior", ap=sum(data_points$joint_pdf[data_points$sig==1])))
+res_ap <- rbind(res_ap, data.frame(type = "Noninformative prior", 
+                          ap = sum(data_points$joint_pdf[data_points$sig == 1])))
 res_ap$ap <- round(res_ap$ap, 2)
 
 res_ap
 ```
 
-##### Simulation approach 2: Direct sampling from predictive distribution
+##### Simulation approach 2: Direct sampling from prior predictive distribution
 
-```{r fig14}
+The second simulation approach samples $q$ event outcomes from the predictive distribution and calculates whether the $(1-\alpha)$-upper confidence limit of the risk difference is smaller than the non-inferiority margin. The sum of positive outcomes divided by the number of samples $q$ gives the average power. Also here we use Agresti-Caffo confidence intervals for the risk difference @Agresti2000.
+
+```{r fig18}
+#| echo: true
+#| warning: false
+
+# Number of draws
+q <- 10000
 
 res_ap <- c()
 
 ## Enthusiastic prior
 
-a_1 <- 0.8
-b_1 <- (1-p_1)/p_1*a_1
-a_0 <- 0.03
-b_0 <- (1-p_0)/p_0*a_0
+a_1 <- 0.5
+b_1 <- (1 - p_1)/p_1 * a_1
+a_0 <- 3.14
+b_0 <- (1 - 0.05)/0.05 * a_0
 
 set.seed(1)
-r_1 <- rbbinom(10000, size=ceiling(n_1), a_1, b_1)
-r_0 <- rbbinom(10000, size=ceiling(n_0), a_0, b_0)
+r_1 <- rbbinom(q, size = ceiling(n_1), a_1, b_1)
+r_0 <- rbbinom(q, size = ceiling(n_0), a_0, b_0)
 
 res <- c()
 
 for (i in 1:length(r_1)) {
-  res <- c(res, ifelse(wald2ci(r_1[i], n_1, r_0[i], n_0, conf.level=0.95, adjust="AC")$conf.int[2]<=delta_star, 1, 0))
+    res <- c(res, ifelse(wald2ci(r_1[i], n_1, r_0[i], n_0, conf.level = 0.95,
+        adjust = "AC")$conf.int[2] <= delta_star, 1, 0))
 }
 
-res_ap <- data.frame(type="Enthusiastic", ap=sum(res)/10000)
+res_ap <- data.frame(type = "Enthusiastic", ap = sum(res)/q)
 
 ## Skeptical prior
 
 a_1 <- 2.84
-b_1 <- (1-0.05)/0.05*a_1
+b_1 <- (1 - 0.05)/0.05 * a_1
 a_0 <- 1.24
-b_0 <- (1-0.015)/0.015*a_0
+b_0 <- (1 - p_0)/p_0 * a_0
 
 set.seed(1)
-r_1 <- rbbinom(10000, size=ceiling(n_1), a_1, b_1)
-r_0 <- rbbinom(10000, size=ceiling(n_0), a_0, b_0)
+r_1 <- rbbinom(q, size = ceiling(n_1), a_1, b_1)
+r_0 <- rbbinom(q, size = ceiling(n_0), a_0, b_0)
 
 res <- c()
 
 for (i in 1:length(r_1)) {
-res <- c(res, ifelse(wald2ci(r_1[i], n_1, r_0[i], n_0, conf.level=0.95, adjust="AC")$conf.int[2]<=delta_star, 1, 0))
+    res <- c(res, ifelse(wald2ci(r_1[i], n_1, r_0[i], n_0, conf.level = 0.95,
+        adjust = "AC")$conf.int[2] <= delta_star, 1, 0))
 }
 
-res_ap <- rbind(res_ap, data.frame(type="Skeptical", ap=sum(res)/10000))
+res_ap <- rbind(res_ap, data.frame(type = "Skeptical", ap = sum(res)/q))
 
+## Informative prior
+
+a_1 <- 0.8
+b_1 <- (1 - p_1)/p_1 * a_1
+a_0 <- 0.03
+b_0 <- (1 - p_0)/p_0 * a_0
+
+set.seed(1)
+r_1 <- rbbinom(q, size = ceiling(n_1), a_1, b_1)
+r_0 <- rbbinom(q, size = ceiling(n_0), a_0, b_0)
+
+res <- c()
+
+for (i in 1:length(r_1)) {
+    res <- c(res, ifelse(wald2ci(r_1[i], n_1, r_0[i], n_0, conf.level = 0.95,
+        adjust = "AC")$conf.int[2] <= delta_star, 1, 0))
+}
+
+res_ap <- rbind(res_ap, data.frame(type = "Informative", ap = sum(res)/q))
 
 ## Noninformative prior
 
@@ -1288,16 +1463,17 @@ a_1 <- 1
 b_1 <- 1
 
 set.seed(1)
-r_1 <- rbbinom(10000, size=ceiling(n_1), a_1, b_1)
-r_0 <- rbbinom(10000, size=ceiling(n_0), a_0, b_0)
+r_1 <- rbbinom(q, size = ceiling(n_1), a_1, b_1)
+r_0 <- rbbinom(q, size = ceiling(n_0), a_0, b_0)
 
 res <- c()
 
 for (i in 1:length(r_1)) {
-res <- c(res, ifelse(wald2ci(r_1[i], n_1, r_0[i], n_0, conf.level=0.95, adjust="AC")$conf.int[2]<=delta_star, 1, 0))
+    res <- c(res, ifelse(wald2ci(r_1[i], n_1, r_0[i], n_0, conf.level = 0.95,
+        adjust = "AC")$conf.int[2] <= delta_star, 1, 0))
 }
 
-res_ap <- rbind(res_ap, data.frame(type="Noninformative", ap=sum(res)/10000))
+res_ap <- rbind(res_ap, data.frame(type = "Noninformative", ap = sum(res)/q))
 
 res_ap$ap <- round(res_ap$ap, 2)
 res_ap
@@ -1313,22 +1489,188 @@ $$
 \mu_{i,\pi_i}:=E(p_i|\pi_i)=\frac{a_i+\sum_{k\leq n_i}Y_{i,k}}{a_i+b_i+n_i}, \quad \sigma_{i,\pi_i}^2:=Var(p_i|\pi_i)=\frac{\left(a_i+\sum_{k\leq n_i}Y_{i,k}\right)\left(b_i+n_i-\sum_{k\leq n_i}Y_{i,k}\right)}{(a_i+b_i+n_i)^2(a_i+b_i+n_i+1)}.
 $$
 
+------------------------------------------------------------------------
+
+**Working example (continued)**
+
+We use the same prior specifications as from the former subsection for the analysis priors.
+
+**Enthusiastic prior**: The beta prior for the active treatment arm is centered at 0.01 (the expected event proportion) with $P(\pi_1> 0.05)=0.025$, that is, the probability that the prior is greater than the safety margin is 2.5%. The mean of the beta prior for the control arm is centered at 0.05 (the safety margin) with $P(\pi_0\leq 0.01)=0.025$.
+
+- Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=49.5$.
+- Parameters of beta prior for control treatment arm: $a_0=3.14$, $b_0=59.66$.
+
+```{r fig19}
+#| echo: true
+#| warning: false
+
+x <- seq(0.001, 0.999, 0.001)
+
+## Enthusiastic
+a_1 <- 0.5
+b_1 <- (1 - p_1)/p_1 * a_1
+a_0 <- 3.14
+b_0 <- (1 - 0.05)/0.05 * a_0
+
+prior_0 <- dbeta(x, a_0, b_0)
+prior_1 <- dbeta(x, a_1, b_1)
+posterior_0 <- dbeta(x, a_0 + n_0 * p_0, b_0 + n_0 - n_0 * p_0)
+posterior_1 <- dbeta(x, a_1 + n_1 * p_1, b_1 + n_1 - n_1 * p_1)
+var_posterior_0 <- ((a_0 + n_0 * p_0) * (b_0 + n_0 - n_0 * p_0))/((a_0 +
+    b_0 + n_0)^2 * (a_0 + b_0 + n_0 + 1))
+var_posterior_1 <- ((a_1 + n_1 * p_1) * (b_1 + n_1 - n_1 * p_1))/((a_1 +
+    b_1 + n_1)^2 * (a_1 + b_1 + n_1 + 1))
+
+prior_plot <- data.frame(x, prior_0, prior_1, posterior_0, posterior_1)
+prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0, prior_1,
+    posterior_0, posterior_1))
+prior_plot_long$type <- ifelse(str_detect(prior_plot_long$name, "posterior") ==
+    T, "Posterior", "Prior")
+prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name, "_0") ==
+    T, "Treatment arm 0", "Treatment arm 1")
+
+ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) +
+    geom_line() + theme_bw() + theme(panel.grid.minor = element_blank(),
+    legend.position = "bottom", legend.direction = "vertical") + scale_x_continuous(limits = c(0,
+    0.1)) + ylab("Density") + labs(caption = str_glue("Assumed event probabilities: Arm 0 (p_0=",
+    p_0, "), ", "Arm 1 (p_1=", p_1, ")\nPosterior standard deviation: Arm 0=",
+    round(sqrt(var_posterior_0), 3), ", ", "Arm 1=", round(sqrt(var_posterior_1),
+        3))) + scale_color_brewer("Treatment arm", palette = "Set2") +
+    scale_linetype("Type") + ggtitle("Enthusiastic prior")
+```
+
+**Skeptical prior**: The beta prior for the active treatment arm is centered at 0.05 (the safety margin) with $P(\pi_1\leq 0.01)=0.025$, that is the probability that the prior is smaller or equal than the expected event proportion is 2.5%. The mean of the beta prior for the control arm is is centered at 0.01 (the expected event proportion) with $P(\pi_0> 0.05)=0.025$.
+
+- Parameters of beta prior for active treatment arm: $a_1=2.84$, $b_1=53.96$.
+- Parameters of beta prior for control treatment arm: $a_i=1.24$, $b_i=122.76$.
+
+```{r fig20}
+#| echo: true
+#| warning: false
+
+x <- seq(0.001, 0.999, 0.001)
+
+# Skeptical
+a_1 <- 2.84
+b_1 <- (1 - 0.05)/0.05 * a_1
+a_0 <- 1.24
+b_0 <- (1 - p_0)/p_0 * a_0
+
+prior_0 <- dbeta(x, a_0, b_0)
+prior_1 <- dbeta(x, a_1, b_1)
+posterior_0 <- dbeta(x, a_0 + n_0 * p_0, b_0 + n_0 - n_0 * p_0)
+posterior_1 <- dbeta(x, a_1 + n_1 * p_1, b_1 + n_1 - n_1 * p_1)
+var_posterior_0 <- ((a_0 + n_0 * p_0) * (b_0 + n_0 - n_0 * p_0))/((a_0 +
+    b_0 + n_0)^2 * (a_0 + b_0 + n_0 + 1))
+var_posterior_1 <- ((a_1 + n_1 * p_1) * (b_1 + n_1 - n_1 * p_1))/((a_1 +
+    b_1 + n_1)^2 * (a_1 + b_1 + n_1 + 1))
+
+prior_plot <- data.frame(x, prior_0, prior_1, posterior_0, posterior_1)
+prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0, prior_1,
+    posterior_0, posterior_1))
+prior_plot_long$type <- ifelse(str_detect(prior_plot_long$name, "posterior") ==
+    T, "Posterior", "Prior")
+prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name, "_0") ==
+    T, "Treatment arm 0", "Treatment arm 1")
+
+ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) +
+    geom_line() + theme_bw() + theme(panel.grid.minor = element_blank(),
+    legend.position = "bottom", legend.direction = "vertical") + scale_x_continuous(limits = c(0,
+    0.1)) + ylab("Density") + labs(caption = str_glue("Expected event probabilities: Arm 0 (p_0=",
+    p_0, "), ", "Arm 1 (p_1=", p_1, ")\nPosterior standard deviation: Arm 0=",
+    round(sqrt(var_posterior_0), 3), ", ", "Arm 1=", round(sqrt(var_posterior_1),
+        3))) + scale_color_brewer("Treatment arm", palette = "Set2") +
+    scale_linetype("Type") + ggtitle("Skeptical prior")
+```
+
+**Informative prior**: The beta prior for the active treatment arm and control arm is centered at 0.01 (the expected event proportion) with $P(\pi_1\leq 0.05)=0.01$ and $P(\pi_1\leq 0.05)=0.05$.
+
+- Parameters of beta prior for active treatment arm: $a_1=0.8$, $b_1=79.2$.
+- Parameters of beta prior for control treatment arm: $a_0=0.03$, $b_0=2.97$.
+
+```{r fig21}
+#| echo: true
+#| warning: false
+
+x <- seq(0.001, 0.999, 0.001)
+
+## Enthusiastic
+a_1 <- 0.8
+b_1 <- (1 - p_1)/p_1 * a_1
+a_0 <- 0.03
+b_0 <- (1 - p_0)/p_0 * a_0
+
+prior_0 <- dbeta(x, a_0, b_0)
+prior_1 <- dbeta(x, a_1, b_1)
+posterior_0 <- dbeta(x, a_0 + n_0 * p_0, b_0 + n_0 - n_0 * p_0)
+posterior_1 <- dbeta(x, a_1 + n_1 * p_1, b_1 + n_1 - n_1 * p_1)
+var_posterior_0 <- ((a_0 + n_0 * p_0) * (b_0 + n_0 - n_0 * p_0))/((a_0 +
+    b_0 + n_0)^2 * (a_0 + b_0 + n_0 + 1))
+var_posterior_1 <- ((a_1 + n_1 * p_1) * (b_1 + n_1 - n_1 * p_1))/((a_1 +
+    b_1 + n_1)^2 * (a_1 + b_1 + n_1 + 1))
+
+prior_plot <- data.frame(x, prior_0, prior_1, posterior_0, posterior_1)
+prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0, prior_1,
+    posterior_0, posterior_1))
+prior_plot_long$type <- ifelse(str_detect(prior_plot_long$name, "posterior") ==
+    T, "Posterior", "Prior")
+prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name, "_0") ==
+    T, "Treatment arm 0", "Treatment arm 1")
+
+ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) +
+    geom_line() + theme_bw() + theme(panel.grid.minor = element_blank(),
+    legend.position = "bottom", legend.direction = "vertical") + scale_x_continuous(limits = c(0,
+    0.1)) + ylab("Density") + labs(caption = str_glue("Assumed event probabilities: Arm 0 (p_0=",
+    p_0, "), ", "Arm 1 (p_1=", p_1, ")\nPosterior standard deviation: Arm 0=",
+    round(sqrt(var_posterior_0), 3), ", ", "Arm 1=", round(sqrt(var_posterior_1),
+        3))) + scale_color_brewer("Treatment arm", palette = "Set2") +
+    scale_linetype("Type") + ggtitle("Enthusiastic prior")
+```
 
 
-$$
 
-$$
+**Noninformative prior**: Uniform prior for both, the active treatment arm and control arm.
 
-Denote the random variable $D^\pi:=p_1|\pi_1-p_0|\pi_0$ and $\delta^\pi:=\mu_{1,\pi_1}-\mu_{0,\pi_0}$, then, since $D_\pi \sim N(\delta^\pi, \sigma_{1,\pi_1}^2+\sigma_{0,\pi_0}^2)$, one gets a significant result if
-$$
-D^\pi+z_{1-\alpha}\sqrt{\sigma_{1,\pi_1}^2+\sigma_{0,\pi_0}^2}\leq \delta^*.
-$$
-Denote $D^\pi_{suc}:=-z_{1-\alpha}\sqrt{\sigma_{1,\pi_1}^2+\sigma_{0,\pi_0}^2}+\delta^*$
+- Parameters of beta prior for active treatment arm: $a_1=1$, $b_1=1$.
+- Parameters of beta prior for control treatment arm: $a_0=1$, $b_0=1$.
 
-Then
-$$
-P(D^\pi\leq D^\pi_{suc}|\delta^\pi)=\Phi\left( z_{1-\alpha} -\frac{\delta^\pi-\delta^*}{\sqrt{\sigma_{1,\pi_1}^2+\sigma_{0,\pi_0}^2}}\right)
-$$
+```{r fig22}
+#| echo: true
+#| warning: false
 
+## Uniform
+a_0 <- 1
+b_0 <- 1
+a_1 <- 1
+b_1 <- 1
+
+prior_0 <- dbeta(x, a_0, b_0)
+prior_1 <- dbeta(x, a_1, b_1)
+posterior_0 <- dbeta(x, a_0 + n_0 * p_0, b_0 + n_0 - n_0 * p_0)
+posterior_1 <- dbeta(x, a_1 + n_1 * p_1, b_1 + n_1 - n_1 * p_1)
+var_posterior_0 <- ((a_0 + n_0 * p_0) * (b_0 + n_0 - n_0 * p_0))/((a_0 +
+    b_0 + n_0)^2 * (a_0 + b_0 + n_0 + 1))
+var_posterior_1 <- ((a_1 + n_1 * p_1) * (b_1 + n_1 - n_1 * p_1))/((a_1 +
+    b_1 + n_1)^2 * (a_1 + b_1 + n_1 + 1))
+
+prior_plot <- data.frame(x, prior_0, prior_1, posterior_0, posterior_1)
+prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0, prior_1,
+    posterior_0, posterior_1))
+prior_plot_long$type <- ifelse(str_detect(prior_plot_long$name, "posterior") ==
+    T, "Posterior", "Prior")
+prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name, "_0") ==
+    T, "Treatment arm 0", "Treatment arm 1")
+
+ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) +
+    geom_line() + theme_bw() + theme(panel.grid.minor = element_blank(),
+    legend.position = "bottom", legend.direction = "vertical") + scale_x_continuous(limits = c(0,
+    0.1)) + ylab("Density") + labs(caption = str_glue("Assumed event probabilities: Arm 0 (p_0=",
+    p_0, "), ", "Arm 1 (p_1=", p_1, ")\nPosterior standard deviation: Arm 0=",
+    round(sqrt(var_posterior_0), 3), ", ", "Arm 1=", round(sqrt(var_posterior_1),
+        3))) + scale_color_brewer("Treatment arm", palette = "Set2") +
+    scale_linetype("Type") + ggtitle("Noninformative prior")
+```
+
+------------------------------------------------------------------------
 
 

@@ -1146,12 +1146,114 @@ BAP&amp;=-z_{1-\epsilon}\sqrt{\frac{m}{n}}-\sqrt{\frac{(m+n)m}{2n\sigma^2}}(d-\d
 </section>
 <section id="hybrid-approach-prior-on-event-probabilities" class="level4" data-number="2.2.1.4">
 <h4 data-number="2.2.1.4" class="anchored" data-anchor-id="hybrid-approach-prior-on-event-probabilities"><span class="header-section-number">2.2.1.4</span> Hybrid approach: Prior on event probabilities</h4>
-<p>In the former subsection we assumed that the prior was directly specified on the treatment effect. In this subsection we assume that that design prior is specified on the event probabilities <span class="math inline">\(p_i\)</span>, <span class="math inline">\(i=\{0,1\}\)</span>. Suppose that the priors on the event probabilities are beta distributed <span class="math inline">\(\pi_i \sim Beta(a_i,b_i)\)</span>. It is well known (see for example <span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">2</a>]</span> or <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span>) that the prior predictive distribution of <span class="math inline">\(n_i\)</span> new Bernoulli observations is beta-binomial distributed with <span class="math display">\[
-E(\tilde Y_i)=n_i\frac{a_i}{a_i+b_i}, \quad \sigma_{i,\pi_i}^2=\frac{\left(a_i+\sum_{k\leq n_i}Y_{i,k}\right)\left(b_i+n_i-\sum_{k\leq n_i}Y_{i,k}\right)}{(a_i+b_i+n_i)^2(a_i+b_i+n_i+1)}.
+<p>In the former subsections we assumed that the prior was directly specified on the treatment effect. In this subsection we assume that that design prior is specified on the event probabilities <span class="math inline">\(p_i\)</span>, <span class="math inline">\(i=\{0,1\}\)</span>, itselfs. Suppose that the design priors on the event probabilities are beta distributed <span class="math inline">\(\pi_i \sim Beta(a_i,b_i)\)</span>, <span class="math inline">\(i=\{0,1\}\)</span>. It is well known (see for example <span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">2</a>]</span> or <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span>) that the prior predictive distribution of the number of events <span class="math inline">\(R_i\)</span>, <span class="math inline">\(i=\{0,1\}\)</span>, from <span class="math inline">\(n_i\)</span> Bernoulli observations is beta-binomial distributed with <span class="math inline">\(R_i \sim betabinom(r_i|n_i, a_i, b_i)\)</span> and <span class="math display">\[
+E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i+b_i)^2(a_i+b_i+1)}.
 \]</span></p>
 <hr>
 <p><strong>Working example (continued)</strong></p>
-<p><strong>Enthusiastic prior</strong>: The beta prior for the active treatment arm and control arm is centered at 0.01 (the expected event proportion) with <span class="math inline">\(P(\pi_1\leq 0.05)=0.01\)</span> and <span class="math inline">\(P(\pi_1\leq 0.05)=0.05\)</span>.</p>
+<p>For the SAFE-SSPE trial we specify the following design beta priors for the expected event probabilites <span class="math inline">\(p_1=p_0=0.01\)</span>.</p>
+<p><strong>Enthusiastic prior</strong>: The beta prior for the active treatment arm is centered at 0.01 (the expected event proportion) with <span class="math inline">\(P(\pi_1&gt; 0.05)=0.025\)</span>, that is, the probability that the prior is greater than the safety margin is 2.5%. The mean of the beta prior for the control arm is centered at 0.05 (the safety margin) with <span class="math inline">\(P(\pi_0\leq 0.01)=0.025\)</span>.</p>
+<ul>
+<li>Parameters of beta prior for active treatment arm: <span class="math inline">\(a_1=0.5\)</span>, <span class="math inline">\(b_1=49.5\)</span>.</li>
+<li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_0=3.14\)</span>, <span class="math inline">\(b_0=59.66\)</span>.</li>
+</ul>
+<div class="cell">
+<details>
+<summary>Show R code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(extraDistr)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>p_1 <span class="ot">&lt;-</span> <span class="fl">0.01</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>, <span class="fl">0.999</span>, <span class="fl">0.001</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Enthusiastic prior</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">3.14</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span>)<span class="sc">/</span><span class="fl">0.05</span> <span class="sc">*</span> a_0</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>prior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0, b_0)</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>prior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1, b_1)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>prior_plot <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, prior_0, prior_1)</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>prior_plot_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(prior_plot, <span class="at">cols =</span> <span class="fu">c</span>(prior_0, prior_1))</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"_0"</span>) <span class="sc">==</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    T, <span class="st">"Treatment arm 0"</span>, <span class="st">"Treatment arm 1"</span>)</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>fig1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(prior_plot_long, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> value, <span class="at">colour =</span> group)) <span class="sc">+</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>) <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>) <span class="sc">+</span> <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.1</span>)) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Density"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">caption =</span> <span class="fu">str_glue</span>(<span class="st">"Assumed event probabilities: Arm 0 (p_0="</span>,</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>    p_0, <span class="st">"), "</span>, <span class="st">"Arm 1 (p_1="</span>, p_1, <span class="st">")"</span>)) <span class="sc">+</span> <span class="fu">scale_color_brewer</span>(<span class="st">"Treatment arm"</span>,</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span> <span class="fu">scale_linetype</span>(<span class="st">"Type"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Enthusiastic prior"</span>)</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>diff_prior <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rbbinom</span>(<span class="fl">1e+06</span>, <span class="at">size =</span> <span class="fu">ceiling</span>(n_1), a_1,</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>    b_1)<span class="sc">/</span><span class="fu">ceiling</span>(n_1) <span class="sc">-</span> <span class="fu">rbbinom</span>(<span class="fl">1e+06</span>, <span class="at">size =</span> <span class="fu">ceiling</span>(n_0), a_0, b_0)<span class="sc">/</span><span class="fu">ceiling</span>(n_0))</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>fig2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(diff_prior, <span class="fu">aes</span>(x), <span class="at">group=</span>x) <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>, <span class="at">bw=</span><span class="fl">0.1</span>) <span class="sc">+</span> </span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Difference from prior predictive distribution"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Distribution of difference from prior predictive distribution"</span>) <span class="sc">+</span></span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Density"</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept=</span>delta_star, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.25</span>, <span class="fl">0.035</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>), </span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.25</span>, <span class="fl">0.035</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>),</span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>))</span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>cowplot<span class="sc">::</span><span class="fu">plot_grid</span>(fig1, fig2, <span class="at">align =</span> <span class="st">"h"</span>, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="01-NI_files/figure-html/fig13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Skeptical prior</strong>: The beta prior for the active treatment arm is centered at 0.05 (the safety margin) with <span class="math inline">\(P(\pi_1\leq 0.01)=0.025\)</span>, that is the probability that the prior is smaller or equal than the expected event proportion is 2.5%. The mean of the beta prior for the control arm is is centered at 0.01 (the expected event proportion) with <span class="math inline">\(P(\pi_0&gt; 0.05)=0.025\)</span>.</p>
+<ul>
+<li>Parameters of beta prior for active treatment arm: <span class="math inline">\(a_1=2.84\)</span>, <span class="math inline">\(b_1=53.96\)</span>.</li>
+<li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_i=1.24\)</span>, <span class="math inline">\(b_i=122.76\)</span>.</li>
+</ul>
+<div class="cell">
+<details>
+<summary>Show R code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>, <span class="fl">0.999</span>, <span class="fl">0.001</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Skeptical</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">2.84</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span>)<span class="sc">/</span><span class="fl">0.05</span> <span class="sc">*</span> a_1</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">1.24</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.01</span>)<span class="sc">/</span><span class="fl">0.01</span> <span class="sc">*</span> a_0</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>prior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0, b_0)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>prior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1, b_1)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>prior_plot <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, prior_0, prior_1)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>prior_plot_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(prior_plot, <span class="at">cols =</span> <span class="fu">c</span>(prior_0, prior_1))</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"_0"</span>) <span class="sc">==</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    T, <span class="st">"Treatment arm 0"</span>, <span class="st">"Treatment arm 1"</span>)</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>fig1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(prior_plot_long, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> value, <span class="at">colour =</span> group)) <span class="sc">+</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>) <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>) <span class="sc">+</span> <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.1</span>)) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Density"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">caption =</span> <span class="fu">str_glue</span>(<span class="st">"Assumed event probabilities: Arm 0 (p_0="</span>,</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>    p_0, <span class="st">"), "</span>, <span class="st">"Arm 1 (p_1="</span>, p_1, <span class="st">")"</span>)) <span class="sc">+</span> <span class="fu">scale_color_brewer</span>(<span class="st">"Treatment arm"</span>,</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span> <span class="fu">scale_linetype</span>(<span class="st">"Type"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Skeptical prior"</span>)</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>diff_prior <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rbbinom</span>(<span class="fl">1e+06</span>, <span class="at">size =</span> <span class="fu">ceiling</span>(n_1), a_1,</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>    b_1)<span class="sc">/</span><span class="fu">ceiling</span>(n_1) <span class="sc">-</span> <span class="fu">rbbinom</span>(<span class="fl">1e+06</span>, <span class="at">size =</span> <span class="fu">ceiling</span>(n_0), a_0, b_0)<span class="sc">/</span><span class="fu">ceiling</span>(n_0))</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>fig2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(diff_prior, <span class="fu">aes</span>(x)) <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>, <span class="at">bw=</span><span class="fl">0.1</span>) <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Difference from prior predictive distribution"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Distribution of difference from prior predictive distribution"</span>) <span class="sc">+</span></span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Density"</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept=</span>delta_star, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.25</span>, <span class="fl">0.035</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>), </span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.25</span>, <span class="fl">0.035</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>),</span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>))</span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>cowplot<span class="sc">::</span><span class="fu">plot_grid</span>(fig1, fig2, <span class="at">align =</span> <span class="st">"h"</span>, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="01-NI_files/figure-html/fig14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Informative prior</strong>: The beta prior for the active treatment arm and control arm is centered at 0.01 (the expected event proportion) with <span class="math inline">\(P(\pi_1\leq 0.05)=0.01\)</span> and <span class="math inline">\(P(\pi_1\leq 0.05)=0.05\)</span>.</p>
 <ul>
 <li>Parameters of beta prior for active treatment arm: <span class="math inline">\(a_1=0.8\)</span>, <span class="math inline">\(b_1=79.2\)</span>.</li>
 <li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_0=0.03\)</span>, <span class="math inline">\(b_0=2.97\)</span>.</li>
@@ -1159,69 +1261,45 @@ E(\tilde Y_i)=n_i\frac{a_i}{a_i+b_i}, \quad \sigma_{i,\pi_i}^2=\frac{\left(a_i+\
 <div class="cell">
 <details>
 <summary>Show R code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>, <span class="fl">0.999</span>, <span class="fl">0.001</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Enthusiastic</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">-</span>p_1)<span class="sc">/</span>p_1<span class="sc">*</span>a_1</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.03</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">-</span>p_0)<span class="sc">/</span>p_0<span class="sc">*</span>a_0</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.01</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">-</span>p_1)<span class="sc">/</span>p_1<span class="sc">*</span>a_1</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.02</span></span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">-</span>p_0)<span class="sc">/</span>p_0<span class="sc">*</span>a_0</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>prior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0, b_0)</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>prior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1, b_1)</span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>posterior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0<span class="sc">+</span>n_0<span class="sc">*</span>p_0, b_0<span class="sc">+</span>n_0<span class="sc">-</span>n_0<span class="sc">*</span>p_0)</span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>posterior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1<span class="sc">+</span>n_1<span class="sc">*</span>p_1, b_1<span class="sc">+</span>n_1<span class="sc">-</span>n_1<span class="sc">*</span>p_1)</span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>var_posterior_0 <span class="ot">&lt;-</span> ((a_0<span class="sc">+</span>n_0<span class="sc">*</span>p_0)<span class="sc">*</span>(b_0<span class="sc">+</span>n_0<span class="sc">-</span>n_0<span class="sc">*</span>p_0))<span class="sc">/</span>((a_0<span class="sc">+</span>b_0<span class="sc">+</span>n_0)<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>(a_0<span class="sc">+</span>b_0<span class="sc">+</span>n_0<span class="sc">+</span><span class="dv">1</span>))</span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>var_posterior_1 <span class="ot">&lt;-</span> ((a_1<span class="sc">+</span>n_1<span class="sc">*</span>p_1)<span class="sc">*</span>(b_1<span class="sc">+</span>n_1<span class="sc">-</span>n_1<span class="sc">*</span>p_1))<span class="sc">/</span>((a_1<span class="sc">+</span>b_1<span class="sc">+</span>n_1)<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>(a_1<span class="sc">+</span>b_1<span class="sc">+</span>n_1<span class="sc">+</span><span class="dv">1</span>))</span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>prior_plot <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, prior_0, prior_1, posterior_0, posterior_1)</span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>prior_plot_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(prior_plot, <span class="at">cols=</span><span class="fu">c</span>(prior_0, prior_1, posterior_0, posterior_1))</span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"posterior"</span>)<span class="sc">==</span>T, <span class="st">"Posterior"</span>, <span class="st">"Prior"</span>)</span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"_0"</span>)<span class="sc">==</span>T, <span class="st">"Treatment arm 0"</span>, <span class="st">"Treatment arm 1"</span>)</span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(prior_plot_long, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>value, <span class="at">linetype=</span>type, <span class="at">colour=</span>group))<span class="sc">+</span><span class="fu">geom_line</span>()<span class="sc">+</span><span class="fu">theme_bw</span>()<span class="sc">+</span><span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(), <span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.direction =</span> <span class="st">"vertical"</span>)<span class="sc">+</span><span class="fu">scale_x_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>))<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Density"</span>)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">caption=</span><span class="fu">str_glue</span>(<span class="st">"Assumed event probabilities: Arm 0 (p_0="</span>, p_0, <span class="st">"), "</span>, <span class="st">"Arm 1 (p_1="</span>, p_1, <span class="st">")</span><span class="sc">\n</span><span class="st">Posterior standard deviation: Arm 0="</span>, <span class="fu">round</span>(<span class="fu">sqrt</span>(var_posterior_0), <span class="dv">3</span>), <span class="st">", "</span>, <span class="st">"Arm 1="</span>, <span class="fu">round</span>(<span class="fu">sqrt</span>(var_posterior_1), <span class="dv">3</span>)))<span class="sc">+</span><span class="fu">scale_color_brewer</span>(<span class="st">"Treatment arm"</span>, <span class="at">palette=</span><span class="st">"Set2"</span>)<span class="sc">+</span><span class="fu">scale_linetype</span>(<span class="st">"Type"</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Enthusiastic prior"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>, <span class="fl">0.999</span>, <span class="fl">0.001</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Informative prior</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.03</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>prior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0, b_0)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>prior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1, b_1)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>prior_plot <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, prior_0, prior_1)</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>prior_plot_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(prior_plot, <span class="at">cols =</span> <span class="fu">c</span>(prior_0, prior_1))</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"_0"</span>) <span class="sc">==</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>    T, <span class="st">"Treatment arm 0"</span>, <span class="st">"Treatment arm 1"</span>)</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>fig1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(prior_plot_long, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> value, <span class="at">colour =</span> group)) <span class="sc">+</span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>) <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>) <span class="sc">+</span> <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.1</span>)) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Density"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">caption =</span> <span class="fu">str_glue</span>(<span class="st">"Assumed event probabilities: Arm 0 (p_0="</span>,</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>    p_0, <span class="st">"), "</span>, <span class="st">"Arm 1 (p_1="</span>, p_1, <span class="st">")"</span>)) <span class="sc">+</span> <span class="fu">scale_color_brewer</span>(<span class="st">"Treatment arm"</span>,</span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span> <span class="fu">scale_linetype</span>(<span class="st">"Type"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Informative prior"</span>)</span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>diff_prior <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rbbinom</span>(<span class="fl">1e+06</span>, <span class="at">size =</span> <span class="fu">ceiling</span>(n_1), a_1,</span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>    b_1)<span class="sc">/</span><span class="fu">ceiling</span>(n_1) <span class="sc">-</span> <span class="fu">rbbinom</span>(<span class="fl">1e+06</span>, <span class="at">size =</span> <span class="fu">ceiling</span>(n_0), a_0, b_0)<span class="sc">/</span><span class="fu">ceiling</span>(n_0))</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>fig2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(diff_prior, <span class="fu">aes</span>(x)) <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>, <span class="at">bw=</span><span class="fl">0.1</span>) <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Difference from prior predictive distribution"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Distribution of difference from prior predictive distribution"</span>) <span class="sc">+</span></span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Density"</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept=</span>delta_star, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.25</span>, <span class="fl">0.035</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>), </span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.25</span>, <span class="fl">0.035</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>),</span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>))</span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>cowplot<span class="sc">::</span><span class="fu">plot_grid</span>(fig1, fig2, <span class="at">align =</span> <span class="st">"h"</span>, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="01-NI_files/figure-html/fig15-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p><strong>Skeptical prior</strong>: The beta prior for the active treatment arm is centered at 0.05 (the upper margin for safety) with <span class="math inline">\(P(\pi_1\leq 0.01)=0.025\)</span>. The mean of the beta prior for the control arm is chosen such that the mean difference between both priors lies on the non-inferiority margin and <span class="math inline">\(P(\pi_0&gt; 0.05)=0.025\)</span>.</p>
-<ul>
-<li>Parameters of beta prior for active treatment arm: <span class="math inline">\(a_1=2.84\)</span>, <span class="math inline">\(b_1=53.96\)</span>.</li>
-<li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_i=1.24\)</span>, <span class="math inline">\(b_i=81.43\)</span>.</li>
-</ul>
-<div class="cell">
-<details>
-<summary>Show R code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>,<span class="fl">0.999</span>,<span class="fl">0.001</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Skeptical</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">2.84</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="fl">-0.05</span>)<span class="sc">/</span><span class="fl">0.05</span><span class="sc">*</span>a_1</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">1.24</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="fl">-0.015</span>)<span class="sc">/</span><span class="fl">0.015</span><span class="sc">*</span>a_0</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>prior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0, b_0)</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>prior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1, b_1)</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>posterior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0<span class="sc">+</span>n_0<span class="sc">*</span>p_0, b_0<span class="sc">+</span>n_0<span class="sc">-</span>n_0<span class="sc">*</span>p_0)</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>posterior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1<span class="sc">+</span>n_1<span class="sc">*</span>p_1, b_1<span class="sc">+</span>n_1<span class="sc">-</span>n_1<span class="sc">*</span>p_1)</span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>var_posterior_0 <span class="ot">&lt;-</span> ((a_0<span class="sc">+</span>n_0<span class="sc">*</span>p_0)<span class="sc">*</span>(b_0<span class="sc">+</span>n_0<span class="sc">-</span>n_0<span class="sc">*</span>p_0))<span class="sc">/</span>((a_0<span class="sc">+</span>b_0<span class="sc">+</span>n_0)<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>(a_0<span class="sc">+</span>b_0<span class="sc">+</span>n_0<span class="sc">+</span><span class="dv">1</span>))</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>var_posterior_1 <span class="ot">&lt;-</span> ((a_1<span class="sc">+</span>n_1<span class="sc">*</span>p_1)<span class="sc">*</span>(b_1<span class="sc">+</span>n_1<span class="sc">-</span>n_1<span class="sc">*</span>p_1))<span class="sc">/</span>((a_1<span class="sc">+</span>b_1<span class="sc">+</span>n_1)<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>(a_1<span class="sc">+</span>b_1<span class="sc">+</span>n_1<span class="sc">+</span><span class="dv">1</span>))</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>prior_plot <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, prior_0, prior_1, posterior_0, posterior_1)</span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>prior_plot_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(prior_plot, <span class="at">cols=</span><span class="fu">c</span>(prior_0, prior_1, posterior_0, posterior_1))</span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"posterior"</span>)<span class="sc">==</span>T, <span class="st">"Posterior"</span>, <span class="st">"Prior"</span>)</span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"_0"</span>)<span class="sc">==</span>T, <span class="st">"Treatment arm 0"</span>, <span class="st">"Treatment arm 1"</span>)</span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(prior_plot_long, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>value, <span class="at">linetype=</span>type, <span class="at">colour=</span>group))<span class="sc">+</span><span class="fu">geom_line</span>()<span class="sc">+</span><span class="fu">theme_bw</span>()<span class="sc">+</span><span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(), <span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.direction =</span> <span class="st">"vertical"</span>)<span class="sc">+</span><span class="fu">scale_x_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>))<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Density"</span>)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">caption=</span><span class="fu">str_glue</span>(<span class="st">"Expected event probabilities: Arm 0 (p_0="</span>, p_0, <span class="st">"), "</span>, <span class="st">"Arm 1 (p_1="</span>, p_1, <span class="st">")</span><span class="sc">\n</span><span class="st">Posterior standard deviation: Arm 0="</span>, <span class="fu">round</span>(<span class="fu">sqrt</span>(var_posterior_0), <span class="dv">3</span>), <span class="st">", "</span>, <span class="st">"Arm 1="</span>, <span class="fu">round</span>(<span class="fu">sqrt</span>(var_posterior_1), <span class="dv">3</span>)))<span class="sc">+</span><span class="fu">scale_color_brewer</span>(<span class="st">"Treatment arm"</span>, <span class="at">palette=</span><span class="st">"Set2"</span>)<span class="sc">+</span><span class="fu">scale_linetype</span>(<span class="st">"Type"</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Skeptical prior"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p><strong>Noninformative prior</strong>: Uniform prior for both, the active treatment arm and control arm.</p>
@@ -1232,203 +1310,295 @@ E(\tilde Y_i)=n_i\frac{a_i}{a_i+b_i}, \quad \sigma_{i,\pi_i}^2=\frac{\left(a_i+\
 <div class="cell">
 <details>
 <summary>Show R code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Uniform</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>prior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0, b_0)</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>prior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1, b_1)</span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>posterior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0<span class="sc">+</span>n_0<span class="sc">*</span>p_0, b_0<span class="sc">+</span>n_0<span class="sc">-</span>n_0<span class="sc">*</span>p_0)</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>posterior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1<span class="sc">+</span>n_1<span class="sc">*</span>p_1, b_1<span class="sc">+</span>n_1<span class="sc">-</span>n_1<span class="sc">*</span>p_1)</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>var_posterior_0 <span class="ot">&lt;-</span> ((a_0<span class="sc">+</span>n_0<span class="sc">*</span>p_0)<span class="sc">*</span>(b_0<span class="sc">+</span>n_0<span class="sc">-</span>n_0<span class="sc">*</span>p_0))<span class="sc">/</span>((a_0<span class="sc">+</span>b_0<span class="sc">+</span>n_0)<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>(a_0<span class="sc">+</span>b_0<span class="sc">+</span>n_0<span class="sc">+</span><span class="dv">1</span>))</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>var_posterior_1 <span class="ot">&lt;-</span> ((a_1<span class="sc">+</span>n_1<span class="sc">*</span>p_1)<span class="sc">*</span>(b_1<span class="sc">+</span>n_1<span class="sc">-</span>n_1<span class="sc">*</span>p_1))<span class="sc">/</span>((a_1<span class="sc">+</span>b_1<span class="sc">+</span>n_1)<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>(a_1<span class="sc">+</span>b_1<span class="sc">+</span>n_1<span class="sc">+</span><span class="dv">1</span>))</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>prior_plot <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, prior_0, prior_1, posterior_0, posterior_1)</span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>prior_plot_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(prior_plot, <span class="at">cols=</span><span class="fu">c</span>(prior_0, prior_1, posterior_0, posterior_1))</span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"posterior"</span>)<span class="sc">==</span>T, <span class="st">"Posterior"</span>, <span class="st">"Prior"</span>)</span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"_0"</span>)<span class="sc">==</span>T, <span class="st">"Treatment arm 0"</span>, <span class="st">"Treatment arm 1"</span>)</span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(prior_plot_long, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>value, <span class="at">linetype=</span>type, <span class="at">colour=</span>group))<span class="sc">+</span><span class="fu">geom_line</span>()<span class="sc">+</span><span class="fu">theme_bw</span>()<span class="sc">+</span><span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(), <span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.direction =</span> <span class="st">"vertical"</span>)<span class="sc">+</span><span class="fu">scale_x_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>))<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Density"</span>)<span class="sc">+</span><span class="fu">labs</span>(<span class="at">caption=</span><span class="fu">str_glue</span>(<span class="st">"Assumed event probabilities: Arm 0 (p_0="</span>, p_0, <span class="st">"), "</span>, <span class="st">"Arm 1 (p_1="</span>, p_1, <span class="st">")</span><span class="sc">\n</span><span class="st">Posterior standard deviation: Arm 0="</span>, <span class="fu">round</span>(<span class="fu">sqrt</span>(var_posterior_0), <span class="dv">3</span>), <span class="st">", "</span>, <span class="st">"Arm 1="</span>, <span class="fu">round</span>(<span class="fu">sqrt</span>(var_posterior_1), <span class="dv">3</span>)))<span class="sc">+</span><span class="fu">scale_color_brewer</span>(<span class="st">"Treatment arm"</span>, <span class="at">palette=</span><span class="st">"Set2"</span>)<span class="sc">+</span><span class="fu">scale_linetype</span>(<span class="st">"Type"</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Noninformative prior"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Noninformative prior</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>prior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0, b_0)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>prior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1, b_1)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>prior_plot <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, prior_0, prior_1)</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>prior_plot_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(prior_plot, <span class="at">cols =</span> <span class="fu">c</span>(prior_0, prior_1))</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"_0"</span>) <span class="sc">==</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    T, <span class="st">"Treatment arm 0"</span>, <span class="st">"Treatment arm 1"</span>)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>fig1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(prior_plot_long, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> value, <span class="at">colour =</span> group)) <span class="sc">+</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>) <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>) <span class="sc">+</span> <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.1</span>)) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Density"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">caption =</span> <span class="fu">str_glue</span>(<span class="st">"Assumed event probabilities: Arm 0 (p_0="</span>,</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    p_0, <span class="st">"), "</span>, <span class="st">"Arm 1 (p_1="</span>, p_1, <span class="st">")"</span>)) <span class="sc">+</span> <span class="fu">scale_color_brewer</span>(<span class="st">"Treatment arm"</span>,</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span> <span class="fu">scale_linetype</span>(<span class="st">"Type"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Noninformative prior"</span>)</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>diff_prior <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rbbinom</span>(<span class="fl">1e+06</span>, <span class="at">size =</span> <span class="fu">ceiling</span>(n_1), a_1,</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>    b_1)<span class="sc">/</span><span class="fu">ceiling</span>(n_1) <span class="sc">-</span> <span class="fu">rbbinom</span>(<span class="fl">1e+06</span>, <span class="at">size =</span> <span class="fu">ceiling</span>(n_0), a_0, b_0)<span class="sc">/</span><span class="fu">ceiling</span>(n_0))</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>fig2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(diff_prior, <span class="fu">aes</span>(x)) <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>, <span class="at">bw=</span><span class="fl">0.05</span>) <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Difference from prior predictive distribution"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Distribution of difference from prior predictive distribution"</span>) <span class="sc">+</span></span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Density"</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept=</span>delta_star, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.035</span>, <span class="fl">0.5</span>, <span class="dv">1</span>), </span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.035</span>, <span class="fl">0.5</span>, <span class="dv">1</span>),</span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>cowplot<span class="sc">::</span><span class="fu">plot_grid</span>(fig1, fig2, <span class="at">align =</span> <span class="st">"h"</span>, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig17-1.png" class="img-fluid" width="672"></p>
+<p><img src="01-NI_files/figure-html/fig16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <hr>
+<p>The calculation of the average power is easily done by simulation.</p>
 <section id="simulation-approach-1-joint-probability" class="level5" data-number="2.2.1.4.1">
 <h5 data-number="2.2.1.4.1" class="anchored" data-anchor-id="simulation-approach-1-joint-probability"><span class="header-section-number">2.2.1.4.1</span> Simulation approach 1: Joint probability</h5>
+<p>The joint probability approach has been described in <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span> and includes the following steps:</p>
+<ul>
+<li>Calculate the joint pdf <span class="math inline">\(p(r_1, r_0|n_1, n_0, a_1, a_0, b_1, b_0)=betabinom(r_1|n_1, a_1, b_1)\cdot betabinom(r_0|n_0, a_0, b_i0)\)</span> for all pairs <span class="math inline">\(r_i\in\{0, 1, \cdots, n_i\}\)</span>, <span class="math inline">\(i\in\{0,1\}\)</span>.</li>
+<li>The sum of the joint predictive probabilites over <span class="math inline">\(r_i\)</span> pairs where the <span class="math inline">\((1-\alpha)\)</span>-upper confidence limit of the risk difference is smaller than the non-inferiority margin is the average power.</li>
+</ul>
+<p>Here we use Agresti-Caffo confidence intervals for the risk difference <span class="citation" data-cites="Agresti2000">[<a href="references.html#ref-Agresti2000" role="doc-biblioref">8</a>]</span>.</p>
 <div class="cell">
 <details>
 <summary>Show R code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(extraDistr)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PropCIs)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Enthusiastic prior</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>p_1 <span class="ot">&lt;-</span> <span class="fl">0.01</span></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>p_0 <span class="ot">&lt;-</span> <span class="fl">0.01</span></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">-</span>p_1)<span class="sc">/</span>p_1<span class="sc">*</span>a_1</span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.03</span></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">-</span>p_0)<span class="sc">/</span>p_0<span class="sc">*</span>a_0</span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span></span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span></span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>data_points <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">r_1=</span>r_1, <span class="at">r_0=</span>r_0)</span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>pdf_r_1 <span class="ot">&lt;-</span> <span class="fu">dbbinom</span>(data_points<span class="sc">$</span>r_1, <span class="at">size=</span><span class="fu">ceiling</span>(n_1), a_1, b_1)</span>
-<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>pdf_r_0 <span class="ot">&lt;-</span> <span class="fu">dbbinom</span>(data_points<span class="sc">$</span>r_0, <span class="at">size=</span><span class="fu">ceiling</span>(n_0), a_0, b_0)</span>
-<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>joint_pdf <span class="ot">&lt;-</span> data_points<span class="sc">$</span>pdf_r_1<span class="sc">*</span>data_points<span class="sc">$</span>pdf_r_0</span>
-<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>sig <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data_points)) {</span>
-<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>sig[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">wald2ci</span>(data_points<span class="sc">$</span>r_1[i], n_1, data_points<span class="sc">$</span>r_0[i], n_0, <span class="at">conf.level=</span><span class="fl">0.95</span>, <span class="at">adjust=</span><span class="st">"AC"</span>)<span class="sc">$</span>conf.int[<span class="dv">2</span>]<span class="sc">&lt;=</span>delta_star, <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Enthusiastic"</span>, <span class="at">ap=</span><span class="fu">sum</span>(data_points<span class="sc">$</span>joint_pdf[data_points<span class="sc">$</span>sig<span class="sc">==</span><span class="dv">1</span>]))</span>
-<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a><span class="do">## Skeptical prior</span></span>
-<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">2.84</span></span>
-<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="fl">-0.05</span>)<span class="sc">/</span><span class="fl">0.05</span><span class="sc">*</span>a_1</span>
-<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">1.24</span></span>
-<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="fl">-0.015</span>)<span class="sc">/</span><span class="fl">0.015</span><span class="sc">*</span>a_0</span>
-<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span></span>
-<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span></span>
-<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>data_points <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">r_1=</span>r_1, <span class="at">r_0=</span>r_0)</span>
-<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>pdf_r_1 <span class="ot">&lt;-</span> <span class="fu">dbbinom</span>(data_points<span class="sc">$</span>r_1, <span class="at">size=</span><span class="fu">ceiling</span>(n_1), a_1, b_1)</span>
-<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>pdf_r_0 <span class="ot">&lt;-</span> <span class="fu">dbbinom</span>(data_points<span class="sc">$</span>r_0, <span class="at">size=</span><span class="fu">ceiling</span>(n_0), a_0, b_0)</span>
-<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>joint_pdf <span class="ot">&lt;-</span> data_points<span class="sc">$</span>pdf_r_1<span class="sc">*</span>data_points<span class="sc">$</span>pdf_r_0</span>
-<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>sig <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data_points)) {</span>
-<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>sig[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">wald2ci</span>(data_points<span class="sc">$</span>r_1[i], n_1, data_points<span class="sc">$</span>r_0[i], n_0, <span class="at">conf.level=</span><span class="fl">0.95</span>, <span class="at">adjust=</span><span class="st">"AC"</span>)<span class="sc">$</span>conf.int[<span class="dv">2</span>]<span class="sc">&lt;=</span>delta_star, <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-57"><a href="#cb25-57" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_ap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Skeptical"</span>, <span class="at">ap=</span><span class="fu">sum</span>(data_points<span class="sc">$</span>joint_pdf[data_points<span class="sc">$</span>sig<span class="sc">==</span><span class="dv">1</span>])))</span>
-<span id="cb25-58"><a href="#cb25-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-59"><a href="#cb25-59" aria-hidden="true" tabindex="-1"></a><span class="do">## Noninformative prior </span></span>
-<span id="cb25-60"><a href="#cb25-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-61"><a href="#cb25-61" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb25-62"><a href="#cb25-62" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb25-63"><a href="#cb25-63" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb25-64"><a href="#cb25-64" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb25-65"><a href="#cb25-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-66"><a href="#cb25-66" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span></span>
-<span id="cb25-67"><a href="#cb25-67" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span></span>
-<span id="cb25-68"><a href="#cb25-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-69"><a href="#cb25-69" aria-hidden="true" tabindex="-1"></a>data_points <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">r_1=</span>r_1, <span class="at">r_0=</span>r_0)</span>
-<span id="cb25-70"><a href="#cb25-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-71"><a href="#cb25-71" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb25-72"><a href="#cb25-72" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>pdf_r_1 <span class="ot">&lt;-</span> <span class="fu">dbbinom</span>(data_points<span class="sc">$</span>r_1, <span class="at">size=</span><span class="fu">ceiling</span>(n_1), a_1, b_1)</span>
-<span id="cb25-73"><a href="#cb25-73" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>pdf_r_0 <span class="ot">&lt;-</span> <span class="fu">dbbinom</span>(data_points<span class="sc">$</span>r_0, <span class="at">size=</span><span class="fu">ceiling</span>(n_0), a_0, b_0)</span>
-<span id="cb25-74"><a href="#cb25-74" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>joint_pdf <span class="ot">&lt;-</span> data_points<span class="sc">$</span>pdf_r_1<span class="sc">*</span>data_points<span class="sc">$</span>pdf_r_0</span>
-<span id="cb25-75"><a href="#cb25-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-76"><a href="#cb25-76" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>sig <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb25-77"><a href="#cb25-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-78"><a href="#cb25-78" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data_points)) {</span>
-<span id="cb25-79"><a href="#cb25-79" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>sig[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">wald2ci</span>(data_points<span class="sc">$</span>r_1[i], n_1, data_points<span class="sc">$</span>r_0[i], n_0, <span class="at">conf.level=</span><span class="fl">0.95</span>, <span class="at">adjust=</span><span class="st">"AC"</span>)<span class="sc">$</span>conf.int[<span class="dv">2</span>]<span class="sc">&lt;=</span>delta_star, <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb25-80"><a href="#cb25-80" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb25-81"><a href="#cb25-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-82"><a href="#cb25-82" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_ap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Noninformative prior"</span>, <span class="at">ap=</span><span class="fu">sum</span>(data_points<span class="sc">$</span>joint_pdf[data_points<span class="sc">$</span>sig<span class="sc">==</span><span class="dv">1</span>])))</span>
-<span id="cb25-83"><a href="#cb25-83" aria-hidden="true" tabindex="-1"></a>res_ap<span class="sc">$</span>ap <span class="ot">&lt;-</span> <span class="fu">round</span>(res_ap<span class="sc">$</span>ap, <span class="dv">2</span>)</span>
-<span id="cb25-84"><a href="#cb25-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-85"><a href="#cb25-85" aria-hidden="true" tabindex="-1"></a>res_ap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(extraDistr)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PropCIs)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Enthusiastic prior</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">3.14</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span>)<span class="sc">/</span><span class="fl">0.05</span> <span class="sc">*</span> a_0</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>data_points <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">r_1 =</span> r_1, <span class="at">r_0 =</span> r_0)</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>pdf_r_1 <span class="ot">&lt;-</span> <span class="fu">dbbinom</span>(data_points<span class="sc">$</span>r_1, <span class="at">size =</span> <span class="fu">ceiling</span>(n_1), a_1,</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>    b_1)</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>pdf_r_0 <span class="ot">&lt;-</span> <span class="fu">dbbinom</span>(data_points<span class="sc">$</span>r_0, <span class="at">size =</span> <span class="fu">ceiling</span>(n_0), a_0,</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>    b_0)</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>joint_pdf <span class="ot">&lt;-</span> data_points<span class="sc">$</span>pdf_r_1 <span class="sc">*</span> data_points<span class="sc">$</span>pdf_r_0</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>sig <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data_points)) {</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>    data_points<span class="sc">$</span>sig[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">wald2ci</span>(data_points<span class="sc">$</span>r_1[i], n_1, data_points<span class="sc">$</span>r_0[i],</span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>        n_0, <span class="at">conf.level =</span> <span class="fl">0.95</span>, <span class="at">adjust =</span> <span class="st">"AC"</span>)<span class="sc">$</span>conf.int[<span class="dv">2</span>] <span class="sc">&lt;=</span> delta_star,</span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>        <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Enthusiastic"</span>, </span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>                            <span class="at">ap =</span> <span class="fu">sum</span>(data_points<span class="sc">$</span>joint_pdf[data_points<span class="sc">$</span>sig <span class="sc">==</span> <span class="dv">1</span>]))</span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a><span class="do">## Skeptical prior</span></span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">2.84</span></span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span>)<span class="sc">/</span><span class="fl">0.05</span> <span class="sc">*</span> a_1</span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">1.24</span></span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.01</span>)<span class="sc">/</span><span class="fl">0.01</span> <span class="sc">*</span> a_0</span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span></span>
+<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span></span>
+<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>data_points <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">r_1 =</span> r_1, <span class="at">r_0 =</span> r_0)</span>
+<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>pdf_r_1 <span class="ot">&lt;-</span> <span class="fu">dbbinom</span>(data_points<span class="sc">$</span>r_1, <span class="at">size =</span> <span class="fu">ceiling</span>(n_1), a_1,</span>
+<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a>    b_1)</span>
+<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>pdf_r_0 <span class="ot">&lt;-</span> <span class="fu">dbbinom</span>(data_points<span class="sc">$</span>r_0, <span class="at">size =</span> <span class="fu">ceiling</span>(n_0), a_0,</span>
+<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a>    b_0)</span>
+<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>joint_pdf <span class="ot">&lt;-</span> data_points<span class="sc">$</span>pdf_r_1 <span class="sc">*</span> data_points<span class="sc">$</span>pdf_r_0</span>
+<span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-55"><a href="#cb26-55" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>sig <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb26-56"><a href="#cb26-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-57"><a href="#cb26-57" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data_points)) {</span>
+<span id="cb26-58"><a href="#cb26-58" aria-hidden="true" tabindex="-1"></a>    data_points<span class="sc">$</span>sig[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">wald2ci</span>(data_points<span class="sc">$</span>r_1[i], n_1, data_points<span class="sc">$</span>r_0[i],</span>
+<span id="cb26-59"><a href="#cb26-59" aria-hidden="true" tabindex="-1"></a>        n_0, <span class="at">conf.level =</span> <span class="fl">0.95</span>, <span class="at">adjust =</span> <span class="st">"AC"</span>)<span class="sc">$</span>conf.int[<span class="dv">2</span>] <span class="sc">&lt;=</span> delta_star,</span>
+<span id="cb26-60"><a href="#cb26-60" aria-hidden="true" tabindex="-1"></a>        <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb26-61"><a href="#cb26-61" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-62"><a href="#cb26-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-63"><a href="#cb26-63" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_ap, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Skeptical"</span>, </span>
+<span id="cb26-64"><a href="#cb26-64" aria-hidden="true" tabindex="-1"></a>                          <span class="at">ap =</span> <span class="fu">sum</span>(data_points<span class="sc">$</span>joint_pdf[data_points<span class="sc">$</span>sig <span class="sc">==</span> <span class="dv">1</span>])))</span>
+<span id="cb26-65"><a href="#cb26-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-66"><a href="#cb26-66" aria-hidden="true" tabindex="-1"></a><span class="do">## Informative prior</span></span>
+<span id="cb26-67"><a href="#cb26-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-68"><a href="#cb26-68" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb26-69"><a href="#cb26-69" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
+<span id="cb26-70"><a href="#cb26-70" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.03</span></span>
+<span id="cb26-71"><a href="#cb26-71" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
+<span id="cb26-72"><a href="#cb26-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-73"><a href="#cb26-73" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span></span>
+<span id="cb26-74"><a href="#cb26-74" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span></span>
+<span id="cb26-75"><a href="#cb26-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-76"><a href="#cb26-76" aria-hidden="true" tabindex="-1"></a>data_points <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">r_1 =</span> r_1, <span class="at">r_0 =</span> r_0)</span>
+<span id="cb26-77"><a href="#cb26-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-78"><a href="#cb26-78" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb26-79"><a href="#cb26-79" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>pdf_r_1 <span class="ot">&lt;-</span> <span class="fu">dbbinom</span>(data_points<span class="sc">$</span>r_1, <span class="at">size =</span> <span class="fu">ceiling</span>(n_1), a_1,</span>
+<span id="cb26-80"><a href="#cb26-80" aria-hidden="true" tabindex="-1"></a>    b_1)</span>
+<span id="cb26-81"><a href="#cb26-81" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>pdf_r_0 <span class="ot">&lt;-</span> <span class="fu">dbbinom</span>(data_points<span class="sc">$</span>r_0, <span class="at">size =</span> <span class="fu">ceiling</span>(n_0), a_0,</span>
+<span id="cb26-82"><a href="#cb26-82" aria-hidden="true" tabindex="-1"></a>    b_0)</span>
+<span id="cb26-83"><a href="#cb26-83" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>joint_pdf <span class="ot">&lt;-</span> data_points<span class="sc">$</span>pdf_r_1 <span class="sc">*</span> data_points<span class="sc">$</span>pdf_r_0</span>
+<span id="cb26-84"><a href="#cb26-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-85"><a href="#cb26-85" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>sig <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb26-86"><a href="#cb26-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-87"><a href="#cb26-87" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data_points)) {</span>
+<span id="cb26-88"><a href="#cb26-88" aria-hidden="true" tabindex="-1"></a>    data_points<span class="sc">$</span>sig[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">wald2ci</span>(data_points<span class="sc">$</span>r_1[i], n_1, data_points<span class="sc">$</span>r_0[i],</span>
+<span id="cb26-89"><a href="#cb26-89" aria-hidden="true" tabindex="-1"></a>        n_0, <span class="at">conf.level =</span> <span class="fl">0.95</span>, <span class="at">adjust =</span> <span class="st">"AC"</span>)<span class="sc">$</span>conf.int[<span class="dv">2</span>] <span class="sc">&lt;=</span> delta_star,</span>
+<span id="cb26-90"><a href="#cb26-90" aria-hidden="true" tabindex="-1"></a>        <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb26-91"><a href="#cb26-91" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-92"><a href="#cb26-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-93"><a href="#cb26-93" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_ap, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Informative"</span>, </span>
+<span id="cb26-94"><a href="#cb26-94" aria-hidden="true" tabindex="-1"></a>                          <span class="at">ap =</span> <span class="fu">sum</span>(data_points<span class="sc">$</span>joint_pdf[data_points<span class="sc">$</span>sig <span class="sc">==</span> <span class="dv">1</span>])))</span>
+<span id="cb26-95"><a href="#cb26-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-96"><a href="#cb26-96" aria-hidden="true" tabindex="-1"></a><span class="do">## Noninformative prior</span></span>
+<span id="cb26-97"><a href="#cb26-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-98"><a href="#cb26-98" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb26-99"><a href="#cb26-99" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb26-100"><a href="#cb26-100" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb26-101"><a href="#cb26-101" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb26-102"><a href="#cb26-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-103"><a href="#cb26-103" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span></span>
+<span id="cb26-104"><a href="#cb26-104" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span></span>
+<span id="cb26-105"><a href="#cb26-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-106"><a href="#cb26-106" aria-hidden="true" tabindex="-1"></a>data_points <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">r_1 =</span> r_1, <span class="at">r_0 =</span> r_0)</span>
+<span id="cb26-107"><a href="#cb26-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-108"><a href="#cb26-108" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb26-109"><a href="#cb26-109" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>pdf_r_1 <span class="ot">&lt;-</span> <span class="fu">dbbinom</span>(data_points<span class="sc">$</span>r_1, <span class="at">size =</span> <span class="fu">ceiling</span>(n_1), a_1,</span>
+<span id="cb26-110"><a href="#cb26-110" aria-hidden="true" tabindex="-1"></a>    b_1)</span>
+<span id="cb26-111"><a href="#cb26-111" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>pdf_r_0 <span class="ot">&lt;-</span> <span class="fu">dbbinom</span>(data_points<span class="sc">$</span>r_0, <span class="at">size =</span> <span class="fu">ceiling</span>(n_0), a_0,</span>
+<span id="cb26-112"><a href="#cb26-112" aria-hidden="true" tabindex="-1"></a>    b_0)</span>
+<span id="cb26-113"><a href="#cb26-113" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>joint_pdf <span class="ot">&lt;-</span> data_points<span class="sc">$</span>pdf_r_1 <span class="sc">*</span> data_points<span class="sc">$</span>pdf_r_0</span>
+<span id="cb26-114"><a href="#cb26-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-115"><a href="#cb26-115" aria-hidden="true" tabindex="-1"></a>data_points<span class="sc">$</span>sig <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb26-116"><a href="#cb26-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-117"><a href="#cb26-117" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data_points)) {</span>
+<span id="cb26-118"><a href="#cb26-118" aria-hidden="true" tabindex="-1"></a>    data_points<span class="sc">$</span>sig[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">wald2ci</span>(data_points<span class="sc">$</span>r_1[i], n_1, data_points<span class="sc">$</span>r_0[i],</span>
+<span id="cb26-119"><a href="#cb26-119" aria-hidden="true" tabindex="-1"></a>        n_0, <span class="at">conf.level =</span> <span class="fl">0.95</span>, <span class="at">adjust =</span> <span class="st">"AC"</span>)<span class="sc">$</span>conf.int[<span class="dv">2</span>] <span class="sc">&lt;=</span> delta_star,</span>
+<span id="cb26-120"><a href="#cb26-120" aria-hidden="true" tabindex="-1"></a>        <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb26-121"><a href="#cb26-121" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-122"><a href="#cb26-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-123"><a href="#cb26-123" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_ap, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Noninformative prior"</span>, </span>
+<span id="cb26-124"><a href="#cb26-124" aria-hidden="true" tabindex="-1"></a>                          <span class="at">ap =</span> <span class="fu">sum</span>(data_points<span class="sc">$</span>joint_pdf[data_points<span class="sc">$</span>sig <span class="sc">==</span> <span class="dv">1</span>])))</span>
+<span id="cb26-125"><a href="#cb26-125" aria-hidden="true" tabindex="-1"></a>res_ap<span class="sc">$</span>ap <span class="ot">&lt;-</span> <span class="fu">round</span>(res_ap<span class="sc">$</span>ap, <span class="dv">2</span>)</span>
+<span id="cb26-126"><a href="#cb26-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-127"><a href="#cb26-127" aria-hidden="true" tabindex="-1"></a>res_ap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  type   ap
-1         Enthusiastic 0.55
-2            Skeptical 0.11
-3 Noninformative prior 0.43</code></pre>
+1         Enthusiastic 0.83
+2            Skeptical 0.09
+3          Informative 0.55
+4 Noninformative prior 0.43</code></pre>
 </div>
 </div>
 </section>
-<section id="simulation-approach-2-direct-sampling-from-predictive-distribution" class="level5" data-number="2.2.1.4.2">
-<h5 data-number="2.2.1.4.2" class="anchored" data-anchor-id="simulation-approach-2-direct-sampling-from-predictive-distribution"><span class="header-section-number">2.2.1.4.2</span> Simulation approach 2: Direct sampling from predictive distribution</h5>
+<section id="simulation-approach-2-direct-sampling-from-prior-predictive-distribution" class="level5" data-number="2.2.1.4.2">
+<h5 data-number="2.2.1.4.2" class="anchored" data-anchor-id="simulation-approach-2-direct-sampling-from-prior-predictive-distribution"><span class="header-section-number">2.2.1.4.2</span> Simulation approach 2: Direct sampling from prior predictive distribution</h5>
+<p>The second simulation approach samples <span class="math inline">\(q\)</span> event outcomes from the predictive distribution and calculates whether the <span class="math inline">\((1-\alpha)\)</span>-upper confidence limit of the risk difference is smaller than the non-inferiority margin. The sum of positive outcomes divided by the number of samples <span class="math inline">\(q\)</span> gives the average power. Also here we use Agresti-Caffo confidence intervals for the risk difference <span class="citation" data-cites="Agresti2000">[<a href="references.html#ref-Agresti2000" role="doc-biblioref">8</a>]</span>.</p>
 <div class="cell">
 <details>
 <summary>Show R code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Enthusiastic prior</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">-</span>p_1)<span class="sc">/</span>p_1<span class="sc">*</span>a_1</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.03</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">-</span>p_0)<span class="sc">/</span>p_0<span class="sc">*</span>a_0</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(<span class="dv">10000</span>, <span class="at">size=</span><span class="fu">ceiling</span>(n_1), a_1, b_1)</span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(<span class="dv">10000</span>, <span class="at">size=</span><span class="fu">ceiling</span>(n_0), a_0, b_0)</span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(r_1)) {</span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">c</span>(res, <span class="fu">ifelse</span>(<span class="fu">wald2ci</span>(r_1[i], n_1, r_0[i], n_0, <span class="at">conf.level=</span><span class="fl">0.95</span>, <span class="at">adjust=</span><span class="st">"AC"</span>)<span class="sc">$</span>conf.int[<span class="dv">2</span>]<span class="sc">&lt;=</span>delta_star, <span class="dv">1</span>, <span class="dv">0</span>))</span>
-<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Enthusiastic"</span>, <span class="at">ap=</span><span class="fu">sum</span>(res)<span class="sc">/</span><span class="dv">10000</span>)</span>
-<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Skeptical prior</span></span>
-<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">2.84</span></span>
-<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="fl">-0.05</span>)<span class="sc">/</span><span class="fl">0.05</span><span class="sc">*</span>a_1</span>
-<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">1.24</span></span>
-<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="fl">-0.015</span>)<span class="sc">/</span><span class="fl">0.015</span><span class="sc">*</span>a_0</span>
-<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(<span class="dv">10000</span>, <span class="at">size=</span><span class="fu">ceiling</span>(n_1), a_1, b_1)</span>
-<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(<span class="dv">10000</span>, <span class="at">size=</span><span class="fu">ceiling</span>(n_0), a_0, b_0)</span>
-<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
-<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(r_1)) {</span>
-<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">c</span>(res, <span class="fu">ifelse</span>(<span class="fu">wald2ci</span>(r_1[i], n_1, r_0[i], n_0, <span class="at">conf.level=</span><span class="fl">0.95</span>, <span class="at">adjust=</span><span class="st">"AC"</span>)<span class="sc">$</span>conf.int[<span class="dv">2</span>]<span class="sc">&lt;=</span>delta_star, <span class="dv">1</span>, <span class="dv">0</span>))</span>
-<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_ap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Skeptical"</span>, <span class="at">ap=</span><span class="fu">sum</span>(res)<span class="sc">/</span><span class="dv">10000</span>))</span>
-<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a><span class="do">## Noninformative prior</span></span>
-<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-44"><a href="#cb27-44" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb27-45"><a href="#cb27-45" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb27-47"><a href="#cb27-47" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb27-48"><a href="#cb27-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-49"><a href="#cb27-49" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb27-50"><a href="#cb27-50" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(<span class="dv">10000</span>, <span class="at">size=</span><span class="fu">ceiling</span>(n_1), a_1, b_1)</span>
-<span id="cb27-51"><a href="#cb27-51" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(<span class="dv">10000</span>, <span class="at">size=</span><span class="fu">ceiling</span>(n_0), a_0, b_0)</span>
-<span id="cb27-52"><a href="#cb27-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-53"><a href="#cb27-53" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
-<span id="cb27-54"><a href="#cb27-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-55"><a href="#cb27-55" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(r_1)) {</span>
-<span id="cb27-56"><a href="#cb27-56" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">c</span>(res, <span class="fu">ifelse</span>(<span class="fu">wald2ci</span>(r_1[i], n_1, r_0[i], n_0, <span class="at">conf.level=</span><span class="fl">0.95</span>, <span class="at">adjust=</span><span class="st">"AC"</span>)<span class="sc">$</span>conf.int[<span class="dv">2</span>]<span class="sc">&lt;=</span>delta_star, <span class="dv">1</span>, <span class="dv">0</span>))</span>
-<span id="cb27-57"><a href="#cb27-57" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb27-58"><a href="#cb27-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-59"><a href="#cb27-59" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_ap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Noninformative"</span>, <span class="at">ap=</span><span class="fu">sum</span>(res)<span class="sc">/</span><span class="dv">10000</span>))</span>
-<span id="cb27-60"><a href="#cb27-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-61"><a href="#cb27-61" aria-hidden="true" tabindex="-1"></a>res_ap<span class="sc">$</span>ap <span class="ot">&lt;-</span> <span class="fu">round</span>(res_ap<span class="sc">$</span>ap, <span class="dv">2</span>)</span>
-<span id="cb27-62"><a href="#cb27-62" aria-hidden="true" tabindex="-1"></a>res_ap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of draws</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Enthusiastic prior</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">3.14</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span>)<span class="sc">/</span><span class="fl">0.05</span> <span class="sc">*</span> a_0</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(q, <span class="at">size =</span> <span class="fu">ceiling</span>(n_1), a_1, b_1)</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(q, <span class="at">size =</span> <span class="fu">ceiling</span>(n_0), a_0, b_0)</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(r_1)) {</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">c</span>(res, <span class="fu">ifelse</span>(<span class="fu">wald2ci</span>(r_1[i], n_1, r_0[i], n_0, <span class="at">conf.level =</span> <span class="fl">0.95</span>,</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">adjust =</span> <span class="st">"AC"</span>)<span class="sc">$</span>conf.int[<span class="dv">2</span>] <span class="sc">&lt;=</span> delta_star, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Enthusiastic"</span>, <span class="at">ap =</span> <span class="fu">sum</span>(res)<span class="sc">/</span>q)</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a><span class="do">## Skeptical prior</span></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">2.84</span></span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span>)<span class="sc">/</span><span class="fl">0.05</span> <span class="sc">*</span> a_1</span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">1.24</span></span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(q, <span class="at">size =</span> <span class="fu">ceiling</span>(n_1), a_1, b_1)</span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(q, <span class="at">size =</span> <span class="fu">ceiling</span>(n_0), a_0, b_0)</span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(r_1)) {</span>
+<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">c</span>(res, <span class="fu">ifelse</span>(<span class="fu">wald2ci</span>(r_1[i], n_1, r_0[i], n_0, <span class="at">conf.level =</span> <span class="fl">0.95</span>,</span>
+<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a>        <span class="at">adjust =</span> <span class="st">"AC"</span>)<span class="sc">$</span>conf.int[<span class="dv">2</span>] <span class="sc">&lt;=</span> delta_star, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_ap, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Skeptical"</span>, <span class="at">ap =</span> <span class="fu">sum</span>(res)<span class="sc">/</span>q))</span>
+<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a><span class="do">## Informative prior</span></span>
+<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-48"><a href="#cb28-48" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb28-49"><a href="#cb28-49" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
+<span id="cb28-50"><a href="#cb28-50" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.03</span></span>
+<span id="cb28-51"><a href="#cb28-51" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
+<span id="cb28-52"><a href="#cb28-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-53"><a href="#cb28-53" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb28-54"><a href="#cb28-54" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(q, <span class="at">size =</span> <span class="fu">ceiling</span>(n_1), a_1, b_1)</span>
+<span id="cb28-55"><a href="#cb28-55" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(q, <span class="at">size =</span> <span class="fu">ceiling</span>(n_0), a_0, b_0)</span>
+<span id="cb28-56"><a href="#cb28-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-57"><a href="#cb28-57" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb28-58"><a href="#cb28-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-59"><a href="#cb28-59" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(r_1)) {</span>
+<span id="cb28-60"><a href="#cb28-60" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">c</span>(res, <span class="fu">ifelse</span>(<span class="fu">wald2ci</span>(r_1[i], n_1, r_0[i], n_0, <span class="at">conf.level =</span> <span class="fl">0.95</span>,</span>
+<span id="cb28-61"><a href="#cb28-61" aria-hidden="true" tabindex="-1"></a>        <span class="at">adjust =</span> <span class="st">"AC"</span>)<span class="sc">$</span>conf.int[<span class="dv">2</span>] <span class="sc">&lt;=</span> delta_star, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb28-62"><a href="#cb28-62" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-63"><a href="#cb28-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-64"><a href="#cb28-64" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_ap, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Informative"</span>, <span class="at">ap =</span> <span class="fu">sum</span>(res)<span class="sc">/</span>q))</span>
+<span id="cb28-65"><a href="#cb28-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-66"><a href="#cb28-66" aria-hidden="true" tabindex="-1"></a><span class="do">## Noninformative prior</span></span>
+<span id="cb28-67"><a href="#cb28-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-68"><a href="#cb28-68" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb28-69"><a href="#cb28-69" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb28-70"><a href="#cb28-70" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb28-71"><a href="#cb28-71" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb28-72"><a href="#cb28-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-73"><a href="#cb28-73" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb28-74"><a href="#cb28-74" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(q, <span class="at">size =</span> <span class="fu">ceiling</span>(n_1), a_1, b_1)</span>
+<span id="cb28-75"><a href="#cb28-75" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(q, <span class="at">size =</span> <span class="fu">ceiling</span>(n_0), a_0, b_0)</span>
+<span id="cb28-76"><a href="#cb28-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-77"><a href="#cb28-77" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb28-78"><a href="#cb28-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-79"><a href="#cb28-79" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(r_1)) {</span>
+<span id="cb28-80"><a href="#cb28-80" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">c</span>(res, <span class="fu">ifelse</span>(<span class="fu">wald2ci</span>(r_1[i], n_1, r_0[i], n_0, <span class="at">conf.level =</span> <span class="fl">0.95</span>,</span>
+<span id="cb28-81"><a href="#cb28-81" aria-hidden="true" tabindex="-1"></a>        <span class="at">adjust =</span> <span class="st">"AC"</span>)<span class="sc">$</span>conf.int[<span class="dv">2</span>] <span class="sc">&lt;=</span> delta_star, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb28-82"><a href="#cb28-82" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-83"><a href="#cb28-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-84"><a href="#cb28-84" aria-hidden="true" tabindex="-1"></a>res_ap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_ap, <span class="fu">data.frame</span>(<span class="at">type =</span> <span class="st">"Noninformative"</span>, <span class="at">ap =</span> <span class="fu">sum</span>(res)<span class="sc">/</span>q))</span>
+<span id="cb28-85"><a href="#cb28-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-86"><a href="#cb28-86" aria-hidden="true" tabindex="-1"></a>res_ap<span class="sc">$</span>ap <span class="ot">&lt;-</span> <span class="fu">round</span>(res_ap<span class="sc">$</span>ap, <span class="dv">2</span>)</span>
+<span id="cb28-87"><a href="#cb28-87" aria-hidden="true" tabindex="-1"></a>res_ap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>            type   ap
-1   Enthusiastic 0.55
-2      Skeptical 0.11
-3 Noninformative 0.42</code></pre>
+1   Enthusiastic 0.83
+2      Skeptical 0.09
+3    Informative 0.55
+4 Noninformative 0.42</code></pre>
 </div>
 </div>
 </section>
@@ -1440,14 +1610,192 @@ p_i|\pi_i \sim Beta\left(a_i+\sum_{k\leq n_i}Y_{i,k},b_i+n_i-\sum_{k\leq n_i}Y_{
 \]</span> with <span class="math display">\[
 \mu_{i,\pi_i}:=E(p_i|\pi_i)=\frac{a_i+\sum_{k\leq n_i}Y_{i,k}}{a_i+b_i+n_i}, \quad \sigma_{i,\pi_i}^2:=Var(p_i|\pi_i)=\frac{\left(a_i+\sum_{k\leq n_i}Y_{i,k}\right)\left(b_i+n_i-\sum_{k\leq n_i}Y_{i,k}\right)}{(a_i+b_i+n_i)^2(a_i+b_i+n_i+1)}.
 \]</span></p>
-<p>$$</p>
-<p>$$</p>
-<p>Denote the random variable <span class="math inline">\(D^\pi:=p_1|\pi_1-p_0|\pi_0\)</span> and <span class="math inline">\(\delta^\pi:=\mu_{1,\pi_1}-\mu_{0,\pi_0}\)</span>, then, since <span class="math inline">\(D_\pi \sim N(\delta^\pi, \sigma_{1,\pi_1}^2+\sigma_{0,\pi_0}^2)\)</span>, one gets a significant result if <span class="math display">\[
-D^\pi+z_{1-\alpha}\sqrt{\sigma_{1,\pi_1}^2+\sigma_{0,\pi_0}^2}\leq \delta^*.
-\]</span> Denote <span class="math inline">\(D^\pi_{suc}:=-z_{1-\alpha}\sqrt{\sigma_{1,\pi_1}^2+\sigma_{0,\pi_0}^2}+\delta^*\)</span></p>
-<p>Then <span class="math display">\[
-P(D^\pi\leq D^\pi_{suc}|\delta^\pi)=\Phi\left( z_{1-\alpha} -\frac{\delta^\pi-\delta^*}{\sqrt{\sigma_{1,\pi_1}^2+\sigma_{0,\pi_0}^2}}\right)
-\]</span></p>
+<hr>
+<p><strong>Working example (continued)</strong></p>
+<p>We use the same prior specifications as from the former subsection for the analysis priors.</p>
+<p><strong>Enthusiastic prior</strong>: The beta prior for the active treatment arm is centered at 0.01 (the expected event proportion) with <span class="math inline">\(P(\pi_1&gt; 0.05)=0.025\)</span>, that is, the probability that the prior is greater than the safety margin is 2.5%. The mean of the beta prior for the control arm is centered at 0.05 (the safety margin) with <span class="math inline">\(P(\pi_0\leq 0.01)=0.025\)</span>.</p>
+<ul>
+<li>Parameters of beta prior for active treatment arm: <span class="math inline">\(a_1=0.5\)</span>, <span class="math inline">\(b_1=49.5\)</span>.</li>
+<li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_0=3.14\)</span>, <span class="math inline">\(b_0=59.66\)</span>.</li>
+</ul>
+<div class="cell">
+<details>
+<summary>Show R code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>, <span class="fl">0.999</span>, <span class="fl">0.001</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Enthusiastic</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">3.14</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span>)<span class="sc">/</span><span class="fl">0.05</span> <span class="sc">*</span> a_0</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>prior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0, b_0)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>prior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1, b_1)</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>posterior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, b_0 <span class="sc">+</span> n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0)</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>posterior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1)</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>var_posterior_0 <span class="ot">&lt;-</span> ((a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0) <span class="sc">*</span> (b_0 <span class="sc">+</span> n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0))<span class="sc">/</span>((a_0 <span class="sc">+</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>    b_0 <span class="sc">+</span> n_0)<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (a_0 <span class="sc">+</span> b_0 <span class="sc">+</span> n_0 <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>var_posterior_1 <span class="ot">&lt;-</span> ((a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1) <span class="sc">*</span> (b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1))<span class="sc">/</span>((a_1 <span class="sc">+</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    b_1 <span class="sc">+</span> n_1)<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (a_1 <span class="sc">+</span> b_1 <span class="sc">+</span> n_1 <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>prior_plot <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, prior_0, prior_1, posterior_0, posterior_1)</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>prior_plot_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(prior_plot, <span class="at">cols =</span> <span class="fu">c</span>(prior_0, prior_1,</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>    posterior_0, posterior_1))</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"posterior"</span>) <span class="sc">==</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>    T, <span class="st">"Posterior"</span>, <span class="st">"Prior"</span>)</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"_0"</span>) <span class="sc">==</span></span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>    T, <span class="st">"Treatment arm 0"</span>, <span class="st">"Treatment arm 1"</span>)</span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(prior_plot_long, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> value, <span class="at">linetype =</span> type, <span class="at">colour =</span> group)) <span class="sc">+</span></span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.direction =</span> <span class="st">"vertical"</span>) <span class="sc">+</span> <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,</span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.1</span>)) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Density"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">caption =</span> <span class="fu">str_glue</span>(<span class="st">"Assumed event probabilities: Arm 0 (p_0="</span>,</span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>    p_0, <span class="st">"), "</span>, <span class="st">"Arm 1 (p_1="</span>, p_1, <span class="st">")</span><span class="sc">\n</span><span class="st">Posterior standard deviation: Arm 0="</span>,</span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">round</span>(<span class="fu">sqrt</span>(var_posterior_0), <span class="dv">3</span>), <span class="st">", "</span>, <span class="st">"Arm 1="</span>, <span class="fu">round</span>(<span class="fu">sqrt</span>(var_posterior_1),</span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a>        <span class="dv">3</span>))) <span class="sc">+</span> <span class="fu">scale_color_brewer</span>(<span class="st">"Treatment arm"</span>, <span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
+<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_linetype</span>(<span class="st">"Type"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Enthusiastic prior"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="01-NI_files/figure-html/fig19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Skeptical prior</strong>: The beta prior for the active treatment arm is centered at 0.05 (the safety margin) with <span class="math inline">\(P(\pi_1\leq 0.01)=0.025\)</span>, that is the probability that the prior is smaller or equal than the expected event proportion is 2.5%. The mean of the beta prior for the control arm is is centered at 0.01 (the expected event proportion) with <span class="math inline">\(P(\pi_0&gt; 0.05)=0.025\)</span>.</p>
+<ul>
+<li>Parameters of beta prior for active treatment arm: <span class="math inline">\(a_1=2.84\)</span>, <span class="math inline">\(b_1=53.96\)</span>.</li>
+<li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_i=1.24\)</span>, <span class="math inline">\(b_i=122.76\)</span>.</li>
+</ul>
+<div class="cell">
+<details>
+<summary>Show R code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>, <span class="fl">0.999</span>, <span class="fl">0.001</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Skeptical</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">2.84</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span>)<span class="sc">/</span><span class="fl">0.05</span> <span class="sc">*</span> a_1</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">1.24</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>prior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0, b_0)</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>prior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1, b_1)</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>posterior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, b_0 <span class="sc">+</span> n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0)</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>posterior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1)</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>var_posterior_0 <span class="ot">&lt;-</span> ((a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0) <span class="sc">*</span> (b_0 <span class="sc">+</span> n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0))<span class="sc">/</span>((a_0 <span class="sc">+</span></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>    b_0 <span class="sc">+</span> n_0)<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (a_0 <span class="sc">+</span> b_0 <span class="sc">+</span> n_0 <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>var_posterior_1 <span class="ot">&lt;-</span> ((a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1) <span class="sc">*</span> (b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1))<span class="sc">/</span>((a_1 <span class="sc">+</span></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>    b_1 <span class="sc">+</span> n_1)<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (a_1 <span class="sc">+</span> b_1 <span class="sc">+</span> n_1 <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>prior_plot <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, prior_0, prior_1, posterior_0, posterior_1)</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>prior_plot_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(prior_plot, <span class="at">cols =</span> <span class="fu">c</span>(prior_0, prior_1,</span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>    posterior_0, posterior_1))</span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"posterior"</span>) <span class="sc">==</span></span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>    T, <span class="st">"Posterior"</span>, <span class="st">"Prior"</span>)</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"_0"</span>) <span class="sc">==</span></span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>    T, <span class="st">"Treatment arm 0"</span>, <span class="st">"Treatment arm 1"</span>)</span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(prior_plot_long, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> value, <span class="at">linetype =</span> type, <span class="at">colour =</span> group)) <span class="sc">+</span></span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.direction =</span> <span class="st">"vertical"</span>) <span class="sc">+</span> <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,</span>
+<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.1</span>)) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Density"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">caption =</span> <span class="fu">str_glue</span>(<span class="st">"Expected event probabilities: Arm 0 (p_0="</span>,</span>
+<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a>    p_0, <span class="st">"), "</span>, <span class="st">"Arm 1 (p_1="</span>, p_1, <span class="st">")</span><span class="sc">\n</span><span class="st">Posterior standard deviation: Arm 0="</span>,</span>
+<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">round</span>(<span class="fu">sqrt</span>(var_posterior_0), <span class="dv">3</span>), <span class="st">", "</span>, <span class="st">"Arm 1="</span>, <span class="fu">round</span>(<span class="fu">sqrt</span>(var_posterior_1),</span>
+<span id="cb31-32"><a href="#cb31-32" aria-hidden="true" tabindex="-1"></a>        <span class="dv">3</span>))) <span class="sc">+</span> <span class="fu">scale_color_brewer</span>(<span class="st">"Treatment arm"</span>, <span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
+<span id="cb31-33"><a href="#cb31-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_linetype</span>(<span class="st">"Type"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Skeptical prior"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="01-NI_files/figure-html/fig20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Informative prior</strong>: The beta prior for the active treatment arm and control arm is centered at 0.01 (the expected event proportion) with <span class="math inline">\(P(\pi_1\leq 0.05)=0.01\)</span> and <span class="math inline">\(P(\pi_1\leq 0.05)=0.05\)</span>.</p>
+<ul>
+<li>Parameters of beta prior for active treatment arm: <span class="math inline">\(a_1=0.8\)</span>, <span class="math inline">\(b_1=79.2\)</span>.</li>
+<li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_0=0.03\)</span>, <span class="math inline">\(b_0=2.97\)</span>.</li>
+</ul>
+<div class="cell">
+<details>
+<summary>Show R code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>, <span class="fl">0.999</span>, <span class="fl">0.001</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Enthusiastic</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.03</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>prior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0, b_0)</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>prior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1, b_1)</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>posterior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, b_0 <span class="sc">+</span> n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0)</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>posterior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1)</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>var_posterior_0 <span class="ot">&lt;-</span> ((a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0) <span class="sc">*</span> (b_0 <span class="sc">+</span> n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0))<span class="sc">/</span>((a_0 <span class="sc">+</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>    b_0 <span class="sc">+</span> n_0)<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (a_0 <span class="sc">+</span> b_0 <span class="sc">+</span> n_0 <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>var_posterior_1 <span class="ot">&lt;-</span> ((a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1) <span class="sc">*</span> (b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1))<span class="sc">/</span>((a_1 <span class="sc">+</span></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>    b_1 <span class="sc">+</span> n_1)<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (a_1 <span class="sc">+</span> b_1 <span class="sc">+</span> n_1 <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>prior_plot <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, prior_0, prior_1, posterior_0, posterior_1)</span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>prior_plot_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(prior_plot, <span class="at">cols =</span> <span class="fu">c</span>(prior_0, prior_1,</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>    posterior_0, posterior_1))</span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"posterior"</span>) <span class="sc">==</span></span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>    T, <span class="st">"Posterior"</span>, <span class="st">"Prior"</span>)</span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"_0"</span>) <span class="sc">==</span></span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>    T, <span class="st">"Treatment arm 0"</span>, <span class="st">"Treatment arm 1"</span>)</span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(prior_plot_long, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> value, <span class="at">linetype =</span> type, <span class="at">colour =</span> group)) <span class="sc">+</span></span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.direction =</span> <span class="st">"vertical"</span>) <span class="sc">+</span> <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,</span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.1</span>)) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Density"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">caption =</span> <span class="fu">str_glue</span>(<span class="st">"Assumed event probabilities: Arm 0 (p_0="</span>,</span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a>    p_0, <span class="st">"), "</span>, <span class="st">"Arm 1 (p_1="</span>, p_1, <span class="st">")</span><span class="sc">\n</span><span class="st">Posterior standard deviation: Arm 0="</span>,</span>
+<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">round</span>(<span class="fu">sqrt</span>(var_posterior_0), <span class="dv">3</span>), <span class="st">", "</span>, <span class="st">"Arm 1="</span>, <span class="fu">round</span>(<span class="fu">sqrt</span>(var_posterior_1),</span>
+<span id="cb32-32"><a href="#cb32-32" aria-hidden="true" tabindex="-1"></a>        <span class="dv">3</span>))) <span class="sc">+</span> <span class="fu">scale_color_brewer</span>(<span class="st">"Treatment arm"</span>, <span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
+<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_linetype</span>(<span class="st">"Type"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Enthusiastic prior"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="01-NI_files/figure-html/fig21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Noninformative prior</strong>: Uniform prior for both, the active treatment arm and control arm.</p>
+<ul>
+<li>Parameters of beta prior for active treatment arm: <span class="math inline">\(a_1=1\)</span>, <span class="math inline">\(b_1=1\)</span>.</li>
+<li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_0=1\)</span>, <span class="math inline">\(b_0=1\)</span>.</li>
+</ul>
+<div class="cell">
+<details>
+<summary>Show R code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Uniform</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>prior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0, b_0)</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>prior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1, b_1)</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>posterior_0 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, b_0 <span class="sc">+</span> n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0)</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>posterior_1 <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1)</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>var_posterior_0 <span class="ot">&lt;-</span> ((a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0) <span class="sc">*</span> (b_0 <span class="sc">+</span> n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0))<span class="sc">/</span>((a_0 <span class="sc">+</span></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>    b_0 <span class="sc">+</span> n_0)<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (a_0 <span class="sc">+</span> b_0 <span class="sc">+</span> n_0 <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>var_posterior_1 <span class="ot">&lt;-</span> ((a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1) <span class="sc">*</span> (b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1))<span class="sc">/</span>((a_1 <span class="sc">+</span></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>    b_1 <span class="sc">+</span> n_1)<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (a_1 <span class="sc">+</span> b_1 <span class="sc">+</span> n_1 <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>prior_plot <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, prior_0, prior_1, posterior_0, posterior_1)</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>prior_plot_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(prior_plot, <span class="at">cols =</span> <span class="fu">c</span>(prior_0, prior_1,</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>    posterior_0, posterior_1))</span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"posterior"</span>) <span class="sc">==</span></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>    T, <span class="st">"Posterior"</span>, <span class="st">"Prior"</span>)</span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>prior_plot_long<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(prior_plot_long<span class="sc">$</span>name, <span class="st">"_0"</span>) <span class="sc">==</span></span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>    T, <span class="st">"Treatment arm 0"</span>, <span class="st">"Treatment arm 1"</span>)</span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(prior_plot_long, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> value, <span class="at">linetype =</span> type, <span class="at">colour =</span> group)) <span class="sc">+</span></span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.direction =</span> <span class="st">"vertical"</span>) <span class="sc">+</span> <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,</span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.1</span>)) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Density"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">caption =</span> <span class="fu">str_glue</span>(<span class="st">"Assumed event probabilities: Arm 0 (p_0="</span>,</span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>    p_0, <span class="st">"), "</span>, <span class="st">"Arm 1 (p_1="</span>, p_1, <span class="st">")</span><span class="sc">\n</span><span class="st">Posterior standard deviation: Arm 0="</span>,</span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">round</span>(<span class="fu">sqrt</span>(var_posterior_0), <span class="dv">3</span>), <span class="st">", "</span>, <span class="st">"Arm 1="</span>, <span class="fu">round</span>(<span class="fu">sqrt</span>(var_posterior_1),</span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>        <span class="dv">3</span>))) <span class="sc">+</span> <span class="fu">scale_color_brewer</span>(<span class="st">"Treatment arm"</span>, <span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
+<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_linetype</span>(<span class="st">"Type"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Noninformative prior"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="01-NI_files/figure-html/fig22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<hr>
 
 
 <div id="refs" class="references csl-bib-body" role="doc-bibliography" style="display: none">
@@ -1471,6 +1819,9 @@ P(D^\pi\leq D^\pi_{suc}|\delta^\pi)=\Phi\left( z_{1-\alpha} -\frac{\delta^\pi-\d
 </div>
 <div id="ref-Gelman2013" class="csl-entry" role="doc-biblioentry">
 <div class="csl-left-margin">7. </div><div class="csl-right-inline">Gelman A, Carlin JB, Stern HS, Dunson DB, Vehtari A, Rubin DB. Bayesian data analysis. Chapman; Hall/CRC; 2013. doi:<a href="https://doi.org/10.1201/b16018">10.1201/b16018</a></div>
+</div>
+<div id="ref-Agresti2000" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">8. </div><div class="csl-right-inline">Agresti A, Caffo B. Simple and effective confidence intervals for proportions and differences of proportions result from adding two successes and two failures. The American Statistician. 2000;54: 280. doi:<a href="https://doi.org/10.2307/2685779">10.2307/2685779</a></div>
 </div>
 </div>
 </section>
