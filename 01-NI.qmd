@@ -1030,7 +1030,7 @@ The average Bayesian power under an informative prior is 72% compared to 66% fro
 
 #### Hybrid approach: Prior on event probabilities
 
-In the former subsections we assumed that the prior was directly specified on the treatment effect. In this subsection we assume that that design prior is specified on the event probabilities $p_i$, $i=\{0,1\}$, itselfs. Suppose that the design priors on the event probabilities are beta distributed $\pi_i \sim Beta(a_i,b_i)$, $i=\{0,1\}$. It is well known (see for example @Spiegelhalter2003 or @Grieve2022) that the prior predictive distribution of the number of events $R_i$, $i=\{0,1\}$, from $n_i$ Bernoulli observations is beta-binomial distributed with $R_i \sim betabinom(r_i|n_i, a_i, b_i)$ and 
+In the former subsections we assumed that the prior was directly specified on the treatment effect. In this subsection we assume that that design prior is specified on the event probabilities $p_i$, $i=\{0,1\}$. Suppose that the design priors on the event probabilities are beta distributed $\pi_i \sim Beta(a_i,b_i)$, $i=\{0,1\}$. It is well known (see for example @Spiegelhalter2003 or @Grieve2022) that the prior predictive distribution of the number of events $R_i$, $i=\{0,1\}$, from $n_i$ Bernoulli observations is beta-binomial distributed with $R_i \sim betabinom(r_i|n_i, a_i, b_i)$ and 
 $$
 E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i+b_i)^2(a_i+b_i+1)}.
 $$
@@ -1041,10 +1041,10 @@ $$
 
 For the SAFE-SSPE trial we specify the following design beta priors for the expected event probabilites $p_1=p_0=0.01$.
 
-**Enthusiastic prior**: The beta prior for the active treatment arm is centered at 0.01 (the expected event proportion) with $P(\pi_1> 0.05)=0.025$, that is, the probability that the prior is greater than the safety margin is 2.5%. The mean of the beta prior for the control arm is centered at 0.05 (the safety margin) with $P(\pi_0\leq 0.01)=0.025$.
+**Enthusiastic prior**: The beta prior for the active treatment arm is centered at 0.01 (the expected event proportion) with $P(\pi_1> 0.05)=0.025$, that is, the probability that the prior is greater than the safety margin is 2.5%. The mean of the beta prior for the control arm is centered at 0.03 (the safety margin) with $P(\pi_0> 0.05)=0.05$.
 
 - Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=49.5$.
-- Parameters of beta prior for control treatment arm: $a_0=3.14$, $b_0=59.66$.
+- Parameters of beta prior for control treatment arm: $a_0=7.2$, $b_0=232.8$.
 
 ```{r fig13}
 #| echo: true
@@ -1059,15 +1059,14 @@ x <- seq(0.001, 0.999, 0.001)
 ## Enthusiastic prior
 a_1 <- 0.5
 b_1 <- (1 - p_1)/p_1 * a_1
-a_0 <- 3.14
-b_0 <- (1 - 0.05)/0.05 * a_0
+a_0 <- 7.2
+b_0 <- (1 - 0.03)/0.03 * a_0
 
 prior_0 <- dbeta(x, a_0, b_0)
 prior_1 <- dbeta(x, a_1, b_1)
 
 prior_plot <- data.frame(x, prior_0, prior_1)
 prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0, prior_1))
-
 prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name, "_0") ==
     T, "Treatment arm 0", "Treatment arm 1")
 
@@ -1083,10 +1082,11 @@ diff_prior <- data.frame(x = rbbinom(1e+06, size = ceiling(n_1), a_1,
 
 fig2 <- ggplot(diff_prior, aes(x), group=x) + geom_density(linewidth = 1.5, bw=0.1) + 
     theme_bw() + theme(panel.grid.minor = element_blank()) +
-    xlab("Difference from prior predictive distribution") + ggtitle("Distribution of difference from prior predictive distribution") +
+    xlab("Difference from prior predictive distribution") + ggtitle("Simulated distribution of difference from predicted event proportions") +
     ylab("Density") + geom_vline(xintercept=delta_star, linetype="dashed") +
-    scale_x_continuous(breaks=c(-0.5, -0.25, 0.035, 0.25, 0.5), 
-                       labels=c(-0.5, -0.25, 0.035, 0.25, 0.5),
+    geom_vline(xintercept=0, linetype="dotted") +
+    scale_x_continuous(breaks=c(-0.5, -0.25, 0, 0.035, 0.25, 0.5), 
+                       labels=c(-0.5, -0.25, 0, 0.035, 0.25, 0.5),
                        limits=c(-0.5, 0.5))
 
 cowplot::plot_grid(fig1, fig2, align = "h", ncol = 1)
@@ -1132,10 +1132,11 @@ diff_prior <- data.frame(x = rbbinom(1e+06, size = ceiling(n_1), a_1,
 
 fig2 <- ggplot(diff_prior, aes(x)) + geom_density(linewidth = 1.5, bw=0.1) + theme_bw() + 
     theme(panel.grid.minor = element_blank()) +
-    xlab("Difference from prior predictive distribution") + ggtitle("Distribution of difference from prior predictive distribution") +
+    xlab("Difference from prior predictions") + ggtitle("Simulated distribution of difference from predicted event proportions") +
     ylab("Density") + geom_vline(xintercept=delta_star, linetype="dashed") +
-    scale_x_continuous(breaks=c(-0.5, -0.25, 0.035, 0.25, 0.5), 
-                       labels=c(-0.5, -0.25, 0.035, 0.25, 0.5),
+    geom_vline(xintercept=0, linetype="dotted") +
+    scale_x_continuous(breaks=c(-0.5, -0.25, 0, 0.035, 0.25, 0.5), 
+                       labels=c(-0.5, -0.25, 0, 0.035, 0.25, 0.5),
                        limits=c(-0.5, 0.5))
 
 cowplot::plot_grid(fig1, fig2, align = "h", ncol = 1)
@@ -1162,6 +1163,8 @@ b_0 <- (1 - p_0)/p_0 * a_0
 prior_0 <- dbeta(x, a_0, b_0)
 prior_1 <- dbeta(x, a_1, b_1)
 
+
+
 prior_plot <- data.frame(x, prior_0, prior_1)
 prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0, prior_1))
 
@@ -1180,10 +1183,11 @@ diff_prior <- data.frame(x = rbbinom(1e+06, size = ceiling(n_1), a_1,
 
 fig2 <- ggplot(diff_prior, aes(x)) + geom_density(linewidth = 1.5, bw=0.1) + theme_bw() + 
     theme(panel.grid.minor = element_blank()) +
-    xlab("Difference from prior predictive distribution") + ggtitle("Distribution of difference from prior predictive distribution") +
+    xlab("Difference from prior predictive distribution") + ggtitle("Simulated distribution of difference from predicted event proportions") +
     ylab("Density") + geom_vline(xintercept=delta_star, linetype="dashed") +
-    scale_x_continuous(breaks=c(-0.5, -0.25, 0.035, 0.25, 0.5), 
-                       labels=c(-0.5, -0.25, 0.035, 0.25, 0.5),
+    geom_vline(xintercept=0, linetype="dotted") +
+    scale_x_continuous(breaks=c(-0.5, -0.25, 0, 0.035, 0.25, 0.5), 
+                       labels=c(-0.5, -0.25, 0, 0.035, 0.25, 0.5),
                        limits=c(-0.5, 0.5))
 
 cowplot::plot_grid(fig1, fig2, align = "h", ncol = 1)
@@ -1227,10 +1231,11 @@ diff_prior <- data.frame(x = rbbinom(1e+06, size = ceiling(n_1), a_1,
 
 fig2 <- ggplot(diff_prior, aes(x)) + geom_density(linewidth = 1.5, bw=0.05) + theme_bw() + 
     theme(panel.grid.minor = element_blank()) +
-    xlab("Difference from prior predictive distribution") + ggtitle("Distribution of difference from prior predictive distribution") +
+    xlab("Difference from prior predictive distribution") + ggtitle("Simulated distribution of difference from predicted event proportions") +
     ylab("Density") + geom_vline(xintercept=delta_star, linetype="dashed") +
-    scale_x_continuous(breaks=c(-1, -0.5, 0.035, 0.5, 1), 
-                       labels=c(-1, -0.5, 0.035, 0.5, 1),
+    geom_vline(xintercept=0, linetype="dotted") +
+    scale_x_continuous(breaks=c(-1, -0.5, 0, 0.5, 1), 
+                       labels=c(-1, -0.5, 0,  0.5, 1),
                        limits=c(-1, 1))
 
 cowplot::plot_grid(fig1, fig2, align = "h", ncol = 1)
@@ -1244,7 +1249,7 @@ The calculation of the average power is easily done by simulation.
 
 The joint probability approach has been described in @Grieve2022 and includes the following steps:
 
-- Calculate the joint pdf $p(r_1, r_0|n_1, n_0, a_1, a_0, b_1, b_0)=betabinom(r_1|n_1, a_1, b_1)\cdot betabinom(r_0|n_0, a_0, b_i0)$ for all pairs $r_i\in\{0, 1, \cdots, n_i\}$, $i\in\{0,1\}$.
+- Calculate the joint pdf for all pairs $r_i\in\{0, 1, \cdots, n_i\}$, $i\in\{0,1\}$.
 - The sum of the joint predictive probabilites over $r_i$ pairs where the $(1-\alpha)$-upper confidence limit of the risk difference is smaller than the non-inferiority margin is the average power.
 
 Here we use Agresti-Caffo confidence intervals for the risk difference @Agresti2000.
@@ -1262,11 +1267,11 @@ res_ap <- c()
 
 a_1 <- 0.5
 b_1 <- (1 - p_1)/p_1 * a_1
-a_0 <- 3.14
-b_0 <- (1 - 0.05)/0.05 * a_0
+a_0 <- 7.2
+b_0 <- (1 - 0.03)/0.03 * a_0
 
-r_0 <- 0:100
-r_1 <- 0:100
+r_0 <- 0:(ceiling(n_0)-1)
+r_1 <- 0:(ceiling(n_1)-1)
 
 data_points <- expand.grid(r_1 = r_1, r_0 = r_0)
 
@@ -1295,8 +1300,8 @@ b_1 <- (1 - 0.05)/0.05 * a_1
 a_0 <- 1.24
 b_0 <- (1 - 0.01)/0.01 * a_0
 
-r_0 <- 0:100
-r_1 <- 0:100
+r_0 <- 0:(ceiling(n_0)-1)
+r_1 <- 0:(ceiling(n_1)-1)
 
 data_points <- expand.grid(r_1 = r_1, r_0 = r_0)
 
@@ -1325,8 +1330,8 @@ b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 0.03
 b_0 <- (1 - p_0)/p_0 * a_0
 
-r_0 <- 0:100
-r_1 <- 0:100
+r_0 <- 0:(ceiling(n_0)-1)
+r_1 <- 0:(ceiling(n_1)-1)
 
 data_points <- expand.grid(r_1 = r_1, r_0 = r_0)
 
@@ -1355,8 +1360,8 @@ b_1 <- 1
 a_0 <- 1
 b_0 <- 1
 
-r_0 <- 0:100
-r_1 <- 0:100
+r_0 <- 0:(ceiling(n_0)-1)
+r_1 <- 0:(ceiling(n_1)-1)
 
 data_points <- expand.grid(r_1 = r_1, r_0 = r_0)
 
@@ -1399,8 +1404,8 @@ res_ap <- c()
 
 a_1 <- 0.5
 b_1 <- (1 - p_1)/p_1 * a_1
-a_0 <- 3.14
-b_0 <- (1 - 0.05)/0.05 * a_0
+a_0 <- 7.2
+b_0 <- (1 - 0.03)/0.03 * a_0
 
 set.seed(1)
 r_1 <- rbbinom(q, size = ceiling(n_1), a_1, b_1)
@@ -1495,10 +1500,10 @@ $$
 
 We use the same prior specifications as from the former subsection for the analysis priors.
 
-**Enthusiastic prior**: The beta prior for the active treatment arm is centered at 0.01 (the expected event proportion) with $P(\pi_1> 0.05)=0.025$, that is, the probability that the prior is greater than the safety margin is 2.5%. The mean of the beta prior for the control arm is centered at 0.05 (the safety margin) with $P(\pi_0\leq 0.01)=0.025$.
+**Enthusiastic prior**: The beta prior for the active treatment arm is centered at 0.01 (the expected event proportion) with $P(\pi_1> 0.05)=0.025$, that is, the probability that the prior is greater than the safety margin is 2.5%. The mean of the beta prior for the control arm is centered at 0.03 (the safety margin) with $P(\pi_0> 0.05)=0.05$.
 
 - Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=49.5$.
-- Parameters of beta prior for control treatment arm: $a_0=3.14$, $b_0=59.66$.
+- Parameters of beta prior for control treatment arm: $a_0=7.2$, $b_0=232.8$.
 
 ```{r fig19}
 #| echo: true
@@ -1506,11 +1511,11 @@ We use the same prior specifications as from the former subsection for the analy
 
 x <- seq(0.001, 0.999, 0.001)
 
-## Enthusiastic
+## Enthusiastic prior
 a_1 <- 0.5
 b_1 <- (1 - p_1)/p_1 * a_1
-a_0 <- 3.14
-b_0 <- (1 - 0.05)/0.05 * a_0
+a_0 <- 7.2
+b_0 <- (1 - 0.03)/0.03 * a_0
 
 prior_0 <- dbeta(x, a_0, b_0)
 prior_1 <- dbeta(x, a_1, b_1)
