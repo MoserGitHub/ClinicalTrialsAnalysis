@@ -33,6 +33,36 @@ $$
 p(\tilde x|x)=\int_\Theta p(\tilde x | \theta, x)p(\theta|x)d\theta=\int_\Theta \underbrace{p(\tilde x | \theta)}_{likelihood}\underbrace{p(\theta|x)}_{prior}d\theta.
 $$
 
+- **Jeffrey's prior**: Jeffrey's prior is defined as $p(\theta) \propto \sqrt{I(\theta)}$, where $I(\theta)$ is the expected Fisher information of $\theta$ @Held2020. Jeffrey's prior can be improper @Held2020. Bayesian point estimates using Jeffrey's prior are often very close to maximum likelihood estimators @Held2020.
+
+------------------------------------------------------------------------
+
+**Example: Jeffrey's prior for the binomial model**
+
+The likelihood of the binomial model is
+$$
+p(x|\theta)=\begin{pmatrix} n \\ x \end{pmatrix}\theta^x(1-\theta)^{n-x}
+$$
+and thus
+$$
+L:=log(p(x|\theta))\propto y\log(\theta)+(n-x)\log(1-\theta).
+$$
+Simple algebra leads to
+$$
+\frac{dL}{d\theta}=\frac{x}{\theta}-\frac{n-x}{1-\theta}, \quad \frac{d^2L}{d\theta^2}=-\frac{x}{\theta^2}-\frac{n-x}{(1-\theta)^2}.
+$$
+The expected Fisher information is
+$$
+I(\theta)=-E_\theta\left( \frac{d^2L}{d\theta^2} \right)=\frac{n\theta}{\theta^2}+\frac{n-n\theta}{(1-\theta)^2}=\frac{n}{\theta(1-\theta)}\propto\frac{1}{\theta(1-\theta)}.
+$$
+Thus, Jeffrey's prior for the binomial model is
+$$
+p(\theta) \propto \frac{1}{\sqrt{\theta(1-\theta)}}=\theta^{-0.5}(1-\theta)^{-0.5}=beta(0.5, 0.5).
+$$
+Jeffrey's prior for the binomial model is a proper prior @Held2020.
+
+------------------------------------------------------------------------
+
 ## Used R libraries
 
 ```{r lib}

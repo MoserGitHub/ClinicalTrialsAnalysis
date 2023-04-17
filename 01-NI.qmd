@@ -1193,10 +1193,10 @@ fig2 <- ggplot(diff_prior, aes(x)) + geom_density(linewidth = 1.5, bw=0.1) + the
 cowplot::plot_grid(fig1, fig2, align = "h", ncol = 1)
 ```
 
-**Noninformative prior**: Uniform prior for both, the active treatment arm and control arm.
+**Noninformative prior**: Agresti and Min suggest to use a 'diffuse' prior and recommend to use Jeffrey's prior @Agresti2005. Jeffrey's prior for a binomial likelihood is $beta(0.5, 0.5)$-distributed.
 
-- Parameters of beta prior for active treatment arm: $a_1=1$, $b_1=1$.
-- Parameters of beta prior for control treatment arm: $a_0=1$, $b_0=1$.
+- Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=0.5$.
+- Parameters of beta prior for control treatment arm: $a_0=0.5$, $b_0=0.5$.
 
 ```{r fig16}
 #| echo: true
@@ -1205,10 +1205,10 @@ cowplot::plot_grid(fig1, fig2, align = "h", ncol = 1)
 
 
 ## Noninformative prior
-a_0 <- 1
-b_0 <- 1
-a_1 <- 1
-b_1 <- 1
+a_0 <- 0.5
+b_0 <- 0.5
+a_1 <- 0.5
+b_1 <- 0.5
 
 prior_0 <- dbeta(x, a_0, b_0)
 prior_1 <- dbeta(x, a_1, b_1)
@@ -1355,10 +1355,10 @@ res_ap <- rbind(res_ap, data.frame(type = "Informative",
 
 ## Noninformative prior
 
-a_1 <- 1
-b_1 <- 1
-a_0 <- 1
-b_0 <- 1
+a_1 <- 0.5
+b_1 <- 0.5
+a_0 <- 0.5
+b_0 <- 0.5
 
 r_0 <- 0:(ceiling(n_0)-1)
 r_1 <- 0:(ceiling(n_1)-1)
@@ -1462,10 +1462,10 @@ res_ap <- rbind(res_ap, data.frame(type = "Informative", ap = sum(res)/q))
 
 ## Noninformative prior
 
-a_0 <- 1
-b_0 <- 1
-a_1 <- 1
-b_1 <- 1
+a_0 <- 0.5
+b_0 <- 0.5
+a_1 <- 0.5
+b_1 <- 0.5
 
 set.seed(1)
 r_1 <- rbbinom(q, size = ceiling(n_1), a_1, b_1)
@@ -1644,10 +1644,10 @@ ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) 
 #| warning: false
 
 ## Uniform
-a_0 <- 1
-b_0 <- 1
-a_1 <- 1
-b_1 <- 1
+a_0 <- 0.5
+b_0 <- 0.5
+a_1 <- 0.5
+b_1 <- 0.5
 
 prior_0 <- dbeta(x, a_0, b_0)
 prior_1 <- dbeta(x, a_1, b_1)
@@ -1696,6 +1696,11 @@ The calculation of the Bayesian average power is again done by simulation.
 # Number of draws
 q <- 10000
 
+
+m_0 <- ceiling(n_0)
+m_1 <- ceiling(n_1)
+
+
 ## Enthusiastic prior
 
 a_1 <- 0.5
@@ -1703,26 +1708,27 @@ b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 7.2
 b_0 <- (1 - 0.03)/0.03 * a_0
 
-m <- 100
+
+
 set.seed(1)
-r_1 <- rbbinom(q, size = m, a_1 + ceiling(n_1) * p_1,
+r_1 <- rbbinom(q, size = m_1, a_1 + ceiling(n_1) * p_1,
     b_1 + ceiling(n_1) - ceiling(n_1) * p_1)
-mean_r_1 <- m * (a_1 + ceiling(n_1) * p_1)/(a_1 + ceiling(n_1) *
+mean_r_1 <- m_1 * (a_1 + ceiling(n_1) * p_1)/(a_1 + ceiling(n_1) *
     p_1 + b_1 + ceiling(n_1) - ceiling(n_1) * p_1)
-var_posterior_1 <- (m * (a_1 + ceiling(n_1) * p_1) *
-    (b_1 + ceiling(n_1) - ceiling(n_1) * p_1) * (m +
+var_posterior_1 <- (m_1 * (a_1 + ceiling(n_1) * p_1) *
+    (b_1 + ceiling(n_1) - ceiling(n_1) * p_1) * (m_1 +
     a_1 + ceiling(n_1) * p_1 + b_1 + ceiling(n_1) -
     ceiling(n_1) * p_1))/((a_1 + ceiling(n_1) * p_1 +
     b_1 + ceiling(n_1) - ceiling(n_1) * p_1)^2 * (a_1 +
     ceiling(n_1) * p_1 + b_1 + ceiling(n_1) - ceiling(n_1) *
     p_1 + 1))
 
-r_0 <- rbbinom(q, size = m, a_0 + ceiling(n_0) * p_0,
+r_0 <- rbbinom(q, size = m_0, a_0 + ceiling(n_0) * p_0,
     b_0 + ceiling(n_0) - ceiling(n_0) * p_0)
-mean_r_0 <- m * (a_0 + ceiling(n_0) * p_0)/(a_0 + ceiling(n_0) *
+mean_r_0 <- m_0 * (a_0 + ceiling(n_0) * p_0)/(a_0 + ceiling(n_0) *
     p_0 + b_0 + ceiling(n_0) - ceiling(n_0) * p_0)
-var_posterior_0 <- (m * (a_0 + ceiling(n_0) * p_0) *
-    (b_0 + ceiling(n_0) - ceiling(n_0) * p_0) * (m +
+var_posterior_0 <- (m_0 * (a_0 + ceiling(n_0) * p_0) *
+    (b_0 + ceiling(n_0) - ceiling(n_0) * p_0) * (m_0 +
     a_0 + ceiling(n_0) * p_0 + b_0 + ceiling(n_0) -
     ceiling(n_0) * p_0))/((a_0 + ceiling(n_0) * p_0 +
     b_0 + ceiling(n_0) - ceiling(n_0) * p_0)^2 * (a_0 +
@@ -1747,26 +1753,25 @@ b_1 <- (1 - 0.05)/0.05 * a_1
 a_0 <- 1.24
 b_0 <- (1 - p_0)/p_0 * a_0
 
-m <- 100
 set.seed(1)
-r_1 <- rbbinom(q, size = m, a_1 + ceiling(n_1) * p_1,
+r_1 <- rbbinom(q, size = m_1, a_1 + ceiling(n_1) * p_1,
     b_1 + ceiling(n_1) - ceiling(n_1) * p_1)
-mean_r_1 <- m * (a_1 + ceiling(n_1) * p_1)/(a_1 + ceiling(n_1) *
+mean_r_1 <- m_1 * (a_1 + ceiling(n_1) * p_1)/(a_1 + ceiling(n_1) *
     p_1 + b_1 + ceiling(n_1) - ceiling(n_1) * p_1)
-var_posterior_1 <- (m * (a_1 + ceiling(n_1) * p_1) *
-    (b_1 + ceiling(n_1) - ceiling(n_1) * p_1) * (m +
+var_posterior_1 <- (m_1 * (a_1 + ceiling(n_1) * p_1) *
+    (b_1 + ceiling(n_1) - ceiling(n_1) * p_1) * (m_1 +
     a_1 + ceiling(n_1) * p_1 + b_1 + ceiling(n_1) -
     ceiling(n_1) * p_1))/((a_1 + ceiling(n_1) * p_1 +
     b_1 + ceiling(n_1) - ceiling(n_1) * p_1)^2 * (a_1 +
     ceiling(n_1) * p_1 + b_1 + ceiling(n_1) - ceiling(n_1) *
     p_1 + 1))
 
-r_0 <- rbbinom(q, size = m, a_0 + ceiling(n_0) * p_0,
+r_0 <- rbbinom(q, size = m_0, a_0 + ceiling(n_0) * p_0,
     b_0 + ceiling(n_0) - ceiling(n_0) * p_0)
-mean_r_0 <- m * (a_0 + ceiling(n_0) * p_0)/(a_0 + ceiling(n_0) *
+mean_r_0 <- m_0 * (a_0 + ceiling(n_0) * p_0)/(a_0 + ceiling(n_0) *
     p_0 + b_0 + ceiling(n_0) - ceiling(n_0) * p_0)
-var_posterior_0 <- (m * (a_0 + ceiling(n_0) * p_0) *
-    (b_0 + ceiling(n_0) - ceiling(n_0) * p_0) * (m +
+var_posterior_0 <- (m_0 * (a_0 + ceiling(n_0) * p_0) *
+    (b_0 + ceiling(n_0) - ceiling(n_0) * p_0) * (m_0 +
     a_0 + ceiling(n_0) * p_0 + b_0 + ceiling(n_0) -
     ceiling(n_0) * p_0))/((a_0 + ceiling(n_0) * p_0 +
     b_0 + ceiling(n_0) - ceiling(n_0) * p_0)^2 * (a_0 +
@@ -1792,26 +1797,25 @@ b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 0.03
 b_0 <- (1 - p_0)/p_0 * a_0
 
-m <- 100
 set.seed(1)
-r_1 <- rbbinom(q, size = m, a_1 + ceiling(n_1) * p_1,
+r_1 <- rbbinom(q, size = m_1, a_1 + ceiling(n_1) * p_1,
     b_1 + ceiling(n_1) - ceiling(n_1) * p_1)
-mean_r_1 <- m * (a_1 + ceiling(n_1) * p_1)/(a_1 + ceiling(n_1) *
+mean_r_1 <- m_1 * (a_1 + ceiling(n_1) * p_1)/(a_1 + ceiling(n_1) *
     p_1 + b_1 + ceiling(n_1) - ceiling(n_1) * p_1)
-var_posterior_1 <- (m * (a_1 + ceiling(n_1) * p_1) *
-    (b_1 + ceiling(n_1) - ceiling(n_1) * p_1) * (m +
+var_posterior_1 <- (m_1 * (a_1 + ceiling(n_1) * p_1) *
+    (b_1 + ceiling(n_1) - ceiling(n_1) * p_1) * (m_1 +
     a_1 + ceiling(n_1) * p_1 + b_1 + ceiling(n_1) -
     ceiling(n_1) * p_1))/((a_1 + ceiling(n_1) * p_1 +
     b_1 + ceiling(n_1) - ceiling(n_1) * p_1)^2 * (a_1 +
     ceiling(n_1) * p_1 + b_1 + ceiling(n_1) - ceiling(n_1) *
     p_1 + 1))
 
-r_0 <- rbbinom(q, size = m, a_0 + ceiling(n_0) * p_0,
+r_0 <- rbbinom(q, size = m_0, a_0 + ceiling(n_0) * p_0,
     b_0 + ceiling(n_0) - ceiling(n_0) * p_0)
-mean_r_0 <- m * (a_0 + ceiling(n_0) * p_0)/(a_0 + ceiling(n_0) *
+mean_r_0 <- m_0 * (a_0 + ceiling(n_0) * p_0)/(a_0 + ceiling(n_0) *
     p_0 + b_0 + ceiling(n_0) - ceiling(n_0) * p_0)
-var_posterior_0 <- (m * (a_0 + ceiling(n_0) * p_0) *
-    (b_0 + ceiling(n_0) - ceiling(n_0) * p_0) * (m +
+var_posterior_0 <- (m_0 * (a_0 + ceiling(n_0) * p_0) *
+    (b_0 + ceiling(n_0) - ceiling(n_0) * p_0) * (m_0 +
     a_0 + ceiling(n_0) * p_0 + b_0 + ceiling(n_0) -
     ceiling(n_0) * p_0))/((a_0 + ceiling(n_0) * p_0 +
     b_0 + ceiling(n_0) - ceiling(n_0) * p_0)^2 * (a_0 +
@@ -1832,31 +1836,30 @@ res_bap <- rbind(res_bap, data.frame(type = "Informative",
 
 ## Noninformative prior
 
-a_0 <- 1
-b_0 <- 1
-a_1 <- 1
-b_1 <- 1
+a_0 <- 0.5
+b_0 <- 0.5
+a_1 <- 0.5
+b_1 <- 0.5
 
-m <- 100
 set.seed(1)
-r_1 <- rbbinom(q, size = m, a_1 + ceiling(n_1) * p_1,
+r_1 <- rbbinom(q, size = m_1, a_1 + ceiling(n_1) * p_1,
     b_1 + ceiling(n_1) - ceiling(n_1) * p_1)
-mean_r_1 <- m * (a_1 + ceiling(n_1) * p_1)/(a_1 + ceiling(n_1) *
+mean_r_1 <- m_1 * (a_1 + ceiling(n_1) * p_1)/(a_1 + ceiling(n_1) *
     p_1 + b_1 + ceiling(n_1) - ceiling(n_1) * p_1)
-var_posterior_1 <- (m * (a_1 + ceiling(n_1) * p_1) *
-    (b_1 + ceiling(n_1) - ceiling(n_1) * p_1) * (m +
+var_posterior_1 <- (m_1 * (a_1 + ceiling(n_1) * p_1) *
+    (b_1 + ceiling(n_1) - ceiling(n_1) * p_1) * (m_1 +
     a_1 + ceiling(n_1) * p_1 + b_1 + ceiling(n_1) -
     ceiling(n_1) * p_1))/((a_1 + ceiling(n_1) * p_1 +
     b_1 + ceiling(n_1) - ceiling(n_1) * p_1)^2 * (a_1 +
     ceiling(n_1) * p_1 + b_1 + ceiling(n_1) - ceiling(n_1) *
     p_1 + 1))
 
-r_0 <- rbbinom(q, size = m, a_0 + ceiling(n_0) * p_0,
+r_0 <- rbbinom(q, size = m_0, a_0 + ceiling(n_0) * p_0,
     b_0 + ceiling(n_0) - ceiling(n_0) * p_0)
-mean_r_0 <- m * (a_0 + ceiling(n_0) * p_0)/(a_0 + ceiling(n_0) *
+mean_r_0 <- m_0 * (a_0 + ceiling(n_0) * p_0)/(a_0 + ceiling(n_0) *
     p_0 + b_0 + ceiling(n_0) - ceiling(n_0) * p_0)
-var_posterior_0 <- (m * (a_0 + ceiling(n_0) * p_0) *
-    (b_0 + ceiling(n_0) - ceiling(n_0) * p_0) * (m +
+var_posterior_0 <- (m_0 * (a_0 + ceiling(n_0) * p_0) *
+    (b_0 + ceiling(n_0) - ceiling(n_0) * p_0) * (m_0 +
     a_0 + ceiling(n_0) * p_0 + b_0 + ceiling(n_0) -
     ceiling(n_0) * p_0))/((a_0 + ceiling(n_0) * p_0 +
     b_0 + ceiling(n_0) - ceiling(n_0) * p_0)^2 * (a_0 +

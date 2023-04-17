@@ -268,6 +268,23 @@ p(\tilde x)=\int_\Theta p(\tilde x, \theta)d\theta=\int_\Theta \underbrace{p(\ti
 <p><span class="math display">\[
 p(\tilde x|x)=\int_\Theta p(\tilde x | \theta, x)p(\theta|x)d\theta=\int_\Theta \underbrace{p(\tilde x | \theta)}_{likelihood}\underbrace{p(\theta|x)}_{prior}d\theta.
 \]</span></p>
+<ul>
+<li><strong>Jeffrey’s prior</strong>: Jeffrey’s prior is defined as <span class="math inline">\(p(\theta) \propto \sqrt{I(\theta)}\)</span>, where <span class="math inline">\(I(\theta)\)</span> is the expected Fisher information of <span class="math inline">\(\theta\)</span> <span class="citation" data-cites="Held2020">[<a href="references.html#ref-Held2020" role="doc-biblioref">3</a>]</span>. Jeffrey’s prior can be improper <span class="citation" data-cites="Held2020">[<a href="references.html#ref-Held2020" role="doc-biblioref">3</a>]</span>.</li>
+</ul>
+<hr>
+<p><strong>Example: Jeffrey’s prior for the binomial model</strong></p>
+<p>The likelihood of the binomial model is <span class="math display">\[
+p(x|\theta)=\begin{pmatrix} n \\ x \end{pmatrix}\theta^x(1-\theta)^{n-x}
+\]</span> and thus <span class="math display">\[
+L:=log(p(x|\theta))\propto y\log(\theta)+(n-x)\log(1-\theta).
+\]</span> Simple algebra leads to <span class="math display">\[
+\frac{dL}{d\theta}=\frac{x}{\theta}-\frac{n-x}{1-\theta}, \quad \frac{d^2L}{d\theta^2}=-\frac{x}{\theta^2}-\frac{n-x}{(1-\theta)^2}.
+\]</span> The expected Fisher information is <span class="math display">\[
+I(\theta)=-E_\theta\left( \frac{d^2L}{d\theta^2} \right)=\frac{n\theta}{\theta^2}+\frac{n-n\theta}{(1-\theta)^2}=\frac{n}{\theta(1-\theta)}\propto\frac{1}{\theta(1-\theta)}.
+\]</span> Thus, Jeffrey’s prior for the binomial model is <span class="math display">\[
+p(\theta) \propto \frac{1}{\sqrt{\theta(1-\theta)}}=\theta^{-0.5}(1-\theta)^{-0.5}=beta(0.5, 0.5).
+\]</span> Jeffrey’s prior for the binomial model is a proper prior <span class="citation" data-cites="Held2020">[<a href="references.html#ref-Held2020" role="doc-biblioref">3</a>]</span>.</p>
+<hr>
 </section>
 <section id="used-r-libraries" class="level2" data-number="1.4">
 <h2 data-number="1.4" class="anchored" data-anchor-id="used-r-libraries"><span class="header-section-number">1.4</span> Used R libraries</h2>
@@ -289,6 +306,9 @@ p(\tilde x|x)=\int_\Theta p(\tilde x | \theta, x)p(\theta|x)d\theta=\int_\Theta 
 </div>
 <div id="ref-Stefan2019" class="csl-entry" role="doc-biblioentry">
 <div class="csl-left-margin">2. </div><div class="csl-right-inline">Stefan AM, Gronau QF, Schönbrodt FD, Wagenmakers E-J. A tutorial on bayes factor design analysis using an informed prior. Behavior Research Methods. 2019;51: 1042–1058. doi:<a href="https://doi.org/10.3758/s13428-018-01189-8">10.3758/s13428-018-01189-8</a></div>
+</div>
+<div id="ref-Held2020" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Held L, Bové DS. Likelihood and bayesian inference. Springer Berlin Heidelberg; 2020. doi:<a href="https://doi.org/10.1007/978-3-662-60792-3">10.1007/978-3-662-60792-3</a></div>
 </div>
 </div>
 </section>
