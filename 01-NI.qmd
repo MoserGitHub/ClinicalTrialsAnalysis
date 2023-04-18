@@ -46,7 +46,7 @@ The non-inferiority margin was set at 3.5% and it was assumed that the proportio
 
 #### Frequentist approach
 
-Let $Y_{i,k} \sim^{iid} Bernoulli(p_i)$, $k=1,\dots,n_i$, $i\in \{0,1\}$. Let $\overline p_i=\frac{1}{n_i}\sum_{k\leq n_i} Y_{i,k}$, $i\in {0,1}$, and thus the estimated risk difference $D=\overline p_1-\overline p_0$ is asymptotically Gaussian distributed with $D \sim N\left(\delta, \frac{\sigma_1^2}{n_1}+\frac{\sigma_0^2}{n_0}\right)$, where $\sigma_i^2=p_i(1-p_i)$, $i\in \{0,1\}$. For notational purposes we denote $\sigma_{treat}^2=\frac{\sigma_1^2}{n_1}+\frac{\sigma_0^2}{n_0}$, that is, the variance for the treatment effect.
+Let $Y_{i}=(Y_{i,1}, Y_{i,2}, \cdots, Y_{i,n_i})^\top$ be a sample of size $n_i$ from a binomial distribution $Y_{i} \sim Binomial(p_i, n_i)$, $i\in \{0,1\}$, where $p_i$ is true event proportion. Denote the estimated event proportions as $\overline p_i=\frac{1}{n_i}\sum_{k\leq n_i} Y_{i,k}$, $i\in {0,1}$, and thus the estimated risk difference $D=\overline p_1-\overline p_0$ is asymptotically Gaussian distributed with $D \sim N\left(\delta, \frac{\sigma_1^2}{n_1}+\frac{\sigma_0^2}{n_0}\right)$, where $\sigma_i^2=p_i(1-p_i)$, $i\in \{0,1\}$. For notational purposes we denote $\sigma_{treat}^2=\frac{\sigma_1^2}{n_1}+\frac{\sigma_0^2}{n_0}$, that is, the variance for the treatment effect.
 
 We are interested whether the upper $(1-\alpha)\%$-confidence limit is smaller than the non-inferiority margin, that is, $$
 D+z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}\leq \delta^*,
@@ -150,7 +150,7 @@ Under the specified parameters a sample size of 200 patients (100 per arm) is ne
 
 #### Hybrid approach: Prior on the treatment effect
 
-Suppose that the true treatment effect $\delta$ is a realization from a random variable $\Delta$ with $p(\delta)$. In this subsection we assume that the design prior comes from a Gaussian distribution function so that $\Delta \sim N\left(d, \frac{\sigma_1^2+\sigma_0^2}{m}\right)$. Note that this prior can be thought as a realisation from $m$ Gaussian 'prior observations' with variance $\sigma_1^2+\sigma_0^2$. Again for notational purposes we denote $\sigma_{prior}^2=\frac{\sigma_1^2+\sigma_0^2}{m}$ as the variance of the design prior on the treatment effect.
+Suppose that the true treatment effect $\delta$ is a realization from a random variable $\Delta$ with $f(\delta)$. In this subsection we assume that the design prior comes from a Gaussian distribution function so that $\Delta \sim N\left(d, \frac{\sigma_1^2+\sigma_0^2}{m}\right)$. Note that this prior can be thought as a realisation from $m$ Gaussian 'prior observations' with variance $\sigma_1^2+\sigma_0^2$. Again for notational purposes we denote $\sigma_{prior}^2=\frac{\sigma_1^2+\sigma_0^2}{m}$ as the variance of the design prior on the treatment effect.
 
 In the following we will use the following design priors:
 
@@ -221,7 +221,7 @@ ggplot(data_output, aes(x = delta_star_range, y = n_output)) +
 ```
 
 Let $$
-AP:=\int_{\Delta} P_{\delta}(D\leq D_{suc}^{\delta^*})p(\delta)d\delta,
+AP:=\int_{\Delta} P_{\delta}(D\leq D_{suc}^{\delta^*})f(\delta)d\delta,
 $$
 
 be the **'average power'** @Grieve2022 (also called 'assurance' @OHagan2005, 'probability of success' @Kunzmann2022, @Spiegelhalter2003 or Bayesian predictive power @Rufibach2016. The supplemental section of @Kunzmann2022 contains a literature review of the used terminology). Remember that in an hybrid approach we are interested in trial conclusions from a frequentist point of view, thus we are interested in
@@ -586,15 +586,15 @@ $$
 \underbrace{P(D\leq D_{suc}^{\delta^*}, \Delta\leq\delta^*)}_{PAP}=\underbrace{E\left[P_{\Delta\leq\delta^*}(D\leq D_{suc}^{\delta^*})\right]}_{EP}\underbrace{P(\Delta\leq\delta^*)}_{constant}.
 $$ Spiegelhalter calls $P(D\leq D_{suc}^{\delta^*}, \Delta\leq\delta^*)$ the **'prior adjusted power'** (PAP).
 
-The AP decomposition can be visualised using the posterior predictive distribution. Let $p(\tilde\delta)$ be the pdf of the posterior predictive distribution then $$
-p(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin{pmatrix} \sigma^2_{treat}+\sigma^2_{prior} \quad \sigma^2_{prior} \\ \quad \quad \sigma^2_{prior} \quad \ \quad  \sigma^2_{prior}\end{pmatrix}\right),
+The AP decomposition can be visualised using the posterior predictive distribution. Let $f(\tilde\delta)$ be the pdf of the posterior predictive distribution then $$
+f_2(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin{pmatrix} \sigma^2_{treat}+\sigma^2_{prior} \quad \sigma^2_{prior} \\ \quad \quad \sigma^2_{prior} \quad \ \quad  \sigma^2_{prior}\end{pmatrix}\right),
 $$ see formula (2.11) in @Grieve2022.
 
 ------------------------------------------------------------------------
 
 **Working example (continued)**
 
-For the SAFE-SSPE study the bivariate scatterplot of $p(\tilde\delta, \delta)$ under an enthusiastic prior can be visualised as:
+For the SAFE-SSPE study the bivariate scatterplot of $f_2(\tilde\delta, \delta)$ under an enthusiastic prior can be visualised as:
 
 ```{r fig9}
 #| echo: true
@@ -1709,8 +1709,7 @@ a_0 <- 7.2
 b_0 <- (1 - 0.03)/0.03 * a_0
 
 
-
-set.seed(1)
+set.seed(2)
 r_1 <- rbbinom(q, size = m_1, a_1 + ceiling(n_1) * p_1,
     b_1 + ceiling(n_1) - ceiling(n_1) * p_1)
 mean_r_1 <- m_1 * (a_1 + ceiling(n_1) * p_1)/(a_1 + ceiling(n_1) *
@@ -1735,14 +1734,14 @@ var_posterior_0 <- (m_0 * (a_0 + ceiling(n_0) * p_0) *
     ceiling(n_0) * p_0 + b_0 + ceiling(n_0) - ceiling(n_0) *
     p_0 + 1))
 
-data_bap <- data.frame(pred_1 = r_1/m, pred_0 = r_0/m,
-    diff = r_1/m - r_0/m, type = "Enthusiastic")
-
-data_bap_graph <- data_bap
+data_bap <- data.frame(pred_1 = r_1/m_1, pred_0 = r_0/m_0,
+    diff = r_1/m_1 - r_0/m_0, type = "Enthusiastic")
 
 bap <- sum(ifelse(data_bap$diff + qnorm(1 - alpha) *
-    sqrt(var_posterior_0 + var_posterior_1)/m <= delta_star,
+    sqrt(var_posterior_0/m_0^2 + var_posterior_1/m_1^2) <= delta_star,
     1, 0))/q
+
+data_bap_graph <- data_bap
 
 res_bap <- data.frame(type = "Enthusiastic", bap = bap)
 
@@ -1778,13 +1777,13 @@ var_posterior_0 <- (m_0 * (a_0 + ceiling(n_0) * p_0) *
     ceiling(n_0) * p_0 + b_0 + ceiling(n_0) - ceiling(n_0) *
     p_0 + 1))
 
-data_bap <- data.frame(pred_1 = r_1/m,
-    pred_0 = r_0/m, diff = r_1/m - r_0/m, type = "Skeptical")
+data_bap <- data.frame(pred_1 = r_1/m_1, pred_0 = r_0/m_0,
+    diff = r_1/m_1 - r_0/m_0, type = "Skeptical")
 
 data_bap_graph <- rbind(data_bap_graph, data_bap)
 
 bap <- sum(ifelse(data_bap$diff + qnorm(1 - alpha) *
-    sqrt(var_posterior_0 + var_posterior_1)/m <= delta_star,
+    sqrt(var_posterior_0/m_0^2 + var_posterior_1/m_1^2) <= delta_star,
     1, 0))/q
 
 res_bap <- rbind(res_bap, data.frame(type = "Skeptical",
@@ -1822,13 +1821,13 @@ var_posterior_0 <- (m_0 * (a_0 + ceiling(n_0) * p_0) *
     ceiling(n_0) * p_0 + b_0 + ceiling(n_0) - ceiling(n_0) *
     p_0 + 1))
 
-data_bap <- data.frame(pred_1 = r_1/m,
-    pred_0 = r_0/m, diff = r_1/m - r_0/m, type = "Informative")
+data_bap <- data.frame(pred_1 = r_1/m_1, pred_0 = r_0/m_0,
+    diff = r_1/m_1 - r_0/m_0, type = "Informative")
 
 data_bap_graph <- rbind(data_bap_graph, data_bap)
 
 bap <- sum(ifelse(data_bap$diff + qnorm(1 - alpha) *
-    sqrt(var_posterior_0 + var_posterior_1)/m <= delta_star,
+    sqrt(var_posterior_0/m_0^2 + var_posterior_1/m_1^2) <= delta_star,
     1, 0))/q
 
 res_bap <- rbind(res_bap, data.frame(type = "Informative",
@@ -1866,13 +1865,13 @@ var_posterior_0 <- (m_0 * (a_0 + ceiling(n_0) * p_0) *
     ceiling(n_0) * p_0 + b_0 + ceiling(n_0) - ceiling(n_0) *
     p_0 + 1))
 
-data_bap <- data.frame(pred_1 = r_1/m,
-    pred_0 = r_0/m, diff = r_1/m - r_0/m, type = "Noninformative")
+data_bap <- data.frame(pred_1 = r_1/m_1, pred_0 = r_0/m_0,
+    diff = r_1/m_1 - r_0/m_0, type = "Noninformative")
 
 data_bap_graph <- rbind(data_bap_graph, data_bap)
 
 bap <- sum(ifelse(data_bap$diff + qnorm(1 - alpha) *
-    sqrt(var_posterior_0 + var_posterior_1)/m <= delta_star,
+    sqrt(var_posterior_0/m_0^2 + var_posterior_1/m_1^2) <= delta_star,
     1, 0))/q
 
 res_bap <- rbind(res_bap, data.frame(type = "Noninformative",
