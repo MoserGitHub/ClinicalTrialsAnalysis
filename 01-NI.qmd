@@ -1486,12 +1486,12 @@ res_ap
 
 #### Bayesian approach: Prior on event probabilities
 
-In the former subsection we assumed that the prior was directly specified on the treatment effect. In this subsection we assume that that design prior is specified on the event probabilities $p_i$, $i=\{0,1\}$. Suppose that the priors on the event probability are beta distributed $\pi_i \sim Beta(a_i,b_i)$, then the posterior distribution is
+In the former subsection we assumed that the prior was directly specified on the treatment effect. In this subsection we assume that that design prior is specified on the event probabilities $p_i$, $i=\{0,1\}$. Suppose that the priors on the event probability are beta distributed $\pi_i \sim Beta(a_i,b_i)$ and that we have observed a binomial distributed random sample of size $n_i$ and number of events $r_i$. Then the posterior distribution is
 $$
-p_i|\pi_i \sim Beta\left(a_i+\sum_{k\leq n_i}Y_{i,k},b_i+n_i-\sum_{k\leq n_i}Y_{i,k}\right)
+\pi_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)
 $$ with
 $$
-\mu_{i,\pi_i}:=E(p_i|\pi_i)=\frac{a_i+\sum_{k\leq n_i}Y_{i,k}}{a_i+b_i+n_i}, \quad \sigma_{i,\pi_i}^2:=Var(p_i|\pi_i)=\frac{\left(a_i+\sum_{k\leq n_i}Y_{i,k}\right)\left(b_i+n_i-\sum_{k\leq n_i}Y_{i,k}\right)}{(a_i+b_i+n_i)^2(a_i+b_i+n_i+1)}.
+\mu_{i,r_i}:=E(\pi_i|r_i)=\frac{a_i+r_i}{a_i+b_i+n_i}, \quad \sigma_{i,r_i}^2:=Var(\pi_i|r_i)=\frac{\left(a_i+r_i\right)\left(b_i+n_i-r_i\right)}{(a_i+b_i+n_i)^2(a_i+b_i+n_i+1)}.
 $$
 
 ------------------------------------------------------------------------
@@ -1685,7 +1685,19 @@ ggplot(prior_plot_long, aes(x = x, y = value, linetype = type,
 
 ------------------------------------------------------------------------
 
-
+Note that the posterior predictive distribution of a future binomial random sample $m_i$ is beta-binomial distributed $\tilde R_i \sim betabinom(\tilde r_i|m_i, n_i, a_i, b_i)$ with
+$$
+\mu_{i, \tilde R}:=E(\tilde R_i)=m_i\frac{a_i+r_i}{a_i+b_i+n_i}, \\ \sigma_{i, \tilde R}^2:=Var(\tilde R_i)=\frac{m_i(a_i+r_i)(b_i+n_i-r_i)(m_i+a_i+b_i+n_i)}{(a_i+b_i+n_i)^2(a_i+b_i+n_i+1)}.
+$$
+Suppose that $\rho_i$ is a realisation from $\tilde R_i$.
+The difference between predicted event proportions $\tilde R_i/m_i$ is Gaussian distributed
+$$
+\tilde D=\int_{\tilde R_1}\frac{\rho_1}{m_1}d\rho_1-\int_{\tilde R_0}\frac{\rho_0}{m_1}d\rho_0 \sim N\left(\frac{\mu_{1, \tilde R}}{m_1}-\frac{\mu_{0, \tilde R}}{m_0}, \frac{\sigma_{1, \tilde R}^2}{m_1^2}+\frac{\sigma_{0, \tilde R}^2}{m_0^2}\right).
+$$
+Then one obtains a 'successful' trial result if
+$$
+\tilde D+z_{1-\epsilon}\sqrt{\frac{\sigma_{1, \tilde R}^2}{m_1^2}+\frac{\sigma_{0, \tilde R}^2}{m_0^2}}\leq \delta^*.
+$$
 The calculation of the Bayesian average power is again done by simulation.
 
 

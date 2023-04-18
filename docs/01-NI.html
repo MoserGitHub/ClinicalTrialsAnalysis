@@ -1610,10 +1610,10 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 </section>
 <section id="bayesian-approach-prior-on-event-probabilities" class="level4" data-number="2.2.1.5">
 <h4 data-number="2.2.1.5" class="anchored" data-anchor-id="bayesian-approach-prior-on-event-probabilities"><span class="header-section-number">2.2.1.5</span> Bayesian approach: Prior on event probabilities</h4>
-<p>In the former subsection we assumed that the prior was directly specified on the treatment effect. In this subsection we assume that that design prior is specified on the event probabilities <span class="math inline">\(p_i\)</span>, <span class="math inline">\(i=\{0,1\}\)</span>. Suppose that the priors on the event probability are beta distributed <span class="math inline">\(\pi_i \sim Beta(a_i,b_i)\)</span>, then the posterior distribution is <span class="math display">\[
-p_i|\pi_i \sim Beta\left(a_i+\sum_{k\leq n_i}Y_{i,k},b_i+n_i-\sum_{k\leq n_i}Y_{i,k}\right)
+<p>In the former subsection we assumed that the prior was directly specified on the treatment effect. In this subsection we assume that that design prior is specified on the event probabilities <span class="math inline">\(p_i\)</span>, <span class="math inline">\(i=\{0,1\}\)</span>. Suppose that the priors on the event probability are beta distributed <span class="math inline">\(\pi_i \sim Beta(a_i,b_i)\)</span> and that we have observed a binomial distributed random sample of size <span class="math inline">\(n_i\)</span> and number of events <span class="math inline">\(r_i\)</span>. Then the posterior distribution is <span class="math display">\[
+\pi_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)
 \]</span> with <span class="math display">\[
-\mu_{i,\pi_i}:=E(p_i|\pi_i)=\frac{a_i+\sum_{k\leq n_i}Y_{i,k}}{a_i+b_i+n_i}, \quad \sigma_{i,\pi_i}^2:=Var(p_i|\pi_i)=\frac{\left(a_i+\sum_{k\leq n_i}Y_{i,k}\right)\left(b_i+n_i-\sum_{k\leq n_i}Y_{i,k}\right)}{(a_i+b_i+n_i)^2(a_i+b_i+n_i+1)}.
+\mu_{i,r_i}:=E(\pi_i|r_i)=\frac{a_i+r_i}{a_i+b_i+n_i}, \quad \sigma_{i,r_i}^2:=Var(\pi_i|r_i)=\frac{\left(a_i+r_i\right)\left(b_i+n_i-r_i\right)}{(a_i+b_i+n_i)^2(a_i+b_i+n_i+1)}.
 \]</span></p>
 <hr>
 <p><strong>Working example (continued)</strong></p>
@@ -1808,7 +1808,13 @@ p_i|\pi_i \sim Beta\left(a_i+\sum_{k\leq n_i}Y_{i,k},b_i+n_i-\sum_{k\leq n_i}Y_{
 </div>
 </div>
 <hr>
-<p>The calculation of the Bayesian average power is again done by simulation.</p>
+<p>Note that the posterior predictive distribution of a future binomial random sample <span class="math inline">\(m_i\)</span> is beta-binomial distributed <span class="math inline">\(\tilde R_i \sim betabinom(\tilde r_i|m_i, n_i, a_i, b_i)\)</span> with <span class="math display">\[
+\mu_{i, \tilde R}:=E(\tilde R_i)=m_i\frac{a_i+r_i}{a_i+b_i+n_i}, \\ \sigma_{i, \tilde R}^2:=Var(\tilde R_i)=\frac{m_i(a_i+r_i)(b_i+n_i-r_i)(m_i+a_i+b_i+n_i)}{(a_i+b_i+n_i)^2(a_i+b_i+n_i+1)}.
+\]</span> Suppose that <span class="math inline">\(\rho_i\)</span> is a realisation from <span class="math inline">\(\tilde R_i\)</span>. The difference between predicted event proportions <span class="math inline">\(\tilde R_i/m_i\)</span> is Gaussian distributed <span class="math display">\[
+\tilde D=\int_{\tilde R_1}\frac{\rho_1}{m_1}d\rho_1-\int_{\tilde R_0}\frac{\rho_0}{m_1}d\rho_0 \sim N\left(\frac{\mu_{1, \tilde R}}{m_1}-\frac{\mu_{0, \tilde R}}{m_0}, \frac{\sigma_{1, \tilde R}^2}{m_1^2}+\frac{\sigma_{0, \tilde R}^2}{m_0^2}\right).
+\]</span> Then one obtains a ‘successful’ trial result if <span class="math display">\[
+\tilde D+z_{1-\epsilon}\sqrt{\frac{\sigma_{1, \tilde R}^2}{m_1^2}+\frac{\sigma_{0, \tilde R}^2}{m_0^2}}\leq \delta^*.
+\]</span> The calculation of the Bayesian average power is again done by simulation.</p>
 <div class="cell">
 <details>
 <summary>Show R code</summary>
