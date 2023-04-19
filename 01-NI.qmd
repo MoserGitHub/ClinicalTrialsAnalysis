@@ -1488,8 +1488,9 @@ res_ap
 
 In the former subsection we assumed that the prior was directly specified on the treatment effect. In this subsection we assume that that design prior is specified on the event probabilities $p_i$, $i=\{0,1\}$. Suppose that the priors on the event probability are beta distributed $\pi_i \sim Beta(a_i,b_i)$ and that we have observed a binomial distributed random sample of size $n_i$ and number of events $r_i$. Then the posterior distribution is
 $$
-\pi_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)
+\pi_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)=\frac{\pi_i^{a_i+r_i-1}(1-\pi_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}
 $$ with
+$B(\cdot)$ the beta function and
 $$
 \mu_{i,r_i}:=E(\pi_i|r_i)=\frac{a_i+r_i}{a_i+b_i+n_i}, \quad \sigma_{i,r_i}^2:=Var(\pi_i|r_i)=\frac{\left(a_i+r_i\right)\left(b_i+n_i-r_i\right)}{(a_i+b_i+n_i)^2(a_i+b_i+n_i+1)}.
 $$
@@ -1555,7 +1556,7 @@ ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) 
 
 x <- seq(0.001, 0.999, 0.001)
 
-# Skeptical
+# Skeptical prior
 a_1 <- 2.84
 b_1 <- (1 - 0.05)/0.05 * a_1
 a_0 <- 1.24
@@ -1599,7 +1600,7 @@ ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) 
 
 x <- seq(0.001, 0.999, 0.001)
 
-## Enthusiastic
+## Informative prior
 a_1 <- 0.8
 b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 0.03
@@ -1643,7 +1644,7 @@ ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) 
 #| echo: true
 #| warning: false
 
-## Uniform
+## Noninformative prior
 a_0 <- 0.5
 b_0 <- 0.5
 a_1 <- 0.5
@@ -1685,219 +1686,114 @@ ggplot(prior_plot_long, aes(x = x, y = value, linetype = type,
 
 ------------------------------------------------------------------------
 
-Note that the posterior predictive distribution of a future binomial random sample $m_i$ is beta-binomial distributed $\tilde R_i \sim betabinom(\tilde r_i|m_i, n_i, a_i, b_i)$ with
+We denote the joint posterior distribution as
 $$
-\mu_{i, \tilde R}:=E(\tilde R_i)=m_i\frac{a_i+r_i}{a_i+b_i+n_i}, \\ \sigma_{i, \tilde R}^2:=Var(\tilde R_i)=\frac{m_i(a_i+r_i)(b_i+n_i-r_i)(m_i+a_i+b_i+n_i)}{(a_i+b_i+n_i)^2(a_i+b_i+n_i+1)}.
+f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)=\prod_{i\in\{0,1\}} \frac{\pi_i^{a_i+r_i-1}(1-\pi_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}.
 $$
-Suppose that $\rho_i$ is a realisation from $\tilde R_i$.
-The difference between predicted event proportions $\tilde R_i/m_i$ is Gaussian distributed
+and thus
 $$
-\tilde D=\int_{\tilde R_1}\frac{\rho_1}{m_1}d\rho_1-\int_{\tilde R_0}\frac{\rho_0}{m_1}d\rho_0 \sim N\left(\frac{\mu_{1, \tilde R}}{m_1}-\frac{\mu_{0, \tilde R}}{m_0}, \frac{\sigma_{1, \tilde R}^2}{m_1^2}+\frac{\sigma_{0, \tilde R}^2}{m_0^2}\right).
+P\left(\pi_1-\pi_0 \leq \delta^*\right)=\int_0^{1-\delta^*}\int_0^{\pi_0+\delta^*} f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)d\pi_1d\pi_0=\int_0^{1-\delta^*}\frac{\pi_0^{a_0+r_0-1}(1-\pi_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{\pi_0+\delta^*}\frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)d\pi_0,
 $$
-Then one obtains a 'successful' trial result if
-$$
-\tilde D+z_{1-\epsilon}\sqrt{\frac{\sigma_{1, \tilde R}^2}{m_1^2}+\frac{\sigma_{0, \tilde R}^2}{m_0^2}}\leq \delta^*.
-$$
-The calculation of the Bayesian average power is again done by simulation.
+is the Bayesian probability to reject. Grieve
 
+
+The calculation of the Bayesian average power is again done by simulation.
 
 ```{r fig23}
 #| echo: true
 #| warning: false
 
-# Number of draws
-q <- 10000
-
-
-m_0 <- ceiling(n_0)
-m_1 <- ceiling(n_1)
-
+p_1 <- 0.01
+x <- seq(0.001, 0.999, 0.001)
 
 ## Enthusiastic prior
-
 a_1 <- 0.5
 b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 7.2
-b_0 <- (1 - 0.03)/0.03 * a_0
+b_0 <- (1 - 0.03)/(0.03) * a_0
 
+inner_func <- function(x) {
+    x^(a_1 + ceiling(n_1) * p_1 - 1) * (1 - x)^(b_1 +
+        ceiling(n_1) - ceiling(n_1) * p_1 - 1)
+}
+inner_int <- Vectorize(function(y) {
+    y^(a_0 + ceiling(n_0) * p_0 - 1) * (1 - y)^(b_0 +
+        ceiling(n_0) - ceiling(n_0) * p_0 - 1) * integrate(inner_func,
+        0, y)$value
+})
+bap <- integrate(inner_int, 0, 1 - delta_star)$value/(beta(a_1 +
+    ceiling(n_1) * p_1, b_1 + ceiling(n_1) - ceiling(n_1) *
+    p_1) * beta(a_0 + ceiling(n_0) * p_0, b_0 + ceiling(n_0) -
+    ceiling(n_0) * p_0))
 
-set.seed(2)
-r_1 <- rbbinom(q, size = m_1, a_1 + ceiling(n_1) * p_1,
-    b_1 + ceiling(n_1) - ceiling(n_1) * p_1)
-mean_r_1 <- m_1 * (a_1 + ceiling(n_1) * p_1)/(a_1 + ceiling(n_1) *
-    p_1 + b_1 + ceiling(n_1) - ceiling(n_1) * p_1)
-var_posterior_1 <- (m_1 * (a_1 + ceiling(n_1) * p_1) *
-    (b_1 + ceiling(n_1) - ceiling(n_1) * p_1) * (m_1 +
-    a_1 + ceiling(n_1) * p_1 + b_1 + ceiling(n_1) -
-    ceiling(n_1) * p_1))/((a_1 + ceiling(n_1) * p_1 +
-    b_1 + ceiling(n_1) - ceiling(n_1) * p_1)^2 * (a_1 +
-    ceiling(n_1) * p_1 + b_1 + ceiling(n_1) - ceiling(n_1) *
-    p_1 + 1))
+res_bap <- data.frame(type="Enthusiastic", bap)
 
-r_0 <- rbbinom(q, size = m_0, a_0 + ceiling(n_0) * p_0,
-    b_0 + ceiling(n_0) - ceiling(n_0) * p_0)
-mean_r_0 <- m_0 * (a_0 + ceiling(n_0) * p_0)/(a_0 + ceiling(n_0) *
-    p_0 + b_0 + ceiling(n_0) - ceiling(n_0) * p_0)
-var_posterior_0 <- (m_0 * (a_0 + ceiling(n_0) * p_0) *
-    (b_0 + ceiling(n_0) - ceiling(n_0) * p_0) * (m_0 +
-    a_0 + ceiling(n_0) * p_0 + b_0 + ceiling(n_0) -
-    ceiling(n_0) * p_0))/((a_0 + ceiling(n_0) * p_0 +
-    b_0 + ceiling(n_0) - ceiling(n_0) * p_0)^2 * (a_0 +
-    ceiling(n_0) * p_0 + b_0 + ceiling(n_0) - ceiling(n_0) *
-    p_0 + 1))
-
-data_bap <- data.frame(pred_1 = r_1/m_1, pred_0 = r_0/m_0,
-    diff = r_1/m_1 - r_0/m_0, type = "Enthusiastic")
-
-bap <- sum(ifelse(data_bap$diff + qnorm(1 - alpha) *
-    sqrt(var_posterior_0/m_0^2 + var_posterior_1/m_1^2) <= delta_star,
-    1, 0))/q
-
-data_bap_graph <- data_bap
-
-res_bap <- data.frame(type = "Enthusiastic", bap = bap)
-
-## Skeptical prior
-
+# Skeptical prior
 a_1 <- 2.84
 b_1 <- (1 - 0.05)/0.05 * a_1
 a_0 <- 1.24
 b_0 <- (1 - p_0)/p_0 * a_0
 
-set.seed(1)
-r_1 <- rbbinom(q, size = m_1, a_1 + ceiling(n_1) * p_1,
-    b_1 + ceiling(n_1) - ceiling(n_1) * p_1)
-mean_r_1 <- m_1 * (a_1 + ceiling(n_1) * p_1)/(a_1 + ceiling(n_1) *
-    p_1 + b_1 + ceiling(n_1) - ceiling(n_1) * p_1)
-var_posterior_1 <- (m_1 * (a_1 + ceiling(n_1) * p_1) *
-    (b_1 + ceiling(n_1) - ceiling(n_1) * p_1) * (m_1 +
-    a_1 + ceiling(n_1) * p_1 + b_1 + ceiling(n_1) -
-    ceiling(n_1) * p_1))/((a_1 + ceiling(n_1) * p_1 +
-    b_1 + ceiling(n_1) - ceiling(n_1) * p_1)^2 * (a_1 +
-    ceiling(n_1) * p_1 + b_1 + ceiling(n_1) - ceiling(n_1) *
-    p_1 + 1))
+inner_func <- function(x) {
+    x^(a_1 + ceiling(n_1) * p_1 - 1) * (1 - x)^(b_1 +
+        ceiling(n_1) - ceiling(n_1) * p_1 - 1)
+}
+inner_int <- Vectorize(function(y) {
+    y^(a_0 + ceiling(n_0) * p_0 - 1) * (1 - y)^(b_0 +
+        ceiling(n_0) - ceiling(n_0) * p_0 - 1) * integrate(inner_func,
+        0, y)$value
+})
+bap <- integrate(inner_int, 0, 1 - delta_star)$value/(beta(a_1 +
+    ceiling(n_1) * p_1, b_1 + ceiling(n_1) - ceiling(n_1) *
+    p_1) * beta(a_0 + ceiling(n_0) * p_0, b_0 + ceiling(n_0) -
+    ceiling(n_0) * p_0))
 
-r_0 <- rbbinom(q, size = m_0, a_0 + ceiling(n_0) * p_0,
-    b_0 + ceiling(n_0) - ceiling(n_0) * p_0)
-mean_r_0 <- m_0 * (a_0 + ceiling(n_0) * p_0)/(a_0 + ceiling(n_0) *
-    p_0 + b_0 + ceiling(n_0) - ceiling(n_0) * p_0)
-var_posterior_0 <- (m_0 * (a_0 + ceiling(n_0) * p_0) *
-    (b_0 + ceiling(n_0) - ceiling(n_0) * p_0) * (m_0 +
-    a_0 + ceiling(n_0) * p_0 + b_0 + ceiling(n_0) -
-    ceiling(n_0) * p_0))/((a_0 + ceiling(n_0) * p_0 +
-    b_0 + ceiling(n_0) - ceiling(n_0) * p_0)^2 * (a_0 +
-    ceiling(n_0) * p_0 + b_0 + ceiling(n_0) - ceiling(n_0) *
-    p_0 + 1))
+res_bap <- rbind(res_bap, data.frame(type="Skeptical", bap))
 
-data_bap <- data.frame(pred_1 = r_1/m_1, pred_0 = r_0/m_0,
-    diff = r_1/m_1 - r_0/m_0, type = "Skeptical")
-
-data_bap_graph <- rbind(data_bap_graph, data_bap)
-
-bap <- sum(ifelse(data_bap$diff + qnorm(1 - alpha) *
-    sqrt(var_posterior_0/m_0^2 + var_posterior_1/m_1^2) <= delta_star,
-    1, 0))/q
-
-res_bap <- rbind(res_bap, data.frame(type = "Skeptical",
-    bap = bap))
-
-## Informative prior
-
+# Informative prior
 a_1 <- 0.8
 b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 0.03
 b_0 <- (1 - p_0)/p_0 * a_0
 
-set.seed(1)
-r_1 <- rbbinom(q, size = m_1, a_1 + ceiling(n_1) * p_1,
-    b_1 + ceiling(n_1) - ceiling(n_1) * p_1)
-mean_r_1 <- m_1 * (a_1 + ceiling(n_1) * p_1)/(a_1 + ceiling(n_1) *
-    p_1 + b_1 + ceiling(n_1) - ceiling(n_1) * p_1)
-var_posterior_1 <- (m_1 * (a_1 + ceiling(n_1) * p_1) *
-    (b_1 + ceiling(n_1) - ceiling(n_1) * p_1) * (m_1 +
-    a_1 + ceiling(n_1) * p_1 + b_1 + ceiling(n_1) -
-    ceiling(n_1) * p_1))/((a_1 + ceiling(n_1) * p_1 +
-    b_1 + ceiling(n_1) - ceiling(n_1) * p_1)^2 * (a_1 +
-    ceiling(n_1) * p_1 + b_1 + ceiling(n_1) - ceiling(n_1) *
-    p_1 + 1))
 
-r_0 <- rbbinom(q, size = m_0, a_0 + ceiling(n_0) * p_0,
-    b_0 + ceiling(n_0) - ceiling(n_0) * p_0)
-mean_r_0 <- m_0 * (a_0 + ceiling(n_0) * p_0)/(a_0 + ceiling(n_0) *
-    p_0 + b_0 + ceiling(n_0) - ceiling(n_0) * p_0)
-var_posterior_0 <- (m_0 * (a_0 + ceiling(n_0) * p_0) *
-    (b_0 + ceiling(n_0) - ceiling(n_0) * p_0) * (m_0 +
-    a_0 + ceiling(n_0) * p_0 + b_0 + ceiling(n_0) -
-    ceiling(n_0) * p_0))/((a_0 + ceiling(n_0) * p_0 +
-    b_0 + ceiling(n_0) - ceiling(n_0) * p_0)^2 * (a_0 +
-    ceiling(n_0) * p_0 + b_0 + ceiling(n_0) - ceiling(n_0) *
-    p_0 + 1))
+bap <- integrate(inner_int, 0, 1 - delta_star)$value/(beta(a_1 +
+    ceiling(n_1) * p_1, b_1 + ceiling(n_1) - ceiling(n_1) *
+    p_1) * beta(a_0 + ceiling(n_0) * p_0, b_0 + ceiling(n_0) -
+    ceiling(n_0) * p_0))
 
-data_bap <- data.frame(pred_1 = r_1/m_1, pred_0 = r_0/m_0,
-    diff = r_1/m_1 - r_0/m_0, type = "Informative")
+res_bap <- rbind(res_bap, data.frame(type="Informative", bap))
 
-data_bap_graph <- rbind(data_bap_graph, data_bap)
-
-bap <- sum(ifelse(data_bap$diff + qnorm(1 - alpha) *
-    sqrt(var_posterior_0/m_0^2 + var_posterior_1/m_1^2) <= delta_star,
-    1, 0))/q
-
-res_bap <- rbind(res_bap, data.frame(type = "Informative",
-    bap = bap))
 
 ## Noninformative prior
-
 a_0 <- 0.5
 b_0 <- 0.5
 a_1 <- 0.5
 b_1 <- 0.5
 
-set.seed(1)
-r_1 <- rbbinom(q, size = m_1, a_1 + ceiling(n_1) * p_1,
-    b_1 + ceiling(n_1) - ceiling(n_1) * p_1)
-mean_r_1 <- m_1 * (a_1 + ceiling(n_1) * p_1)/(a_1 + ceiling(n_1) *
-    p_1 + b_1 + ceiling(n_1) - ceiling(n_1) * p_1)
-var_posterior_1 <- (m_1 * (a_1 + ceiling(n_1) * p_1) *
-    (b_1 + ceiling(n_1) - ceiling(n_1) * p_1) * (m_1 +
-    a_1 + ceiling(n_1) * p_1 + b_1 + ceiling(n_1) -
-    ceiling(n_1) * p_1))/((a_1 + ceiling(n_1) * p_1 +
-    b_1 + ceiling(n_1) - ceiling(n_1) * p_1)^2 * (a_1 +
-    ceiling(n_1) * p_1 + b_1 + ceiling(n_1) - ceiling(n_1) *
-    p_1 + 1))
+bap <- integrate(inner_int, 0, 1 - delta_star)$value/(beta(a_1 +
+    ceiling(n_1) * p_1, b_1 + ceiling(n_1) - ceiling(n_1) *
+    p_1) * beta(a_0 + ceiling(n_0) * p_0, b_0 + ceiling(n_0) -
+    ceiling(n_0) * p_0))
 
-r_0 <- rbbinom(q, size = m_0, a_0 + ceiling(n_0) * p_0,
-    b_0 + ceiling(n_0) - ceiling(n_0) * p_0)
-mean_r_0 <- m_0 * (a_0 + ceiling(n_0) * p_0)/(a_0 + ceiling(n_0) *
-    p_0 + b_0 + ceiling(n_0) - ceiling(n_0) * p_0)
-var_posterior_0 <- (m_0 * (a_0 + ceiling(n_0) * p_0) *
-    (b_0 + ceiling(n_0) - ceiling(n_0) * p_0) * (m_0 +
-    a_0 + ceiling(n_0) * p_0 + b_0 + ceiling(n_0) -
-    ceiling(n_0) * p_0))/((a_0 + ceiling(n_0) * p_0 +
-    b_0 + ceiling(n_0) - ceiling(n_0) * p_0)^2 * (a_0 +
-    ceiling(n_0) * p_0 + b_0 + ceiling(n_0) - ceiling(n_0) *
-    p_0 + 1))
-
-data_bap <- data.frame(pred_1 = r_1/m_1, pred_0 = r_0/m_0,
-    diff = r_1/m_1 - r_0/m_0, type = "Noninformative")
-
-data_bap_graph <- rbind(data_bap_graph, data_bap)
-
-bap <- sum(ifelse(data_bap$diff + qnorm(1 - alpha) *
-    sqrt(var_posterior_0/m_0^2 + var_posterior_1/m_1^2) <= delta_star,
-    1, 0))/q
-
-res_bap <- rbind(res_bap, data.frame(type = "Noninformative",
-    bap = bap))
+res_bap <- rbind(res_bap, data.frame(type="Noninformative", bap))
 
 res_bap$bap <- round(res_bap$bap, 2)
 res_bap
 
-ggplot(data_bap_graph, aes(x = pred_1 - pred_0)) + geom_density(linewidth = 1.5,
-    bw = 0.01) + facet_wrap(~type) + geom_vline(xintercept = delta_star,
-    linetype = "dashed") + theme_bw() + theme(panel.grid.minor = element_blank()) +
-    geom_vline(xintercept = 0, linetype = "dotted") +
-    xlab("Difference in posterior predicted event proportions") +
-    ylab("Density") + scale_x_continuous(breaks = c(-0.1,
-    0, 0.035, 0.1), labels = c(-0.1, 0, 0.035, 0.1)) +
-    ggtitle("Difference in posterior predicted event proportions")
+# posterior_0 <- rbeta(10000, a_0 + n_0 * p_0, b_0 + n_0 -
+#     n_0 * p_0)
+# posterior_1 <- rbeta(10000, a_1 + n_1 * p_1, b_1 + n_1 -
+#     n_1 * p_1)
+# var_posterior_0 <- ((a_0 + n_0 * p_0) * (b_0 + n_0 -
+#     n_0 * p_0))/((a_0 + b_0 + n_0)^2 * (a_0 + b_0 +
+#     n_0 + 1))
+# var_posterior_1 <- ((a_1 + n_1 * p_1) * (b_1 + n_1 -
+#     n_1 * p_1))/((a_1 + b_1 + n_1)^2 * (a_1 + b_1 +
+#     n_1 + 1))
+# sum(posterior_1-posterior_0+qnorm(1-0.05)*sqrt(var_posterior_0+var_posterior_1)<=0.035)/10000
+
+# s <- seq(max(ceiling(r_0+a_0-r_1-a_1),0), ceiling(r_0+a_0-1))
+
+# sum(dhyper(s, m=ceiling(r_0+r_1+a_1+a_0-1), n=ceiling(n_1+n_0-r_1-r_0+b_1+b_0-1), k=ceiling(n_1+a_1+b_1-1)))
 ```
