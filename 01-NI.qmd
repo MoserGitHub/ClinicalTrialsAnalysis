@@ -1694,12 +1694,17 @@ and thus, by using Fubini's theorem,
 $$
 \begin{aligned}
 P\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)&=\int_0^{1}\int_0^{\pi_0+\delta^*} f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)d\pi_1d\pi_0 \\
-&=\int_0^{1-\delta^*}\frac{\pi_0^{a_0+r_0-1}(1-\pi_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{\pi_0} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)d\pi_0 \\
+&=\int_0^{1}\frac{\pi_0^{a_0+r_0-1}(1-\pi_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{\pi_0+\delta^*} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)d\pi_0 \\
+&=\int_{-\delta^*}^{1-\delta^*}\frac{(\pi_0-\delta^*)^{a_0+r_0-1}(1-\pi_0+\delta^*)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{\pi_0} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)d\pi_0 \\
 \end{aligned}
 $$
 is the **Bayesian probability to reject** given assumed $r_0, r_1, n_0, n_1$. Grieve highlights that this is can be written as a hypergeometric distribution (@Grieve2022, @Grieve2016)
 $$
-\sum_{s=\max(r_0+a_0-r_1-a_1,0)}^{r_0+a_0-1} \frac{\begin{pmatrix} r_0+r_1+a_0+a_1-1 \\ s \end{pmatrix}\begin{pmatrix} n_0+n_1-r_0-r_1+b_0+b_1-1 \\ n_0+a_0+b_0-1-s \end{pmatrix}}{\begin{pmatrix} n_0+n_1+a_0+a_1+b_0+b_1-2 \\ n_1+a_1+b_1-1 \end{pmatrix}}.
+\begin{aligned}
+\sum_{s=\max(r_0+a_0-r_1-a_1,0)}^{r_0+a_0-1} \frac{\begin{pmatrix} r_0+r_1+a_0+a_1-1 \\ s \end{pmatrix}\begin{pmatrix} n_0+n_1-r_0-r_1+b_0+b_1-1 \\ n_0+a_0+b_0-1-s \end{pmatrix}}{\begin{pmatrix} n_0+n_1+a_0+a_1+b_0+b_1-2 \\ n_1+a_1+b_1-1 \end{pmatrix}}
+&=\int_{\delta^*}^{1+\delta^*}\frac{(\pi_0+\delta^*)^{a_0+r_0-1}(1-\pi_0-\delta^*)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}(\pi_0+\delta^*)^s(1-\pi_0-\delta^*)^{a_1+b_1+n_1-2-s}\right)d\pi_0 \\
+&=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\frac{(\pi_0+\delta^*)^{a_0+r_0-1}(1-\pi_0-\delta^*)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\int_{\delta^*}^{1+\delta^*}(\pi_0+\delta^*)^s(1-\pi_0-\delta^*)^{a_1+b_1+n_1-2-s}d\pi_0\right)
+\end{aligned}
 $$
 
 ```{r fig23}
@@ -1713,7 +1718,7 @@ inner_func <- function(x) {
 }
 
 inner_int <- Vectorize(function(y) {
-    y^(a_0 + ceiling(n_0) * p_0 - 1) * (1 - y)^(b_0 +
+    (y-delta_star)^(a_0 + ceiling(n_0) * p_0 - 1) * (1 - y + delta_star)^(b_0 +
         ceiling(n_0) - ceiling(n_0) * p_0 - 1) * integrate(inner_func,
         0, y)$value
 })
@@ -1723,8 +1728,8 @@ a_1 <- 0.5
 b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 7.2
 b_0 <- (1 - 0.03)/(0.03) * a_0
-
-bap <- integrate(inner_int, 0, 1 - delta_star)$value/(beta(a_1 +
+delta_star <- 0.035
+bap <- integrate(inner_int, delta_star, 1+delta_star)$value/(beta(a_1 +
     n_1 * p_1, b_1 + n_1 - n_1 * p_1) * beta(a_0 + n_0 * p_0, b_0 + n_0 -
     n_0 * p_0))
 
