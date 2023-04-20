@@ -192,7 +192,7 @@ div.csl-indent {
   <ul class="collapse">
   <li><a href="#frequentist-approach" id="toc-frequentist-approach" class="nav-link" data-scroll-target="#frequentist-approach"><span class="toc-section-number">2.2.1.1</span>  Frequentist approach</a></li>
   <li><a href="#hybrid-approach-prior-on-the-treatment-effect" id="toc-hybrid-approach-prior-on-the-treatment-effect" class="nav-link" data-scroll-target="#hybrid-approach-prior-on-the-treatment-effect"><span class="toc-section-number">2.2.1.2</span>  Hybrid approach: Prior on the treatment effect</a></li>
-  <li><a href="#proper-bayesian-approach-prior-on-the-treatment-effect" id="toc-proper-bayesian-approach-prior-on-the-treatment-effect" class="nav-link" data-scroll-target="#proper-bayesian-approach-prior-on-the-treatment-effect"><span class="toc-section-number">2.2.1.3</span>  Proper Bayesian approach: Prior on the treatment effect</a></li>
+  <li><a href="#bayesian-approach-prior-on-the-treatment-effect" id="toc-bayesian-approach-prior-on-the-treatment-effect" class="nav-link" data-scroll-target="#bayesian-approach-prior-on-the-treatment-effect"><span class="toc-section-number">2.2.1.3</span>  Bayesian approach: Prior on the treatment effect</a></li>
   <li><a href="#hybrid-approach-prior-on-event-probabilities" id="toc-hybrid-approach-prior-on-event-probabilities" class="nav-link" data-scroll-target="#hybrid-approach-prior-on-event-probabilities"><span class="toc-section-number">2.2.1.4</span>  Hybrid approach: Prior on event probabilities</a></li>
   <li><a href="#bayesian-approach-prior-on-event-probabilities" id="toc-bayesian-approach-prior-on-event-probabilities" class="nav-link" data-scroll-target="#bayesian-approach-prior-on-event-probabilities"><span class="toc-section-number">2.2.1.5</span>  Bayesian approach: Prior on event probabilities</a></li>
   </ul></li>
@@ -848,8 +848,8 @@ f_2(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin
 </div>
 <hr>
 </section>
-<section id="proper-bayesian-approach-prior-on-the-treatment-effect" class="level4" data-number="2.2.1.3">
-<h4 data-number="2.2.1.3" class="anchored" data-anchor-id="proper-bayesian-approach-prior-on-the-treatment-effect"><span class="header-section-number">2.2.1.3</span> Proper Bayesian approach: Prior on the treatment effect</h4>
+<section id="bayesian-approach-prior-on-the-treatment-effect" class="level4" data-number="2.2.1.3">
+<h4 data-number="2.2.1.3" class="anchored" data-anchor-id="bayesian-approach-prior-on-the-treatment-effect"><span class="header-section-number">2.2.1.3</span> Bayesian approach: Prior on the treatment effect</h4>
 <p>A proper Bayesian approach uses the posterior distribution to define ‘a successful trial result’. Remember that <span class="math inline">\(D=\overline{p}_1-\overline{p}_0\)</span> with <span class="math inline">\(D \sim N(\delta, \sigma^2_{treat})\)</span>. Suppose that <span class="math inline">\(\Delta \sim N(d, \sigma^2_{prior})\)</span> is an analysis prior, then the posterior distribution is given as <span class="math display">\[
 \begin{aligned}
 \Delta|D \sim N\left(\frac{\frac{d}{\sigma^2_{prior}}+\frac{D}{\sigma^2_{treat}}}{\frac{1}{\sigma^2_{prior}}+\frac{1}{\sigma^2_{treat}}}, \frac{1}{\frac{1}{\sigma^2_{prior}}+\frac{1}{\sigma^2_{treat}}}\right)=N\left( \frac{\sigma^2_{treat}d+\sigma^2_{prior}D}{\sigma^2_{treat}+\sigma^2_{prior}}, \frac{\sigma^2_{treat}\sigma^2_{prior}}{\sigma^2_{treat}+\sigma^2_{prior}}  \right),

@@ -724,7 +724,7 @@ data_ep
 
 ------------------------------------------------------------------------
 
-#### Proper Bayesian approach: Prior on the treatment effect
+#### Bayesian approach: Prior on the treatment effect
 
 A proper Bayesian approach uses the posterior distribution to define 'a successful trial result'. Remember that $D=\overline{p}_1-\overline{p}_0$ with $D \sim N(\delta, \sigma^2_{treat})$. Suppose that $\Delta \sim N(d, \sigma^2_{prior})$ is an analysis prior, then the posterior distribution is given as
 $$
