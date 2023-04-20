@@ -1823,6 +1823,6 @@ res_bap$bap_tail_betabinomial <- round(res_bap$bap_tail_betabinomial, 2)
 res_bap
 ```
 
-Small differences between both approaches occur because 'beta-binomial distribution' approaches is a discretization of the integral and requires integer steps for the calculation.
+Small differences between both approaches occur because the 'beta-binomial distribution' approach is a discretization of the integral approach and requires integer steps for the calculation.
 
 ------------------------------------------------------------------------
