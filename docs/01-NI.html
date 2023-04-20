@@ -1821,75 +1821,69 @@ P\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)&amp;=\int_0^{1}\int_0
 <div class="cell">
 <details>
 <summary>Show R code</summary>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>p_1 <span class="ot">&lt;-</span> <span class="fl">0.01</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>, <span class="fl">0.999</span>, <span class="fl">0.001</span>)</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>inner_func <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    (x)<span class="sc">^</span>(a_1 <span class="sc">+</span> <span class="fu">ceiling</span>(n_1) <span class="sc">*</span> p_1 <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> x)<span class="sc">^</span>(b_1 <span class="sc">+</span></span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ceiling</span>(n_1) <span class="sc">-</span> <span class="fu">ceiling</span>(n_1) <span class="sc">*</span> p_1 <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>inner_int <span class="ot">&lt;-</span> <span class="fu">Vectorize</span>(<span class="cf">function</span>(y) {</span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    y<span class="sc">^</span>(a_0 <span class="sc">+</span> <span class="fu">ceiling</span>(n_0) <span class="sc">*</span> p_0 <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> y)<span class="sc">^</span>(b_0 <span class="sc">+</span></span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ceiling</span>(n_0) <span class="sc">-</span> <span class="fu">ceiling</span>(n_0) <span class="sc">*</span> p_0 <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="fu">integrate</span>(inner_func,</span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>        <span class="dv">0</span>, y)<span class="sc">$</span>value</span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">integrate</span>(inner_int, <span class="dv">0</span>, <span class="dv">1</span><span class="sc">-</span>delta_star)<span class="sc">$</span>value<span class="sc">/</span>(<span class="fu">beta</span>(a_1 <span class="sc">+</span></span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>    n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1) <span class="sc">*</span> <span class="fu">beta</span>(a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, b_0 <span class="sc">+</span> n_0 <span class="sc">-</span></span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">*</span> p_0))</span>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Integral function</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>inner_func <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    (x)<span class="sc">^</span>(a_1 <span class="sc">+</span> <span class="fu">ceiling</span>(n_1) <span class="sc">*</span> p_1 <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> x)<span class="sc">^</span>(b_1 <span class="sc">+</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ceiling</span>(n_1) <span class="sc">-</span> <span class="fu">ceiling</span>(n_1) <span class="sc">*</span> p_1 <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>inner_int <span class="ot">&lt;-</span> <span class="fu">Vectorize</span>(<span class="cf">function</span>(y) {</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    y<span class="sc">^</span>(a_0 <span class="sc">+</span> <span class="fu">ceiling</span>(n_0) <span class="sc">*</span> p_0 <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> y)<span class="sc">^</span>(b_0 <span class="sc">+</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ceiling</span>(n_0) <span class="sc">-</span> <span class="fu">ceiling</span>(n_0) <span class="sc">*</span> p_0 <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="fu">integrate</span>(inner_func,</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>        <span class="dv">0</span>, y)<span class="sc">$</span>value</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Enthusiastic prior</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">7.2</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.03</span>)<span class="sc">/</span>(<span class="fl">0.03</span>) <span class="sc">*</span> a_0</span>
 <span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="do">## Enthusiastic prior</span></span>
-<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
-<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">7.2</span></span>
-<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.03</span>)<span class="sc">/</span>(<span class="fl">0.03</span>) <span class="sc">*</span> a_0</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">integrate</span>(inner_int, <span class="dv">0</span>, <span class="dv">1</span> <span class="sc">-</span> delta_star)<span class="sc">$</span>value<span class="sc">/</span>(<span class="fu">beta</span>(a_1 <span class="sc">+</span></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>    n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1) <span class="sc">*</span> <span class="fu">beta</span>(a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, b_0 <span class="sc">+</span> n_0 <span class="sc">-</span></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">*</span> p_0))</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Enthusiastic"</span>, bap)</span>
 <span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">integrate</span>(inner_int, <span class="dv">0</span>, <span class="dv">1</span> <span class="sc">-</span> delta_star)<span class="sc">$</span>value<span class="sc">/</span>(<span class="fu">beta</span>(a_1 <span class="sc">+</span></span>
-<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>    n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1) <span class="sc">*</span> <span class="fu">beta</span>(a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, b_0 <span class="sc">+</span> n_0 <span class="sc">-</span></span>
-<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">*</span> p_0))</span>
-<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Enthusiastic"</span>, bap)</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Skeptical prior</span></span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">2.84</span></span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span>)<span class="sc">/</span><span class="fl">0.05</span> <span class="sc">*</span> a_1</span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">1.24</span></span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
 <span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Skeptical prior</span></span>
-<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">2.84</span></span>
-<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span>)<span class="sc">/</span><span class="fl">0.05</span> <span class="sc">*</span> a_1</span>
-<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">1.24</span></span>
-<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">integrate</span>(inner_int, <span class="dv">0</span>, <span class="dv">1</span> <span class="sc">-</span> delta_star)<span class="sc">$</span>value<span class="sc">/</span>(<span class="fu">beta</span>(a_1 <span class="sc">+</span></span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>    n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1) <span class="sc">*</span> <span class="fu">beta</span>(a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, b_0 <span class="sc">+</span> n_0 <span class="sc">-</span></span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">*</span> p_0))</span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Skeptical"</span>, bap))</span>
 <span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">integrate</span>(inner_int, <span class="dv">0</span>, <span class="dv">1</span> <span class="sc">-</span> delta_star)<span class="sc">$</span>value<span class="sc">/</span>(<span class="fu">beta</span>(a_1 <span class="sc">+</span></span>
-<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>    n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1) <span class="sc">*</span> <span class="fu">beta</span>(a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, b_0 <span class="sc">+</span> n_0 <span class="sc">-</span></span>
-<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">*</span> p_0))</span>
-<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Skeptical"</span>, bap))</span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Informative prior</span></span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.03</span></span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
 <span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Informative prior</span></span>
-<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
-<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
-<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.03</span></span>
-<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
+<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">integrate</span>(inner_int, <span class="dv">0</span>, <span class="dv">1</span> <span class="sc">-</span> delta_star)<span class="sc">$</span>value<span class="sc">/</span>(<span class="fu">beta</span>(a_1 <span class="sc">+</span></span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a>    n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1) <span class="sc">*</span> <span class="fu">beta</span>(a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, b_0 <span class="sc">+</span> n_0 <span class="sc">-</span></span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">*</span> p_0))</span>
+<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Informative"</span>, bap))</span>
 <span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">integrate</span>(inner_int, <span class="dv">0</span>, <span class="dv">1</span> <span class="sc">-</span> delta_star)<span class="sc">$</span>value<span class="sc">/</span>(<span class="fu">beta</span>(a_1 <span class="sc">+</span></span>
-<span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a>    n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1) <span class="sc">*</span> <span class="fu">beta</span>(a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, b_0 <span class="sc">+</span> n_0 <span class="sc">-</span></span>
-<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">*</span> p_0))</span>
-<span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Informative"</span>, bap))</span>
-<span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a><span class="do">## Noninformative prior</span></span>
+<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
 <span id="cb34-55"><a href="#cb34-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-56"><a href="#cb34-56" aria-hidden="true" tabindex="-1"></a><span class="do">## Noninformative prior</span></span>
-<span id="cb34-57"><a href="#cb34-57" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb34-58"><a href="#cb34-58" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb34-59"><a href="#cb34-59" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb34-60"><a href="#cb34-60" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb34-56"><a href="#cb34-56" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">integrate</span>(inner_int, <span class="dv">0</span>, <span class="dv">1</span> <span class="sc">-</span> delta_star)<span class="sc">$</span>value<span class="sc">/</span>(<span class="fu">beta</span>(a_1 <span class="sc">+</span></span>
+<span id="cb34-57"><a href="#cb34-57" aria-hidden="true" tabindex="-1"></a>    n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1) <span class="sc">*</span> <span class="fu">beta</span>(a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, b_0 <span class="sc">+</span> n_0 <span class="sc">-</span></span>
+<span id="cb34-58"><a href="#cb34-58" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">*</span> p_0))</span>
+<span id="cb34-59"><a href="#cb34-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-60"><a href="#cb34-60" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Noninformative"</span>, bap))</span>
 <span id="cb34-61"><a href="#cb34-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-62"><a href="#cb34-62" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">integrate</span>(inner_int, <span class="dv">0</span>, <span class="dv">1</span> <span class="sc">-</span> delta_star)<span class="sc">$</span>value<span class="sc">/</span>(<span class="fu">beta</span>(a_1 <span class="sc">+</span></span>
-<span id="cb34-63"><a href="#cb34-63" aria-hidden="true" tabindex="-1"></a>    n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1) <span class="sc">*</span> <span class="fu">beta</span>(a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, b_0 <span class="sc">+</span> n_0 <span class="sc">-</span></span>
-<span id="cb34-64"><a href="#cb34-64" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">*</span> p_0))</span>
-<span id="cb34-65"><a href="#cb34-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-66"><a href="#cb34-66" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Noninformative"</span>, bap))</span>
-<span id="cb34-67"><a href="#cb34-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-68"><a href="#cb34-68" aria-hidden="true" tabindex="-1"></a>res_bap<span class="sc">$</span>bap <span class="ot">&lt;-</span> <span class="fu">round</span>(res_bap<span class="sc">$</span>bap, <span class="dv">2</span>)</span>
-<span id="cb34-69"><a href="#cb34-69" aria-hidden="true" tabindex="-1"></a>res_bap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-62"><a href="#cb34-62" aria-hidden="true" tabindex="-1"></a>res_bap<span class="sc">$</span>bap <span class="ot">&lt;-</span> <span class="fu">round</span>(res_bap<span class="sc">$</span>bap, <span class="dv">2</span>)</span>
+<span id="cb34-63"><a href="#cb34-63" aria-hidden="true" tabindex="-1"></a>res_bap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>            type  bap

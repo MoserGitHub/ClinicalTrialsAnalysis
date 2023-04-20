@@ -1706,9 +1706,7 @@ $$
 #| echo: true
 #| warning: false
 
-p_1 <- 0.01
-x <- seq(0.001, 0.999, 0.001)
-
+# Integral function
 inner_func <- function(x) {
     (x)^(a_1 + ceiling(n_1) * p_1 - 1) * (1 - x)^(b_1 +
         ceiling(n_1) - ceiling(n_1) * p_1 - 1)
@@ -1719,10 +1717,6 @@ inner_int <- Vectorize(function(y) {
         ceiling(n_0) - ceiling(n_0) * p_0 - 1) * integrate(inner_func,
         0, y)$value
 })
-
-bap <- integrate(inner_int, 0, 1-delta_star)$value/(beta(a_1 +
-    n_1 * p_1, b_1 + n_1 - n_1 * p_1) * beta(a_0 + n_0 * p_0, b_0 + n_0 -
-    n_0 * p_0))
 
 ## Enthusiastic prior
 a_1 <- 0.5
