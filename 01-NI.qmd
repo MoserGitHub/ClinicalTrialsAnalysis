@@ -1693,7 +1693,7 @@ $$
 and thus, by using Fubini's theorem, the incomplete beta function $B(x;a,b)$ and the guidance of Patricia Altham @Altham1969,
 $$
 \begin{aligned}
-P\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)&=\int_0^{1}\int_0^{\pi_0+\delta^*} f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)d\pi_1d\pi_0 \\
+P&\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0^{\pi_0+\delta^*} f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)d\pi_1d\pi_0 \\
 &=\int_0^{1}\frac{\pi_0^{a_0+r_0-1}(1-\pi_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{\pi_0+\delta^*} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)d\pi_0 \\
 &\overset{u=\pi_0-\delta^*}{=}\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{u} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)du  \\
 &=\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}u^s(1-u)^{a_1+b_1+n_1-1-s}\right)du \\
@@ -1703,7 +1703,7 @@ P\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)&=\int_0^{1}\int_0^{\p
 &=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{B(a_0+r_0+s, a_1+b_1+n_1-1-s+b_0+n_0-r_0)}{B(a_0+r_0, b_0+n_0-r_0)}, \\
 \end{aligned}
 $$
-is the **Bayesian probability to reject** given assumed $r_0, r_1, n_0, n_1$. Note that the last term in the above formula is the upper tail of a beta-binomial cdf. Grieve highlights that this is can be written as a hypergeometric distribution (@Grieve2022, @Grieve2016).
+is the **Bayesian probability to reject** given assumed $r_0, r_1, n_0, n_1$. Note that the last term in the above formula is the upper tail of a beta-binomial distribution Grieve highlights that this is can be written as a hypergeometric distribution (@Grieve2022, @Grieve2016).
 
 ```{r fig23}
 #| echo: true
