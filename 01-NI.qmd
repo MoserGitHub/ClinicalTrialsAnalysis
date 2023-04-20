@@ -1690,14 +1690,17 @@ We denote the joint posterior distribution as
 $$
 f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)=\prod_{i\in\{0,1\}} \frac{\pi_i^{a_i+r_i-1}(1-\pi_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}.
 $$
-and thus
+and thus, by using Fubini's theorem,
 $$
-P\left(\pi_1-\pi_0 \leq \delta^*\right)=\int_0^{1-\delta^*}\int_0^{\pi_0+\delta^*} f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)d\pi_1d\pi_0=\int_0^{1-\delta^*}\frac{\pi_0^{a_0+r_0-1}(1-\pi_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{\pi_0+\delta^*}\frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)d\pi_0,
+\begin{aligned}
+P\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)&=\int_0^{1}\int_0^{\pi_0+\delta^*} f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)d\pi_1d\pi_0 \\
+&=\int_0^{1-\delta^*}\frac{\pi_0^{a_0+r_0-1}(1-\pi_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{\pi_0} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)d\pi_0 \\
+\end{aligned}
 $$
-is the Bayesian probability to reject. Grieve
-
-
-The calculation of the Bayesian average power is again done by simulation.
+is the **Bayesian probability to reject** given assumed $r_0, r_1, n_0, n_1$. Grieve highlights that this is can be written as a hypergeometric distribution (@Grieve2022, @Grieve2016)
+$$
+\sum_{s=\max(r_0+a_0-r_1-a_1,0)}^{r_0+a_0-1} \frac{\begin{pmatrix} r_0+r_1+a_0+a_1-1 \\ s \end{pmatrix}\begin{pmatrix} n_0+n_1-r_0-r_1+b_0+b_1-1 \\ n_0+a_0+b_0-1-s \end{pmatrix}}{\begin{pmatrix} n_0+n_1+a_0+a_1+b_0+b_1-2 \\ n_1+a_1+b_1-1 \end{pmatrix}}.
+$$
 
 ```{r fig23}
 #| echo: true
@@ -1706,25 +1709,30 @@ The calculation of the Bayesian average power is again done by simulation.
 p_1 <- 0.01
 x <- seq(0.001, 0.999, 0.001)
 
+inner_func <- function(x) {
+    (x)^(a_1 + ceiling(n_1) * p_1 - 1) * (1 - x)^(b_1 +
+        ceiling(n_1) - ceiling(n_1) * p_1 - 1)
+}
+
+inner_int <- Vectorize(function(y) {
+    y^(a_0 + ceiling(n_0) * p_0 - 1) * (1 - y)^(b_0 +
+        ceiling(n_0) - ceiling(n_0) * p_0 - 1) * integrate(inner_func,
+        0, y)$value
+})
+
+bap <- integrate(inner_int, 0, 1-delta_star)$value/(beta(a_1 +
+    n_1 * p_1, b_1 + n_1 - n_1 * p_1) * beta(a_0 + n_0 * p_0, b_0 + n_0 -
+    n_0 * p_0))
+
 ## Enthusiastic prior
 a_1 <- 0.5
 b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 7.2
 b_0 <- (1 - 0.03)/(0.03) * a_0
 
-inner_func <- function(x) {
-    x^(a_1 + ceiling(n_1) * p_1 - 1) * (1 - x)^(b_1 +
-        ceiling(n_1) - ceiling(n_1) * p_1 - 1)
-}
-inner_int <- Vectorize(function(y) {
-    y^(a_0 + ceiling(n_0) * p_0 - 1) * (1 - y)^(b_0 +
-        ceiling(n_0) - ceiling(n_0) * p_0 - 1) * integrate(inner_func,
-        0, y)$value
-})
 bap <- integrate(inner_int, 0, 1 - delta_star)$value/(beta(a_1 +
-    ceiling(n_1) * p_1, b_1 + ceiling(n_1) - ceiling(n_1) *
-    p_1) * beta(a_0 + ceiling(n_0) * p_0, b_0 + ceiling(n_0) -
-    ceiling(n_0) * p_0))
+    n_1 * p_1, b_1 + n_1 - n_1 * p_1) * beta(a_0 + n_0 * p_0, b_0 + n_0 -
+    n_0 * p_0))
 
 res_bap <- data.frame(type="Enthusiastic", bap)
 
@@ -1734,19 +1742,9 @@ b_1 <- (1 - 0.05)/0.05 * a_1
 a_0 <- 1.24
 b_0 <- (1 - p_0)/p_0 * a_0
 
-inner_func <- function(x) {
-    x^(a_1 + ceiling(n_1) * p_1 - 1) * (1 - x)^(b_1 +
-        ceiling(n_1) - ceiling(n_1) * p_1 - 1)
-}
-inner_int <- Vectorize(function(y) {
-    y^(a_0 + ceiling(n_0) * p_0 - 1) * (1 - y)^(b_0 +
-        ceiling(n_0) - ceiling(n_0) * p_0 - 1) * integrate(inner_func,
-        0, y)$value
-})
 bap <- integrate(inner_int, 0, 1 - delta_star)$value/(beta(a_1 +
-    ceiling(n_1) * p_1, b_1 + ceiling(n_1) - ceiling(n_1) *
-    p_1) * beta(a_0 + ceiling(n_0) * p_0, b_0 + ceiling(n_0) -
-    ceiling(n_0) * p_0))
+    n_1 * p_1, b_1 + n_1 - n_1 * p_1) * beta(a_0 + n_0 * p_0, b_0 + n_0 -
+    n_0 * p_0))
 
 res_bap <- rbind(res_bap, data.frame(type="Skeptical", bap))
 
@@ -1756,11 +1754,9 @@ b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 0.03
 b_0 <- (1 - p_0)/p_0 * a_0
 
-
 bap <- integrate(inner_int, 0, 1 - delta_star)$value/(beta(a_1 +
-    ceiling(n_1) * p_1, b_1 + ceiling(n_1) - ceiling(n_1) *
-    p_1) * beta(a_0 + ceiling(n_0) * p_0, b_0 + ceiling(n_0) -
-    ceiling(n_0) * p_0))
+    n_1 * p_1, b_1 + n_1 - n_1 * p_1) * beta(a_0 + n_0 * p_0, b_0 + n_0 -
+    n_0 * p_0))
 
 res_bap <- rbind(res_bap, data.frame(type="Informative", bap))
 
@@ -1772,28 +1768,11 @@ a_1 <- 0.5
 b_1 <- 0.5
 
 bap <- integrate(inner_int, 0, 1 - delta_star)$value/(beta(a_1 +
-    ceiling(n_1) * p_1, b_1 + ceiling(n_1) - ceiling(n_1) *
-    p_1) * beta(a_0 + ceiling(n_0) * p_0, b_0 + ceiling(n_0) -
-    ceiling(n_0) * p_0))
+    n_1 * p_1, b_1 + n_1 - n_1 * p_1) * beta(a_0 + n_0 * p_0, b_0 + n_0 -
+    n_0 * p_0))
 
 res_bap <- rbind(res_bap, data.frame(type="Noninformative", bap))
 
 res_bap$bap <- round(res_bap$bap, 2)
 res_bap
-
-# posterior_0 <- rbeta(10000, a_0 + n_0 * p_0, b_0 + n_0 -
-#     n_0 * p_0)
-# posterior_1 <- rbeta(10000, a_1 + n_1 * p_1, b_1 + n_1 -
-#     n_1 * p_1)
-# var_posterior_0 <- ((a_0 + n_0 * p_0) * (b_0 + n_0 -
-#     n_0 * p_0))/((a_0 + b_0 + n_0)^2 * (a_0 + b_0 +
-#     n_0 + 1))
-# var_posterior_1 <- ((a_1 + n_1 * p_1) * (b_1 + n_1 -
-#     n_1 * p_1))/((a_1 + b_1 + n_1)^2 * (a_1 + b_1 +
-#     n_1 + 1))
-# sum(posterior_1-posterior_0+qnorm(1-0.05)*sqrt(var_posterior_0+var_posterior_1)<=0.035)/10000
-
-# s <- seq(max(ceiling(r_0+a_0-r_1-a_1),0), ceiling(r_0+a_0-1))
-
-# sum(dhyper(s, m=ceiling(r_0+r_1+a_1+a_0-1), n=ceiling(n_1+n_0-r_1-r_0+b_1+b_0-1), k=ceiling(n_1+a_1+b_1-1)))
 ```
