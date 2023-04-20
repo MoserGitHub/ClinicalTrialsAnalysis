@@ -68,10 +68,16 @@ Jeffrey's prior for the binomial model is a proper prior @Held2020.
 #| echo: true
 #| message: false
 #| warning: false
+#| code-fold: show
 
+# All tidyverse functions
 library(tidyverse)
+# For frequentist sample size calculation
 library(epiR)
+# Multivariate Gaussian and t-distributions
 library(mvtnorm)
+# Beta binomial distribution
 library(extraDistr)
+# Agresti-Caffo confidence intervals for risk difference
 library(PropCIs)
 ```

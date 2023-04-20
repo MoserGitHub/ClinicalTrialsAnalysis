@@ -1690,36 +1690,52 @@ We denote the joint posterior distribution as
 $$
 f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)=\prod_{i\in\{0,1\}} \frac{\pi_i^{a_i+r_i-1}(1-\pi_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}.
 $$
-and thus, by using Fubini's theorem, the incomplete beta function $B(x;a,b)$ and the guidance of Patricia Altham @Altham1969,
+and thus, by using Fubini's theorem and the guidance of Patricia Altham @Altham1969,
 $$
 \begin{aligned}
 P&\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0^{\pi_0+\delta^*} f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)d\pi_1d\pi_0 \\
 &=\int_0^{1}\frac{\pi_0^{a_0+r_0-1}(1-\pi_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{\pi_0+\delta^*} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)d\pi_0 \\
-&\overset{u=\pi_0-\delta^*}{=}\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{u} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)du  \\
-&=\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}u^s(1-u)^{a_1+b_1+n_1-1-s}\right)du \\
+&\overset{u=\pi_0-\delta^*}{=}\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{u} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)du \\
+&=\cdots
+\end{aligned}
+$$
+is the **Bayesian probability to reject** given assumed $r_0, r_1, n_0, n_1$. This integral can be solved using the *integrate* function in R, or using the continuation of the formula
+$$
+\begin{aligned}
+\cdots&=\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}u^s(1-u)^{a_1+b_1+n_1-1-s}\right)du \\
 &=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{1}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_{-\delta^*}^{1-\delta^*}u^{a_0+r_0+s-1}(1-u)^{a_1+b_1+n_1-1+b_0+n_0-r_0-s-1}du\right) \\
-&=\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}u^s(1-u)^{a_1+b_1+n_1-1-s}\right)du \\
 &\overset{z=u+\delta^*}{=}\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{1}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_{0}^{1}z^{a_0+r_0+s-1}(1-z)^{a_1+b_1+n_1-1-s+b_0+n_0-r_0-1}dz\right) \\
 &=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{B(a_0+r_0+s, a_1+b_1+n_1-1-s+b_0+n_0-r_0)}{B(a_0+r_0, b_0+n_0-r_0)}, \\
 \end{aligned}
 $$
-is the **Bayesian probability to reject** given assumed $r_0, r_1, n_0, n_1$. Note that the last term in the above formula is the upper tail of a beta-binomial distribution Grieve highlights that this is can be written as a hypergeometric distribution (@Grieve2022, @Grieve2016).
+
+where the last term in the above formula is the upper tail of a beta-binomial distribution. Altham @Altham1969 showed that this can be written as a hypergeometric distribution (see also @Grieve2022, @Grieve2016).
+
+------------------------------------------------------------------------
+
+**Working example (continued)**
+
+We calculate the Bayesian probability to reject for the SAFE-SSPE study. We show the integral solution and the calculation from the upper tail of a beta-binomial distribution.
+
+Note that for the integral calculation the lower integrand $-\delta^*$ in
+
+$$
+\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{u} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)du
+$$
+needs to be zero, otherwise the function is not defined.
 
 ```{r fig23}
 #| echo: true
 #| warning: false
 
-library(extraDistr)
-
-
 # Integral function
 inner_func <- function(x) {
-    (x)^(a_1 + ceiling(n_1) * p_1 - 1) * (1 - x)^(b_1 +
+    x^(a_1 + ceiling(n_1) * p_1 - 1) * (1 - x)^(b_1 +
         ceiling(n_1) - ceiling(n_1) * p_1 - 1)
 }
 
 inner_int <- Vectorize(function(u) {
-    (u)^(a_0 + ceiling(n_0) * p_0 - 1) * (1 - u)^(b_0 +
+    u^(a_0 + ceiling(n_0) * p_0 - 1) * (1 - u)^(b_0 +
         ceiling(n_0) - ceiling(n_0) * p_0 - 1) * integrate(inner_func,
         0, u)$value
 })
@@ -1739,9 +1755,6 @@ s <- ceiling(seq(a_1 + n_1 * p_1, b_1 + n_1 - n_1 *
 bap_tail_betabinomial <- sum(dbbinom(s, size = ceiling(a_1 +
     b_1 + n_1 - 1), alpha = a_0 + n_0 * p_0, beta = b_0 +
     n_0 - n_0 * p_0))
-
-# s <- seq(max(ceiling(n_0 * p_0+a_0-n_1*p_1-a_1),0), ceiling(n_1*p_1+a_0-(1-delta_star)))
-# sum(dhyper(s, m=ceiling(n_0*p_0+n_1*p_1+a_1+a_0-1), n=ceiling(n_1+n_0-n_1*p_1-n_0 * p_0+b_1+b_0-1), k=ceiling(n_0+a_0+b_0-1)))
 
 res_bap <- data.frame(type="Enthusiastic", bap_integral, bap_tail_betabinomial)
 
@@ -1809,3 +1822,7 @@ res_bap$bap_tail_betabinomial <- round(res_bap$bap_tail_betabinomial, 2)
 
 res_bap
 ```
+
+Small differences between both approaches occur because 'beta-binomial distribution' approaches is a discretization of the integral and requires integer steps for the calculation.
+
+------------------------------------------------------------------------
