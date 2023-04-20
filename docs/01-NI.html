@@ -1756,10 +1756,10 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 <p><img src="01-NI_files/figure-html/fig21-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p><strong>Noninformative prior</strong>: Uniform prior for both, the active treatment arm and control arm.</p>
+<p><strong>Noninformative prior</strong>: Agresti and Min suggest to use a ‘diffuse’ prior and recommend to use Jeffrey’s prior <span class="citation" data-cites="Agresti2005">[<a href="references.html#ref-Agresti2005" role="doc-biblioref">8</a>]</span>. Jeffrey’s prior for a binomial likelihood is <span class="math inline">\(beta(0.5, 0.5)\)</span>-distributed.</p>
 <ul>
-<li>Parameters of beta prior for active treatment arm: <span class="math inline">\(a_1=1\)</span>, <span class="math inline">\(b_1=1\)</span>.</li>
-<li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_0=1\)</span>, <span class="math inline">\(b_0=1\)</span>.</li>
+<li>Parameters of beta prior for active treatment arm: <span class="math inline">\(a_1=0.5\)</span>, <span class="math inline">\(b_1=0.5\)</span>.</li>
+<li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_0=0.5\)</span>, <span class="math inline">\(b_0=0.5\)</span>.</li>
 </ul>
 <div class="cell">
 <details>

@@ -1635,10 +1635,10 @@ ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) 
 
 
 
-**Noninformative prior**: Uniform prior for both, the active treatment arm and control arm.
+**Noninformative prior**: Agresti and Min suggest to use a 'diffuse' prior and recommend to use Jeffrey's prior @Agresti2005. Jeffrey's prior for a binomial likelihood is $beta(0.5, 0.5)$-distributed.
 
-- Parameters of beta prior for active treatment arm: $a_1=1$, $b_1=1$.
-- Parameters of beta prior for control treatment arm: $a_0=1$, $b_0=1$.
+- Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=0.5$.
+- Parameters of beta prior for control treatment arm: $a_0=0.5$, $b_0=0.5$.
 
 ```{r fig22}
 #| echo: true
