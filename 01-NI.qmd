@@ -1045,7 +1045,6 @@ For the SAFE-SSPE trial we specify the following design beta priors for the expe
 
 library(extraDistr)
 
-p_1 <- 0.01
 x <- seq(0.001, 0.999, 0.001)
 
 ## Enthusiastic prior
@@ -1056,22 +1055,15 @@ b_0 <- (1 - 0.03)/0.03 * a_0
 
 prior_0 <- dbeta(x, a_0, b_0)
 prior_1 <- dbeta(x, a_1, b_1)
-pred_0 <- dbbinom(x = 1:999, size = 1000, a_0, b_0) *
-    1000
-pred_1 <- dbbinom(x = 1:999, size = 1000, a_1, b_1) *
-    1000
 
-prior_plot <- data.frame(x, prior_0, prior_1, pred_0,
-    pred_1)
+prior_plot <- data.frame(x, prior_0, prior_1)
 prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0,
-    prior_1, pred_0, pred_1))
+    prior_1))
 prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name,
     "_0") == T, "Control arm", "Active arm")
-prior_plot_long$type <- ifelse(str_detect(prior_plot_long$name,
-    "pred_") == T, "Predicted", "Prior")
 
 fig1 <- ggplot(prior_plot_long, aes(x = x, y = value,
-    colour = group, linetype = type)) + geom_line(linewidth = 1.5) +
+    colour = group)) + geom_line(linewidth = 1.5) +
     theme_bw() + theme(panel.grid.minor = element_blank(),
     legend.position = "bottom", legend.direction = "horizontal") +
     scale_x_continuous(limits = c(0, 0.1)) + ylab("Density") +
@@ -1094,7 +1086,7 @@ fig2 <- ggplot(diff_prior, aes(x), group = x) + geom_density(linewidth = 1.5,
     -0.25, 0, 0.035, 0.25, 0.5), labels = c(-0.5, -0.25,
     0, 0.035, 0.25, 0.5), limits = c(-0.5, 0.5))
 
-cowplot::plot_grid(fig1, fig2, align = "h", ncol = 1)
+cowplot::plot_grid(fig1, fig2, ncol = 1)
 ```
 
 **Skeptical prior**: The beta prior for the active treatment arm is centered at 0.05 (the safety margin) with $P(\pi_1\leq 0.01)=0.025$, that is the probability that the prior is smaller or equal than the expected event proportion is 2.5%. The mean of the beta prior for the control arm is is centered at 0.01 (the expected event proportion) with $P(\pi_0> 0.05)=0.025$.
@@ -1118,22 +1110,15 @@ b_0 <- (1 - 0.01)/0.01 * a_0
 
 prior_0 <- dbeta(x, a_0, b_0)
 prior_1 <- dbeta(x, a_1, b_1)
-pred_0 <- dbbinom(x = 1:999, size = 1000, a_0, b_0) *
-    1000
-pred_1 <- dbbinom(x = 1:999, size = 1000, a_1, b_1) *
-    1000
 
-prior_plot <- data.frame(x, prior_0, prior_1, pred_0,
-    pred_1)
+prior_plot <- data.frame(x, prior_0, prior_1)
 prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0,
-    prior_1, pred_0, pred_1))
+    prior_1))
 prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name,
     "_0") == T, "Control arm", "Active arm")
-prior_plot_long$type <- ifelse(str_detect(prior_plot_long$name,
-    "pred_") == T, "Predicted", "Prior")
 
 fig1 <- ggplot(prior_plot_long, aes(x = x, y = value,
-    colour = group, linetype = type)) + geom_line(linewidth = 1.5) +
+    colour = group)) + geom_line(linewidth = 1.5) +
     theme_bw() + theme(panel.grid.minor = element_blank(),
     legend.position = "bottom", legend.direction = "horizontal") +
     scale_x_continuous(limits = c(0, 0.1)) + ylab("Density") +
@@ -1156,7 +1141,7 @@ fig2 <- ggplot(diff_prior, aes(x), group = x) + geom_density(linewidth = 1.5,
     -0.25, 0, 0.035, 0.25, 0.5), labels = c(-0.5, -0.25,
     0, 0.035, 0.25, 0.5), limits = c(-0.5, 0.5))
 
-cowplot::plot_grid(fig1, fig2, align = "h", ncol = 1)
+cowplot::plot_grid(fig1, fig2, ncol = 1)
 ```
 
 **Informative prior**: The beta prior for the active treatment arm and control arm is centered at 0.01 (the expected event proportion) with $P(\pi_1\leq 0.05)=0.01$ and $P(\pi_1\leq 0.05)=0.05$.
@@ -1179,22 +1164,15 @@ b_0 <- (1 - p_0)/p_0 * a_0
 
 prior_0 <- dbeta(x, a_0, b_0)
 prior_1 <- dbeta(x, a_1, b_1)
-pred_0 <- dbbinom(x = 1:999, size = 1000, a_0, b_0) *
-    1000
-pred_1 <- dbbinom(x = 1:999, size = 1000, a_1, b_1) *
-    1000
 
-prior_plot <- data.frame(x, prior_0, prior_1, pred_0,
-    pred_1)
+prior_plot <- data.frame(x, prior_0, prior_1)
 prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0,
-    prior_1, pred_0, pred_1))
+    prior_1))
 prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name,
     "_0") == T, "Control arm", "Active arm")
-prior_plot_long$type <- ifelse(str_detect(prior_plot_long$name,
-    "pred_") == T, "Predicted", "Prior")
 
 fig1 <- ggplot(prior_plot_long, aes(x = x, y = value,
-    colour = group, linetype = type)) + geom_line(linewidth = 1.5) +
+    colour = group)) + geom_line(linewidth = 1.5) +
     theme_bw() + theme(panel.grid.minor = element_blank(),
     legend.position = "bottom", legend.direction = "horizontal") +
     scale_x_continuous(limits = c(0, 0.1)) + ylab("Density") +
@@ -1217,7 +1195,7 @@ fig2 <- ggplot(diff_prior, aes(x), group = x) + geom_density(linewidth = 1.5,
     -0.25, 0, 0.035, 0.25, 0.5), labels = c(-0.5, -0.25,
     0, 0.035, 0.25, 0.5), limits = c(-0.5, 0.5))
 
-cowplot::plot_grid(fig1, fig2, align = "h", ncol = 1)
+cowplot::plot_grid(fig1, fig2, ncol = 1)
 ```
 
 **Noninformative prior**: Agresti and Min suggest to use a 'diffuse' prior and recommend to use Jeffrey's prior @Agresti2005. Jeffrey's prior for a binomial likelihood is $beta(0.5, 0.5)$-distributed.
@@ -1240,24 +1218,14 @@ b_1 <- 0.5
 prior_0 <- dbeta(x, a_0, b_0)
 prior_1 <- dbeta(x, a_1, b_1)
 
-prior_0 <- dbeta(x, a_0, b_0)
-prior_1 <- dbeta(x, a_1, b_1)
-pred_0 <- dbbinom(x = 1:999, size = 1000, a_0, b_0) *
-    1000
-pred_1 <- dbbinom(x = 1:999, size = 1000, a_1, b_1) *
-    1000
-
-prior_plot <- data.frame(x, prior_0, prior_1, pred_0,
-    pred_1)
+prior_plot <- data.frame(x, prior_0, prior_1)
 prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0,
-    prior_1, pred_0, pred_1))
+    prior_1))
 prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name,
     "_0") == T, "Control arm", "Active arm")
-prior_plot_long$type <- ifelse(str_detect(prior_plot_long$name,
-    "pred_") == T, "Predicted", "Prior")
 
 fig1 <- ggplot(prior_plot_long, aes(x = x, y = value,
-    colour = group, linetype = type)) + geom_line(linewidth = 1.5) +
+    colour = group)) + geom_line(linewidth = 1.5) +
     theme_bw() + theme(panel.grid.minor = element_blank(),
     legend.position = "bottom", legend.direction = "horizontal") +
     scale_x_continuous(limits = c(0, 0.1)) + ylab("Density") +
@@ -1280,7 +1248,7 @@ fig2 <- ggplot(diff_prior, aes(x), group = x) + geom_density(linewidth = 1.5,
     -0.25, 0, 0.035, 0.25, 0.5, 1), labels = c(-1, -0.5, -0.25,
     0, 0.035, 0.25, 0.5, 1), limits = c(-1, 1))
 
-cowplot::plot_grid(fig1, fig2, align = "h", ncol = 1)
+cowplot::plot_grid(fig1, fig2, ncol = 1)
 ```
 
 ------------------------------------------------------------------------
