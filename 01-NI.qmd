@@ -1276,9 +1276,9 @@ fig2 <- ggplot(diff_prior, aes(x), group = x) + geom_density(linewidth = 1.5,
     ggtitle("Distribution of difference from\nsimulated predicted event proportions") +
     ylab("Density") + geom_vline(xintercept = delta_star,
     linetype = "dashed") + geom_vline(xintercept = 0,
-    linetype = "dotted") + scale_x_continuous(breaks = c(-0.5,
-    -0.25, 0, 0.035, 0.25, 0.5), labels = c(-0.5, -0.25,
-    0, 0.035, 0.25, 0.5), limits = c(-0.5, 0.5))
+    linetype = "dotted") + scale_x_continuous(breaks = c(-1, -0.5,
+    -0.25, 0, 0.035, 0.25, 0.5, 1), labels = c(-1, -0.5, -0.25,
+    0, 0.035, 0.25, 0.5, 1), limits = c(-1, 1))
 
 cowplot::plot_grid(fig1, fig2, align = "h", ncol = 1)
 ```
