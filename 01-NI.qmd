@@ -1728,7 +1728,7 @@ a_1 <- 0.5
 b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 7.2
 b_0 <- (1 - 0.03)/(0.03) * a_0
-delta_star <- 0.035
+delta_star <- 0
 bap <- integrate(inner_int, delta_star, 1+delta_star)$value/(beta(a_1 +
     n_1 * p_1, b_1 + n_1 - n_1 * p_1) * beta(a_0 + n_0 * p_0, b_0 + n_0 -
     n_0 * p_0))
