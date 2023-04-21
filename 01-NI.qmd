@@ -147,7 +147,7 @@ Under the specified parameters a sample size of 200 patients (100 per arm) is ne
 
 ------------------------------------------------------------------------
 
-#### Hybrid approach: Prior on the treatment effect
+#### Hybrid approach: Prior on the risk difference
 
 Suppose that the true treatment effect $\delta$ is a realization from a random variable $\Delta$ with $f(\delta)$. In this subsection we assume that the design prior comes from a Gaussian distribution function so that $\Delta \sim N\left(d, \frac{\sigma_1^2+\sigma_0^2}{m}\right)$. Note that this prior can be thought as a realisation from $m$ Gaussian 'prior observations' with variance $\sigma_1^2+\sigma_0^2$. Again for notational purposes we denote the variance of the design prior of the treatment effect as $\sigma_{prior}^2=\frac{\sigma_1^2+\sigma_0^2}{m}$.
 
@@ -720,9 +720,9 @@ data_ep
 
 ------------------------------------------------------------------------
 
-#### Bayesian approach: Prior on the treatment effect
+#### Bayesian approach: Prior on the risk difference
 
-A proper Bayesian approach uses the posterior distribution to define 'a successful trial result'. Remember that $D=\overline{p}_1-\overline{p}_0$ with $D \sim N(\delta, \sigma^2_{treat})$. Suppose that $\Delta \sim N(d, \sigma^2_{prior})$ is an analysis prior, then the posterior distribution is given as
+The Bayesian approach uses the posterior distribution to define 'a successful trial result'. Remember that $D=\overline{p}_1-\overline{p}_0$ with $D \sim N(\delta, \sigma^2_{treat})$. Suppose that $\Delta \sim N(d, \sigma^2_{prior})$ is an analysis prior, then the posterior distribution is given as
 $$
 \begin{aligned}
 \Delta|D \sim N\left(\frac{\frac{d}{\sigma^2_{prior}}+\frac{D}{\sigma^2_{treat}}}{\frac{1}{\sigma^2_{prior}}+\frac{1}{\sigma^2_{treat}}}, \frac{1}{\frac{1}{\sigma^2_{prior}}+\frac{1}{\sigma^2_{treat}}}\right)=N\left( \frac{\sigma^2_{treat}d+\sigma^2_{prior}D}{\sigma^2_{treat}+\sigma^2_{prior}}, \frac{\sigma^2_{treat}\sigma^2_{prior}}{\sigma^2_{treat}+\sigma^2_{prior}}  \right),
@@ -1067,7 +1067,7 @@ fig1 <- ggplot(prior_plot_long, aes(x = x, y = value,
     theme_bw() + theme(panel.grid.minor = element_blank(),
     legend.position = "bottom", legend.direction = "horizontal") +
     scale_x_continuous(limits = c(0, 0.1)) + ylab("Density") +
-    labs(caption = str_glue("Assumed event probabilities: Control (p_0=",
+    labs(caption = str_glue("Assumed event probabilities: Control arm (p_0=",
         p_0, "), ", "Active arm (p_1=", p_1, ")")) +
     scale_color_brewer("Treatment arm", palette = "Set2") +
     scale_linetype("Type") + ggtitle("Enthusiastic prior")
@@ -1122,7 +1122,7 @@ fig1 <- ggplot(prior_plot_long, aes(x = x, y = value,
     theme_bw() + theme(panel.grid.minor = element_blank(),
     legend.position = "bottom", legend.direction = "horizontal") +
     scale_x_continuous(limits = c(0, 0.1)) + ylab("Density") +
-    labs(caption = str_glue("Assumed event probabilities: Control (p_0=",
+    labs(caption = str_glue("Assumed event probabilities: Control arm (p_0=",
         p_0, "), ", "Active arm (p_1=", p_1, ")")) +
     scale_color_brewer("Treatment arm", palette = "Set2") +
     scale_linetype("Type") + ggtitle("Skeptical prior")
@@ -1176,7 +1176,7 @@ fig1 <- ggplot(prior_plot_long, aes(x = x, y = value,
     theme_bw() + theme(panel.grid.minor = element_blank(),
     legend.position = "bottom", legend.direction = "horizontal") +
     scale_x_continuous(limits = c(0, 0.1)) + ylab("Density") +
-    labs(caption = str_glue("Assumed event probabilities: Control (p_0=",
+    labs(caption = str_glue("Assumed event probabilities: Control arm (p_0=",
         p_0, "), ", "Active arm (p_1=", p_1, ")")) +
     scale_color_brewer("Treatment arm", palette = "Set2") +
     scale_linetype("Type") + ggtitle("Informative prior")
@@ -1229,7 +1229,7 @@ fig1 <- ggplot(prior_plot_long, aes(x = x, y = value,
     theme_bw() + theme(panel.grid.minor = element_blank(),
     legend.position = "bottom", legend.direction = "horizontal") +
     scale_x_continuous(limits = c(0, 0.1)) + ylab("Density") +
-    labs(caption = str_glue("Assumed event probabilities: Control (p_0=",
+    labs(caption = str_glue("Assumed event probabilities: Control arm (p_0=",
         p_0, "), ", "Active arm (p_1=", p_1, ")")) +
     scale_color_brewer("Treatment arm", palette = "Set2") +
     scale_linetype("Type") + ggtitle("Noninformative prior")
@@ -1244,18 +1244,18 @@ fig2 <- ggplot(diff_prior, aes(x), group = x) + geom_density(linewidth = 1.5,
     ggtitle("Distribution of difference from\nsimulated predicted event proportions") +
     ylab("Density") + geom_vline(xintercept = delta_star,
     linetype = "dashed") + geom_vline(xintercept = 0,
-    linetype = "dotted") + scale_x_continuous(breaks = c(-1, -0.5,
-    -0.25, 0, 0.035, 0.25, 0.5, 1), labels = c(-1, -0.5, -0.25,
-    0, 0.035, 0.25, 0.5, 1), limits = c(-1, 1))
+    linetype = "dotted") + scale_x_continuous(breaks = c(-1, -0.75, -0.5,
+    -0.25, 0, 0.035, 0.25, 0.5, 0.75, 1), labels = c(-1, -0.75, -0.5, -0.25,
+    0, 0.035, 0.25, 0.5, 0.75, 1), limits = c(-1, 1))
 
 cowplot::plot_grid(fig1, fig2, ncol = 1)
 ```
 
 ------------------------------------------------------------------------
 
-The calculation of the average power is easily done by simulation.
+One can calculate the average power as follows:
 
-##### Simulation approach 1: Joint probability
+##### Approach 1: Joint prior predictive probability
 
 The joint probability approach has been described in @Grieve2022 and includes the following steps:
 
@@ -1267,6 +1267,8 @@ Here we use Agresti-Caffo confidence intervals for the risk difference @Agresti2
 ```{r fig17}
 #| echo: true
 #| warning: false
+
+x <- c()
 
 library(extraDistr)
 library(PropCIs)
@@ -1285,7 +1287,6 @@ r_1 <- 0:(ceiling(n_1)-1)
 
 data_points <- expand.grid(r_1 = r_1, r_0 = r_0)
 
-set.seed(1)
 data_points$pdf_r_1 <- dbbinom(data_points$r_1, size = ceiling(n_1), a_1,
     b_1)
 data_points$pdf_r_0 <- dbbinom(data_points$r_0, size = ceiling(n_0), a_0,
@@ -1315,7 +1316,6 @@ r_1 <- 0:(ceiling(n_1)-1)
 
 data_points <- expand.grid(r_1 = r_1, r_0 = r_0)
 
-set.seed(1)
 data_points$pdf_r_1 <- dbbinom(data_points$r_1, size = ceiling(n_1), a_1,
     b_1)
 data_points$pdf_r_0 <- dbbinom(data_points$r_0, size = ceiling(n_0), a_0,
@@ -1345,7 +1345,6 @@ r_1 <- 0:(ceiling(n_1)-1)
 
 data_points <- expand.grid(r_1 = r_1, r_0 = r_0)
 
-set.seed(1)
 data_points$pdf_r_1 <- dbbinom(data_points$r_1, size = ceiling(n_1), a_1,
     b_1)
 data_points$pdf_r_0 <- dbbinom(data_points$r_0, size = ceiling(n_0), a_0,
@@ -1375,7 +1374,6 @@ r_1 <- 0:(ceiling(n_1)-1)
 
 data_points <- expand.grid(r_1 = r_1, r_0 = r_0)
 
-set.seed(1)
 data_points$pdf_r_1 <- dbbinom(data_points$r_1, size = ceiling(n_1), a_1,
     b_1)
 data_points$pdf_r_0 <- dbbinom(data_points$r_0, size = ceiling(n_0), a_0,
@@ -1397,9 +1395,9 @@ res_ap$ap <- round(res_ap$ap, 2)
 res_ap
 ```
 
-##### Simulation approach 2: Direct sampling from prior predictive distribution
+##### Approach 2: Sampling from prior predictive distribution
 
-The second simulation approach samples $q$ event outcomes from the predictive distribution and calculates whether the $(1-\alpha)$-upper confidence limit of the risk difference is smaller than the non-inferiority margin. The sum of positive outcomes divided by the number of samples $q$ gives the average power. Also here we use Agresti-Caffo confidence intervals for the risk difference @Agresti2000.
+The second approach samples $q$ event outcomes from the predictive distribution and calculates for each draw whether the $(1-\alpha)$-upper confidence limit of the risk difference is smaller than the non-inferiority margin. The sum of positive outcomes divided by the number of samples $q$ gives the average power. Also here we use Agresti-Caffo confidence intervals for the risk difference @Agresti2000.
 
 ```{r fig18}
 #| echo: true
@@ -1543,14 +1541,14 @@ prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0, prior_1,
 prior_plot_long$type <- ifelse(str_detect(prior_plot_long$name, "posterior") ==
     T, "Posterior", "Prior")
 prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name, "_0") ==
-    T, "Treatment arm 0", "Treatment arm 1")
+    T, "Control arm", "Active arm")
 
 ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) +
     geom_line(linewidth = 1.5) + theme_bw() + theme(panel.grid.minor = element_blank(),
     legend.position = "bottom", legend.direction = "vertical") + scale_x_continuous(limits = c(0,
-    0.1)) + ylab("Density") + labs(caption = str_glue("Assumed event probabilities: Arm 0 (p_0=",
-    p_0, "), ", "Arm 1 (p_1=", p_1, ")\nPosterior standard deviation: Arm 0=",
-    round(sqrt(var_posterior_0), 3), ", ", "Arm 1=", round(sqrt(var_posterior_1),
+    0.1)) + ylab("Density") + labs(caption = str_glue("Assumed event probabilities: Control arm (p_0=",
+    p_0, "), ", "Active arm (p_1=", p_1, ")\nPosterior standard deviation: Control arm=",
+    round(sqrt(var_posterior_0), 3), ", ", "Active arm=", round(sqrt(var_posterior_1),
         3))) + scale_color_brewer("Treatment arm", palette = "Set2") +
     scale_linetype("Type") + ggtitle("Enthusiastic prior")
 ```
@@ -1587,14 +1585,14 @@ prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0, prior_1,
 prior_plot_long$type <- ifelse(str_detect(prior_plot_long$name, "posterior") ==
     T, "Posterior", "Prior")
 prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name, "_0") ==
-    T, "Treatment arm 0", "Treatment arm 1")
+    T, "Control arm", "Active arm")
 
 ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) +
     geom_line(linewidth = 1.5) + theme_bw() + theme(panel.grid.minor = element_blank(),
     legend.position = "bottom", legend.direction = "vertical") + scale_x_continuous(limits = c(0,
-    0.1)) + ylab("Density") + labs(caption = str_glue("Expected event probabilities: Arm 0 (p_0=",
-    p_0, "), ", "Arm 1 (p_1=", p_1, ")\nPosterior standard deviation: Arm 0=",
-    round(sqrt(var_posterior_0), 3), ", ", "Arm 1=", round(sqrt(var_posterior_1),
+    0.1)) + ylab("Density") + labs(caption = str_glue("Expected event probabilities: Control arm (p_0=",
+    p_0, "), ", "Active arm (p_1=", p_1, ")\nPosterior standard deviation: Control arm=",
+    round(sqrt(var_posterior_0), 3), ", ", "Active arm=", round(sqrt(var_posterior_1),
         3))) + scale_color_brewer("Treatment arm", palette = "Set2") +
     scale_linetype("Type") + ggtitle("Skeptical prior")
 ```
@@ -1631,14 +1629,14 @@ prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0, prior_1,
 prior_plot_long$type <- ifelse(str_detect(prior_plot_long$name, "posterior") ==
     T, "Posterior", "Prior")
 prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name, "_0") ==
-    T, "Treatment arm 0", "Treatment arm 1")
+    T, "Control arm", "Active arm")
 
 ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) +
     geom_line(linewidth = 1.5) + theme_bw() + theme(panel.grid.minor = element_blank(),
     legend.position = "bottom", legend.direction = "vertical") + scale_x_continuous(limits = c(0,
-    0.1)) + ylab("Density") + labs(caption = str_glue("Assumed event probabilities: Arm 0 (p_0=",
-    p_0, "), ", "Arm 1 (p_1=", p_1, ")\nPosterior standard deviation: Arm 0=",
-    round(sqrt(var_posterior_0), 3), ", ", "Arm 1=", round(sqrt(var_posterior_1),
+    0.1)) + ylab("Density") + labs(caption = str_glue("Assumed event probabilities: Control arm (p_0=",
+    p_0, "), ", "Active arm (p_1=", p_1, ")\nPosterior standard deviation: Control arm=",
+    round(sqrt(var_posterior_0), 3), ", ", "Active arm=", round(sqrt(var_posterior_1),
         3))) + scale_color_brewer("Treatment arm", palette = "Set2") +
     scale_linetype("Type") + ggtitle("Enthusiastic prior")
 ```
@@ -1680,16 +1678,16 @@ prior_plot_long <- pivot_longer(prior_plot, cols = c(prior_0,
 prior_plot_long$type <- ifelse(str_detect(prior_plot_long$name,
     "posterior") == T, "Posterior", "Prior")
 prior_plot_long$group <- ifelse(str_detect(prior_plot_long$name,
-    "_0") == T, "Treatment arm 0", "Treatment arm 1")
+    "_0") == T, "Control arm", "Active arm")
 
 ggplot(prior_plot_long, aes(x = x, y = value, linetype = type,
     colour = group)) + geom_line(linewidth = 1.5) +
     theme_bw() + theme(panel.grid.minor = element_blank(),
     legend.position = "bottom", legend.direction = "vertical") +
     scale_x_continuous(limits = c(0, 0.1)) + ylab("Density") +
-    labs(caption = str_glue("Assumed event probabilities: Arm 0 (p_0=",
-        p_0, "), ", "Arm 1 (p_1=", p_1, ")\nPosterior standard deviation: Arm 0=",
-        round(sqrt(var_posterior_0), 3), ", ", "Arm 1=",
+    labs(caption = str_glue("Assumed event probabilities: Control arm (p_0=",
+        p_0, "), ", "Active arm (p_1=", p_1, ")\nPosterior standard deviation: Control arm=",
+        round(sqrt(var_posterior_0), 3), ", ", "Active arm=",
         round(sqrt(var_posterior_1), 3))) + scale_color_brewer("Treatment arm",
     palette = "Set2") + scale_linetype("Type") + ggtitle("Noninformative prior")
 ```
@@ -1719,7 +1717,7 @@ $$
 \end{aligned}
 $$
 
-where the last term in the above formula is the upper tail of a beta-binomial distribution. Altham @Altham1969 showed that this can be written as a hypergeometric distribution (see also @Grieve2022, @Grieve2016).
+where the last term in the above formula is the upper tail of a beta-binomial distribution. Altham @Altham1969 showed that this could also be written as a hypergeometric distribution (see also @Grieve2022, @Grieve2016).
 
 ------------------------------------------------------------------------
 
