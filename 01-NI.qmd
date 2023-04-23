@@ -48,11 +48,9 @@ The non-inferiority margin was set at 3.5% and it was assumed that the proportio
 
 Let $Y_{i}=(Y_{i,1}, Y_{i,2}, \cdots, Y_{i,n_i})^\top$ be a sample of size $n_i$ from a binomial distribution $Y_{i} \sim Binomial(p_i, n_i)$, $i\in \{0,1\}$, where $p_i$, $i\in \{0,1\}$, are the true event proportions. Denote the estimated event proportions as $\overline p_i=\frac{1}{n_i}\sum_{k\leq n_i} Y_{i,k}$, $i\in {0,1}$, and the estimated risk difference as $D=\overline p_1-\overline p_0$. Then $D$ is asymptotically Gaussian distributed $D \sim N\left(\delta, \frac{\sigma_1^2}{n_1}+\frac{\sigma_0^2}{n_0}\right)$, where $\sigma_i^2=p_i(1-p_i)$, $i\in \{0,1\}$. For notational purposes we denote the variance of the treatment effect as $\sigma_{treat}^2=\frac{\sigma_1^2}{n_1}+\frac{\sigma_0^2}{n_0}$.
 
-We are interested whether the upper $(1-\alpha)\%$-confidence limit of $D$ is smaller than the non-inferiority margin $\delta^*$, that is,
-$$
+We are interested whether the upper $(1-\alpha)\%$-confidence limit of $D$ is smaller than the non-inferiority margin $\delta^*$, that is, $$
 D+z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}\leq \delta^* \quad \Rightarrow \quad D\leq -z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*,
-$$ where $z_{1-\alpha}=\Phi^{-1}(1-\alpha)$. Note that $D_{suc}^{\delta^*}:=-z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*$ is the **required risk difference** for a 'successful' rejection of the null hypothesis. Then 
-$$
+$$ where $z_{1-\alpha}=\Phi^{-1}(1-\alpha)$. Note that $D_{suc}^{\delta^*}:=-z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*$ is the **required risk difference** for a 'successful' rejection of the null hypothesis. Then $$
 \begin{aligned}
 P_\delta(D\leq D_{suc}^{\delta^*})&=\Phi\left(-z_{1-\alpha}-\sqrt{\frac{n_1n_0}{n_0\sigma_1^2+n_1\sigma_0^2}}(\delta-\delta^*)\right) \\
 &=\Phi\left(-z_{1-\alpha}-\frac{(\delta-\delta^*)}{\sigma_{treat}}\right),
@@ -61,10 +59,9 @@ $$ since under regularity conditions, $$
 Z=\frac{D-\delta^*}{\sigma_{treat}} \rightarrow N(0,1), \quad \min(n_1,n_0) \rightarrow \infty.
 $$
 
-The conditional probability $P_{\delta}(D\leq D_{suc}^{\delta^*})$ is the **probability to reject given $\delta$**. For $\delta>\delta^*$ this is the 'type-I error' and for $\delta\leq\delta^*$ the frequentist 'power'.
+The conditional probability $P_{\delta}(D\leq D_{suc}^{\delta^*})$ is the **probability to reject given** $\delta$. For $\delta>\delta^*$ this is the 'type-I error' and for $\delta\leq\delta^*$ the frequentist 'power'.
 
-For a $\delta_A$ it holds that
-$$
+For a $\delta_A$ it holds that $$
 -z_{1-\alpha}-\sqrt{\frac{n_1n_0}{n_0\sigma_1^2+n_1\sigma_0^2}}(\delta_A-\delta^*)=\Phi^{-1}(1-\beta)=z_{1-\beta}
 $$ and so the sample size can then be calculated as $$
 \frac{(z_{1-\beta}+z_{1-\alpha})^2}{(\delta_A-\delta^*)^2}=\frac{an_0^2}{n_0\sigma_1^2+an_0\sigma_0^2},
@@ -214,18 +211,16 @@ Let $$
 AP:=\int_{\Delta} P_{\delta}(D\leq D_{suc}^{\delta^*})f(\delta)d\delta,
 $$
 
-be the **'average power'** @Grieve2022 (also called 'assurance' @OHagan2005, 'probability of success' @Kunzmann2022, @Spiegelhalter2003 or Bayesian predictive power @Rufibach2016. @Kunzmann2022 provide in their supplemental section a literature review of the used terminology in publications from clinical trials).
+be the **'average power'** @Grieve2022 (also called 'assurance' @OHagan2005, 'probability of success' @Kunzmann2022, @Spiegelhalter2003 or Bayesian predictive power @Rufibach2016. Kunzmann et al. provide in their supplemental section a literature review of the used terminology in publications from clinical trials @Kunzmann2022).
 
-Remember that in an hybrid approach we are interested in trial conclusions from a frequentist point of view, thus we are interested in
-$$
+Remember that in an hybrid approach we are interested in trial conclusions from a frequentist point of view, thus we are interested in $$
 D\leq -z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*.
-$$ By using a design prior we take into account the uncertainty of the treatment effect. The prior predictive distribution for an estimated risk difference, say $\tilde D$, with a prior $\Delta \sim N\left(d, \sigma_{prior}^2\right)$ includes this uncertainty. For the Gaussian case, the prior predictive distribution of $\tilde D$ is given as $$
-\tilde D \sim N\left(d, \sigma_{treat}^2+\sigma_{prior}^2\right),
-$$ since $\tilde D \sim N\left(\delta, \sigma_{treat}^2\right)$, see for example @Gelman2013.
-
-Suppose now that $D$ has a predictive distribution as described above, then $$
+$$ By using a design prior we take into account the uncertainty of the treatment effect. The prior predictive distribution for an estimated risk difference, say $\tilde D$, with a prior $\Delta \sim N\left(d, \sigma_{prior}^2\right)$ includes this uncertainty. For the Gaussian case, the prior predictive distribution of $\tilde D$ is $\tilde D \sim N\left(\delta, \sigma_{treat}^2\right)$, see for example @Gelman2013. Suppose now that $D$ has a predictive distribution as described above, then $$
 \begin{aligned}
-AP&=\int_{-\infty}^{-z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*}f(\tilde\delta)d\tilde\delta= \Phi\left(\frac{1}{\sigma_{prior}}\left[-z_{1-\alpha}\sigma_{treat}-(d-\delta^*)\right]\right),
+AP&=\int_{-\infty}^{-\infty}P(D\leq D_{suc}^{d,\delta^*}|\delta)f(\delta)d\delta \\
+&=\int_{-\infty}^{-\infty}\left\{\int_{-\infty}^{-z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*}f(\tilde \delta| \delta)d\tilde \delta \right\}f(\delta)d\delta\\
+&=\int_{-\infty}^{-z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*}f(\tilde\delta)d\tilde\delta \\
+&=\Phi\left(\frac{1}{\sigma_{prior}}\left[-z_{1-\alpha}\sigma_{treat}-(d-\delta^*)\right]\right),
 \end{aligned}
 $$ see for example @Grieve2022. Note that as $m \rightarrow \infty$, then $AP \rightarrow \Phi\left(-z_{1-\alpha}-\frac{(d-\delta^*)}{\sigma_{treat}}\right)$, that is, the frequentist power at $d$.
 
@@ -294,7 +289,7 @@ Under an 'enthusiastic prior' we get an average power of 59%. For a 'skeptical p
 
 ------------------------------------------------------------------------
 
-Rufibach et al. give a closed a formula for the distribution of $P_\Delta(D\leq D_{suc}^{\delta^*})$, where $\Delta \sim N(d,\sigma^2_{prior})$, and discuss the shape under different prior choices @Rufibach2016. Kunzmann et al. call this the 'random probability to reject` (RPR), $RPR:=P_\Delta(D\leq D_{suc}^{\delta^*})$.
+Rufibach et al. give a closed a formula for the distribution of $P_\Delta(D\leq D_{suc}^{\delta^*})$, where $\Delta \sim N(d,\sigma^2_{prior})$, and discuss the shape under different prior choices @Rufibach2016. Kunzmann et al. call this the 'random probability to reject\` (RPR), $RPR:=P_\Delta(D\leq D_{suc}^{\delta^*})$.
 
 For $0<y<1$, the random variable $RPR$ has a pdf $$
 \begin{aligned}
@@ -572,13 +567,11 @@ In the non-inferiority setting we are interested in (2)+(3), that is $\Delta\leq
 
 $$
 P(D\leq D_{suc}^{\delta^*}, \Delta\leq\delta^*)=P(D\leq D_{suc}^{\delta^*}|\Delta\leq\delta^*)P(\Delta\leq\delta^*)=\underbrace{E\left[P_{\Delta\leq\delta^*}(D\leq D_{suc}^{\delta^*})\right]}_{EP}P(\Delta\leq\delta^*),
-$$ Kunzmann et al. denote EP the **'expected power'** @Kunzmann2022. Note that
-$$
+$$ Kunzmann et al. denote EP the **'expected power'** @Kunzmann2022. Note that $$
 \underbrace{P(D\leq D_{suc}^{\delta^*}, \Delta\leq\delta^*)}_{PAP}=\underbrace{E\left[P_{\Delta\leq\delta^*}(D\leq D_{suc}^{\delta^*})\right]}_{EP}\underbrace{P(\Delta\leq\delta^*)}_{constant}.
 $$ Spiegelhalter calls $P(D\leq D_{suc}^{\delta^*}, \Delta\leq\delta^*)$ the **'prior adjusted power'** (PAP).
 
-The AP decomposition can be visualised using the posterior predictive distribution. Let $f(\tilde\delta)$ be the pdf of the posterior predictive distribution then joint distribution of $\tilde\delta$ and $\delta$ is 
-$$
+The AP decomposition can be visualised using the posterior predictive distribution. Let $f(\tilde\delta)$ be the pdf of the posterior predictive distribution then joint distribution of $\tilde\delta$ and $\delta$ is $$
 f_2(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin{pmatrix} \sigma^2_{treat}+\sigma^2_{prior} \quad \sigma^2_{prior} \\ \quad \quad \sigma^2_{prior} \quad \ \quad  \sigma^2_{prior}\end{pmatrix}\right),
 $$ see formula (2.11) in @Grieve2022.
 
@@ -722,17 +715,13 @@ data_ep
 
 #### Bayesian approach: Prior on the risk difference
 
-In this section we use a proper Bayesian approach for the calculation of the probability to reject the null hypothesis $H_0: \delta>\delta^*$, where $\delta=p_1-p_0$ @Spiegelhalter2003 @Muirhead2013. Suppose that $\Delta \sim N(d, \sigma^2_{prior})$ is an analysis prior for the treatment effect $\delta$. Remember that $D=\overline{p}_1-\overline{p}_0$ is the estimated (observed) treatment effect with $D \sim N(\delta, \sigma^2_{treat})$. A 'trial success' can then be defined as
-$$
+In this section we use a proper Bayesian approach for the calculation of the probability to reject the null hypothesis $H_0: \delta>\delta^*$, where $\delta=p_1-p_0$ (@Spiegelhalter2003, @Muirhead2013). Suppose that $\Delta \sim N(d, \sigma^2_{prior})$ is an analysis prior for the treatment effect $\delta$. Remember that $D=\overline{p}_1-\overline{p}_0$ is the estimated (observed) treatment effect with $D \sim N(\delta, \sigma^2_{treat})$. A 'trial success' can then be defined as $$
 P(\Delta\leq\delta^*|D)>1-\epsilon,
-$$
-where $\epsilon$ is small, say $\epsilon=0.05$ @Spiegelhalter2003 @Muirhead2013. Using the above specified prior and likelihood of the data, the posterior distribution is given as
-$$
+$$ where $\epsilon$ is small, say $\epsilon=0.05$ (@Spiegelhalter2003, @Muirhead2013). Using the above specified prior and likelihood of the data, the posterior distribution is given as $$
 \begin{aligned}
 \Delta|D \sim N\left(\frac{\frac{d}{\sigma^2_{prior}}+\frac{D}{\sigma^2_{treat}}}{\frac{1}{\sigma^2_{prior}}+\frac{1}{\sigma^2_{treat}}}, \frac{1}{\frac{1}{\sigma^2_{prior}}+\frac{1}{\sigma^2_{treat}}}\right)=N\left( \frac{\sigma^2_{treat}d+\sigma^2_{prior}D}{\sigma^2_{treat}+\sigma^2_{prior}}, \frac{\sigma^2_{treat}\sigma^2_{prior}}{\sigma^2_{treat}+\sigma^2_{prior}}  \right),
 \end{aligned}
-$$
-see for example @Gelman2013. 
+$$ see for example @Gelman2013.
 
 ------------------------------------------------------------------------
 
@@ -746,24 +735,19 @@ $$
 
 ------------------------------------------------------------------------
 
-The trial is successful if
-$$
+The trial is successful if $$
 \frac{\sigma^2_{treat}d+\sigma^2_{prior}D}{\sigma^2_{treat}+\sigma^2_{prior}}+z_{1-\epsilon}\frac{\sigma_{treat}\sigma_{prior}}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}\leq \delta^*,
-$$
-where the left side of the above equation is the if the upper $(1-\epsilon)$-credible interval. A simple algebraic step gives
-$$
+$$ where the left side of the above equation is the upper $(1-\epsilon)$-credible interval. A simple algebraic step gives $$
 \begin{aligned}
 D\leq -z_{1-\epsilon}&\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d.
 \end{aligned}
 $$ Here, $D_{suc}^{d,\delta^*}=-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d$ is the **required risk difference** for a successful rejection of the null hypothesis taking into account the uncertainty of $\delta$.
 
-Since $D\sim N(\delta, \sigma_{treat}^2)$,
-$$
+Since $D\sim N(\delta, \sigma_{treat}^2)$, $$
 \begin{aligned}
 P(D\leq D_{suc}^{d,\delta^*}|\delta)&=\Phi\left(-z_{1-\epsilon}\sqrt{1+\frac{\sigma^2_{treat}}{\sigma_{prior}^2}}-\frac{1}{\sigma_{treat}}\left[\delta-\delta^*\left\{ 1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2} \right\} \right]-\frac{\sigma_{treat}}{\sigma_{prior}^2}d \right).
 \end{aligned}
-$$
-This is the **conditional Bayesian probability to reject** (or Bayesian power) under an (assumed) *known* true treatment effect $\delta$.
+$$ This is the **conditional Bayesian probability to reject** (or Bayesian power) under an (assumed) *known* true treatment effect $\delta$.
 
 ------------------------------------------------------------------------
 
@@ -878,18 +862,17 @@ The Bayesian probability to reject $H_0: \delta>\delta^*$ given $\delta=p_1-p_0=
 
 ------------------------------------------------------------------------
 
-Suppose $\tilde D$ is calculated from a future sample given we have already observed $D$. The posterior predictive distribution of $\tilde D$ is Gaussian distributed $\tilde D \sim N(d, \sigma_{treat}^2+\sigma_{prior}^2)$ under an analysis prior $\Delta \sim N(d, \sigma^2_{prior})$. The **Bayesian average (marginal) probability to reject** (BAP) can be calculated as
-$$
+Suppose $\tilde D$ is calculated from a future sample given we have already observed $D$. The posterior predictive distribution of $\tilde D$ is Gaussian distributed $\tilde D \sim N(d, \sigma_{treat}^2+\sigma_{prior}^2)$ under an analysis prior $\Delta \sim N(d, \sigma^2_{prior})$. The **Bayesian average (marginal) probability to reject** (BAP) can be calculated as $$
 \begin{aligned}
-BAP&=\int_{-\infty}^{-\infty}P(D\leq D_{suc}^{d,\delta^*}|\delta)f(\delta)d\delta=\\
+BAP&=\int_{-\infty}^{-\infty}P(D\leq D_{suc}^{d,\delta^*}|\delta)f(\delta)d\delta\\
 &=\int_{-\infty}^{-\infty}\left\{\int_{-\infty}^{-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d}f(\tilde \delta| \delta)d\tilde \delta \right\}f(\delta)d\delta\\
 &=\int_{-\infty}^{-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d} \left\{\int_{-\infty}^{-\infty}f(\tilde \delta| \delta)f(\delta)d\delta \right\}d\tilde \delta\\
 &=\int_{-\infty}^{-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d} f(\tilde \delta)d\tilde \delta
 \\&=\Phi\left( -z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\frac{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}+\frac{\delta^*}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}\left\{1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right\} \right. \\
   & \left. \quad \quad \quad-\frac{d}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}\left\{1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right\}\right) \\
-&=\Phi\left(-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}-\frac{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}{\sigma^2_{prior}}(d-\delta^*)\right),
+&=\Phi\left(-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}-\frac{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}{\sigma^2_{prior}}(d-\delta^*)\right).
 \end{aligned}
-$$ since .
+$$
 
 ------------------------------------------------------------------------
 
@@ -1029,8 +1012,7 @@ The average Bayesian power under an informative prior is 72% compared to 66% fro
 
 #### Hybrid approach: Prior on event probabilities
 
-In the former subsections we assumed that the prior was directly specified on the treatment effect $\delta$. In this subsection design priors are specified on the event probabilities $p_i$, $i=\{0,1\}$. Suppose that these design priors are beta distributed $\pi_i \sim Beta(a_i,b_i)$, $i=\{0,1\}$. It is well known (see for example @Gelman2013) that the prior predictive distribution of the number of events $R_i$, $i=\{0,1\}$, from a future binomial sample of size $n_i$, $i=\{0,1\}$, is beta-binomial distributed $R_i \sim betabinom(r_i|n_i, a_i, b_i)$ with
-$$
+In the former subsections we assumed that the prior was directly specified on the treatment effect $\delta$. In this subsection design priors are specified on the event probabilities $p_i$, $i=\{0,1\}$. Suppose that these design priors are beta distributed $\pi_i \sim Beta(a_i,b_i)$, $i=\{0,1\}$. It is well known (see for example @Gelman2013) that the prior predictive distribution of the number of events $R_i$, $i=\{0,1\}$, from a future binomial sample of size $n_i$, $i=\{0,1\}$, is beta-binomial distributed $R_i \sim betabinom(r_i|n_i, a_i, b_i)$ with $$
 E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i+b_i)^2(a_i+b_i+1)}.
 $$
 
@@ -1042,8 +1024,8 @@ For the SAFE-SSPE trial we specify the following design beta priors for the expe
 
 **Enthusiastic prior**: The beta prior for the active treatment arm is centered at 0.01 (the expected event proportion) with $P(\pi_1> 0.05)=0.025$, that is, the probability that the prior is greater than the safety margin is 2.5%. The mean of the beta prior for the control arm is centered at 0.03 (the safety margin) with $P(\pi_0> 0.05)=0.05$.
 
-- Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=49.5$.
-- Parameters of beta prior for control treatment arm: $a_0=7.2$, $b_0=232.8$.
+-   Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=49.5$.
+-   Parameters of beta prior for control treatment arm: $a_0=7.2$, $b_0=232.8$.
 
 ```{r fig13}
 #| echo: true
@@ -1098,8 +1080,8 @@ cowplot::plot_grid(fig1, fig2, ncol = 1)
 
 **Skeptical prior**: The beta prior for the active treatment arm is centered at 0.05 (the safety margin) with $P(\pi_1\leq 0.01)=0.025$, that is the probability that the prior is smaller or equal than the expected event proportion is 2.5%. The mean of the beta prior for the control arm is is centered at 0.01 (the expected event proportion) with $P(\pi_0> 0.05)=0.025$.
 
-- Parameters of beta prior for active treatment arm: $a_1=2.84$, $b_1=53.96$.
-- Parameters of beta prior for control treatment arm: $a_i=1.24$, $b_i=122.76$.
+-   Parameters of beta prior for active treatment arm: $a_1=2.84$, $b_1=53.96$.
+-   Parameters of beta prior for control treatment arm: $a_i=1.24$, $b_i=122.76$.
 
 ```{r fig14}
 #| echo: true
@@ -1153,8 +1135,8 @@ cowplot::plot_grid(fig1, fig2, ncol = 1)
 
 **Informative prior**: The beta prior for the active treatment arm and control arm is centered at 0.01 (the expected event proportion) with $P(\pi_1\leq 0.05)=0.01$ and $P(\pi_1\leq 0.05)=0.05$.
 
-- Parameters of beta prior for active treatment arm: $a_1=0.8$, $b_1=79.2$.
-- Parameters of beta prior for control treatment arm: $a_0=0.03$, $b_0=2.97$.
+-   Parameters of beta prior for active treatment arm: $a_1=0.8$, $b_1=79.2$.
+-   Parameters of beta prior for control treatment arm: $a_0=0.03$, $b_0=2.97$.
 
 ```{r fig15}
 #| echo: true
@@ -1207,8 +1189,8 @@ cowplot::plot_grid(fig1, fig2, ncol = 1)
 
 **Noninformative prior**: Agresti and Min suggest to use a 'diffuse' prior and recommend to use Jeffrey's prior @Agresti2005. Jeffrey's prior for a binomial likelihood is $beta(0.5, 0.5)$-distributed.
 
-- Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=0.5$.
-- Parameters of beta prior for control treatment arm: $a_0=0.5$, $b_0=0.5$.
+-   Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=0.5$.
+-   Parameters of beta prior for control treatment arm: $a_0=0.5$, $b_0=0.5$.
 
 ```{r fig16}
 #| echo: true
@@ -1266,8 +1248,8 @@ One can calculate the average power as follows:
 
 The joint probability approach has been described in @Grieve2022 and includes the following steps:
 
-- Calculate the joint pdf for all pairs $r_i\in\{0, 1, \cdots, n_i\}$, $i\in\{0,1\}$.
-- The sum of the joint predictive probabilites over $r_i$ pairs where the $(1-\alpha)$-upper confidence limit of the risk difference is smaller than the non-inferiority margin is the average power.
+-   Calculate the joint pdf for all pairs $r_i\in\{0, 1, \cdots, n_i\}$, $i\in\{0,1\}$.
+-   The sum of the joint predictive probabilites over $r_i$ pairs where the $(1-\alpha)$-upper confidence limit of the risk difference is smaller than the non-inferiority margin is the average power.
 
 Here we use Agresti-Caffo confidence intervals for the risk difference @Agresti2000.
 
@@ -1501,12 +1483,9 @@ res_ap
 
 #### Bayesian approach: Prior on event probabilities
 
-In the former subsection we assumed that the prior was directly specified on the treatment effect. In this subsection we assume that that design prior is specified on the event probabilities $p_i$, $i=\{0,1\}$. Suppose that the priors on the event probability are beta distributed $\pi_i \sim Beta(a_i,b_i)$ and that we have observed a binomial distributed random sample of size $n_i$ and number of events $r_i$. Then the posterior distribution is
-$$
+In the former subsection we assumed that the prior was directly specified on the treatment effect. In this subsection we assume that that design prior is specified on the event probabilities $p_i$, $i=\{0,1\}$. Suppose that the priors on the event probability are beta distributed $\pi_i \sim Beta(a_i,b_i)$ and that we have observed a binomial distributed random sample of size $n_i$ and number of events $r_i$. Then the posterior distribution is $$
 \pi_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)=\frac{\pi_i^{a_i+r_i-1}(1-\pi_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}
-$$ with
-$B(\cdot)$ the beta function and
-$$
+$$ with $B(\cdot)$ the beta function and $$
 \mu_{i,r_i}:=E(\pi_i|r_i)=\frac{a_i+r_i}{a_i+b_i+n_i}, \quad \sigma_{i,r_i}^2:=Var(\pi_i|r_i)=\frac{\left(a_i+r_i\right)\left(b_i+n_i-r_i\right)}{(a_i+b_i+n_i)^2(a_i+b_i+n_i+1)}.
 $$
 
@@ -1518,8 +1497,8 @@ We use the same prior specifications as from the former subsection for the analy
 
 **Enthusiastic prior**: The beta prior for the active treatment arm is centered at 0.01 (the expected event proportion) with $P(\pi_1> 0.05)=0.025$, that is, the probability that the prior is greater than the safety margin is 2.5%. The mean of the beta prior for the control arm is centered at 0.03 (the safety margin) with $P(\pi_0> 0.05)=0.05$.
 
-- Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=49.5$.
-- Parameters of beta prior for control treatment arm: $a_0=7.2$, $b_0=232.8$.
+-   Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=49.5$.
+-   Parameters of beta prior for control treatment arm: $a_0=7.2$, $b_0=232.8$.
 
 ```{r fig19}
 #| echo: true
@@ -1562,8 +1541,8 @@ ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) 
 
 **Skeptical prior**: The beta prior for the active treatment arm is centered at 0.05 (the safety margin) with $P(\pi_1\leq 0.01)=0.025$, that is the probability that the prior is smaller or equal than the expected event proportion is 2.5%. The mean of the beta prior for the control arm is is centered at 0.01 (the expected event proportion) with $P(\pi_0> 0.05)=0.025$.
 
-- Parameters of beta prior for active treatment arm: $a_1=2.84$, $b_1=53.96$.
-- Parameters of beta prior for control treatment arm: $a_i=1.24$, $b_i=122.76$.
+-   Parameters of beta prior for active treatment arm: $a_1=2.84$, $b_1=53.96$.
+-   Parameters of beta prior for control treatment arm: $a_i=1.24$, $b_i=122.76$.
 
 ```{r fig20}
 #| echo: true
@@ -1606,8 +1585,8 @@ ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) 
 
 **Informative prior**: The beta prior for the active treatment arm and control arm is centered at 0.01 (the expected event proportion) with $P(\pi_1\leq 0.05)=0.01$ and $P(\pi_1\leq 0.05)=0.05$.
 
-- Parameters of beta prior for active treatment arm: $a_1=0.8$, $b_1=79.2$.
-- Parameters of beta prior for control treatment arm: $a_0=0.03$, $b_0=2.97$.
+-   Parameters of beta prior for active treatment arm: $a_1=0.8$, $b_1=79.2$.
+-   Parameters of beta prior for control treatment arm: $a_0=0.03$, $b_0=2.97$.
 
 ```{r fig21}
 #| echo: true
@@ -1648,12 +1627,10 @@ ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) 
     scale_linetype("Type") + ggtitle("Enthusiastic prior")
 ```
 
-
-
 **Noninformative prior**: Agresti and Min suggest to use a 'diffuse' prior and recommend to use Jeffrey's prior @Agresti2005. Jeffrey's prior for a binomial likelihood is $beta(0.5, 0.5)$-distributed.
 
-- Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=0.5$.
-- Parameters of beta prior for control treatment arm: $a_0=0.5$, $b_0=0.5$.
+-   Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=0.5$.
+-   Parameters of beta prior for control treatment arm: $a_0=0.5$, $b_0=0.5$.
 
 ```{r fig22}
 #| echo: true
@@ -1701,21 +1678,16 @@ ggplot(prior_plot_long, aes(x = x, y = value, linetype = type,
 
 ------------------------------------------------------------------------
 
-We denote the joint posterior distribution as
-$$
+We denote the joint posterior distribution as $$
 f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)=\prod_{i\in\{0,1\}} \frac{\pi_i^{a_i+r_i-1}(1-\pi_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}.
-$$
-and thus, by using Fubini's theorem and the guidance of Patricia Altham @Altham1969,
-$$
+$$ and thus, by using Fubini's theorem and the guidance of Patricia Altham @Altham1969, $$
 \begin{aligned}
 P&\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0^{\pi_0+\delta^*} f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)d\pi_1d\pi_0 \\
 &=\int_0^{1}\frac{\pi_0^{a_0+r_0-1}(1-\pi_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{\pi_0+\delta^*} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)d\pi_0 \\
 &\overset{u=\pi_0-\delta^*}{=}\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{u} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)du \\
 &=\cdots
 \end{aligned}
-$$
-is the **Bayesian probability to reject** given assumed $r_0, r_1, n_0, n_1$. This integral can be solved using the *integrate* function in R, or using the continuation of the formula
-$$
+$$ is the **Bayesian probability to reject** given assumed $r_0, r_1, n_0, n_1$. This integral can be solved using the *integrate* function in R, or using the continuation of the formula $$
 \begin{aligned}
 \cdots&=\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}u^s(1-u)^{a_1+b_1+n_1-1-s}\right)du \\
 &=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{1}{B(a_0+r_0, b_0+n_0-r_0)} \left(\int_{-\delta^*}^{1-\delta^*}u^{a_0+r_0+s-1}(1-u)^{a_1+b_1+n_1-1+b_0+n_0-r_0-s-1}du\right) \\
@@ -1736,8 +1708,7 @@ Note that for the integral calculation the lower integrand $-\delta^*$ in
 
 $$
 \int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{u} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)du
-$$
-needs to be zero, otherwise the function is not defined.
+$$ needs to be zero, otherwise the function is not defined.
 
 ```{r fig23}
 #| echo: true
