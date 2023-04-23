@@ -997,7 +997,7 @@ P(D\leq D_{suc}^{d,\delta^*}|\delta)&amp;=\Phi\left(-z_{1-\epsilon}\sqrt{\frac{n
 </div>
 <p>The Bayesian probability to reject <span class="math inline">\(H_0: \delta&gt;\delta^*\)</span> given <span class="math inline">\(\delta=p_1-p_0=0\)</span> and an informative prior is 90%. This is higher than the frequentist probability to reject of 80% given <span class="math inline">\(\delta=p_1-p_0=0\)</span>. In contrast, the probability to reject <span class="math inline">\(H_0: \delta&gt;\delta^*\)</span> for <span class="math inline">\(\delta=0.035\)</span> under an informative prior is 11%. This is higher than the frequentist ‘type-I error’ of 5%. The probability to reject under the null hypothesis is higher for the Bayesian approach under an informative prior because the prior has substantial believe in non-inferiority.</p>
 <hr>
-<p>Suppose <span class="math inline">\(\tilde D\)</span> is calculated from a future sample given we have already observed <span class="math inline">\(D\)</span>. Then <span class="math inline">\(\tilde D\)</span> has a posterior predictive distribution <span class="math inline">\(\tilde D|D \sim N(\delta, \sigma^2_{treat}+\sigma^2_{prior})=f(\tilde \delta|\delta)\)</span>. The Bayesian average (marginal) probability to reject (BAP) can be calculated as <span class="math display">\[
+<p>Suppose <span class="math inline">\(\tilde D\)</span> is calculated from a future sample given we have already observed <span class="math inline">\(D\)</span>. The <strong>Bayesian average (marginal) probability to reject</strong> (BAP) can be calculated as <span class="math display">\[
 \begin{aligned}
 BAP&amp;=\int_{-\infty}^{-\infty}P(D\leq D_{suc}^{d,\delta^*}|\delta)f(\delta)d\delta=\\
 &amp;=\int_{-\infty}^{-\infty}\left\{\int_{-\infty}^{-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d}f(\tilde \delta| \delta)d\tilde \delta \right\}f(\delta)d\delta=\\
@@ -1007,7 +1007,7 @@ BAP&amp;=\int_{-\infty}^{-\infty}P(D\leq D_{suc}^{d,\delta^*}|\delta)f(\delta)d\
   &amp; \left. \quad \quad \quad-\frac{d}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}\left\{1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right\}\right) \\
 &amp;=\Phi\left(-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}-\frac{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}{\sigma^2_{prior}}(d-\delta^*)\right),
 \end{aligned}
-\]</span> since the posterior predictive distribution <span class="math inline">\(\tilde D \sim N(d, \sigma_{treat}^2+\sigma_{prior}^2)\)</span>.</p>
+\]</span> since the posterior predictive distribution <span class="math inline">\(\tilde D|D \sim N(d, \sigma_{treat}^2+\sigma_{prior}^2)\)</span>.</p>
 <hr>
 <p><strong>Special case</strong></p>
 <p>If <span class="math inline">\(n_0=n_1=n\)</span> and <span class="math inline">\(\sigma_1^2=\sigma_0^2=\sigma^2\)</span>, then <span class="math inline">\(\sigma_{treat}^2=\frac{2\sigma^2}{n}\)</span> and <span class="math inline">\(\sigma_{prior}^2=\frac{2\sigma^2}{m}\)</span>, and the formula above reduces to <span class="math display">\[
@@ -1018,7 +1018,7 @@ BAP&amp;=-z_{1-\epsilon}\sqrt{\frac{m}{n}}-\sqrt{\frac{(m+n)m}{2n\sigma^2}}(d-\d
 <hr>
 <hr>
 <p><strong>Working example (continued)</strong></p>
-<p>We derive the average Bayesian probability to reject for the SAFE-SSPE study.</p>
+<p>We derive the Bayesian average probability to reject for the SAFE-SSPE study.</p>
 <div class="cell">
 <details>
 <summary>Show R code</summary>
