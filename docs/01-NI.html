@@ -848,7 +848,7 @@ f_2(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin
 </section>
 <section id="bayesian-approach-prior-on-the-risk-difference" class="level4" data-number="2.2.1.3">
 <h4 data-number="2.2.1.3" class="anchored" data-anchor-id="bayesian-approach-prior-on-the-risk-difference"><span class="header-section-number">2.2.1.3</span> Bayesian approach: Prior on the risk difference</h4>
-<p>In this section we use a proper Bayesian approach for the calculation of the probability to reject the null hypothesis <span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">2</a>]</span> <span class="citation" data-cites="Muirhead2013">[<a href="references.html#ref-Muirhead2013" role="doc-biblioref">8</a>]</span>. Suppose that <span class="math inline">\(\Delta \sim N(d, \sigma^2_{prior})\)</span> is an analysis prior for the treatment effect <span class="math inline">\(\delta\)</span> and remember that <span class="math inline">\(D=\overline{p}_1-\overline{p}_0\)</span> is the estimated (observed) treatment effect with <span class="math inline">\(D \sim N(\delta, \sigma^2_{treat})\)</span>. A ‘trial success’ can then be defined as <span class="math display">\[
+<p>In this section we use a proper Bayesian approach for the calculation of the probability to reject the null hypothesis <span class="math inline">\(H_0: \delta&gt;\delta^*\)</span>, where <span class="math inline">\(\delta=p_1-p_0\)</span> <span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">2</a>]</span> <span class="citation" data-cites="Muirhead2013">[<a href="references.html#ref-Muirhead2013" role="doc-biblioref">8</a>]</span>. Suppose that <span class="math inline">\(\Delta \sim N(d, \sigma^2_{prior})\)</span> is an analysis prior for the treatment effect <span class="math inline">\(\delta\)</span>. Remember that <span class="math inline">\(D=\overline{p}_1-\overline{p}_0\)</span> is the estimated (observed) treatment effect with <span class="math inline">\(D \sim N(\delta, \sigma^2_{treat})\)</span>. A ‘trial success’ can then be defined as <span class="math display">\[
 P(\Delta\leq\delta^*|D)&gt;1-\epsilon,
 \]</span> where <span class="math inline">\(\epsilon\)</span> is small, say <span class="math inline">\(\epsilon=0.05\)</span> <span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">2</a>]</span> <span class="citation" data-cites="Muirhead2013">[<a href="references.html#ref-Muirhead2013" role="doc-biblioref">8</a>]</span>. Using the above specified prior and likelihood of the data, the posterior distribution is given as <span class="math display">\[
 \begin{aligned}
@@ -862,19 +862,18 @@ P(\Delta\leq\delta^*|D)&gt;1-\epsilon,
 \Delta|D \sim N\left(\frac{m\delta+nD}{n+m}, \frac{2\sigma^2}{n+m} \right).
 \]</span></p>
 <hr>
-<p>The estimated treatment difference <span class="math inline">\(D\)</span> is a yet-to-be-observed statistic and one is interested whether the upper <span class="math inline">\((1-\epsilon)\)</span>-credible interval of <span class="math inline">\(D\)</span> is smaller than the non-inferiority margin <span class="math inline">\(\delta^*\)</span>, that is <span class="math display">\[
-\frac{\sigma^2_{treat}d+\sigma^2_{prior}D}{\sigma^2_{treat}+\sigma^2_{prior}}+z_{1-\epsilon}\frac{\sigma_{treat}\sigma_{prior}}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}\leq \delta^*.
-\]</span> to claim a successful trial result. A simple algebraic step gives</p>
-<p><span class="math display">\[
+<p>The trial is successful if <span class="math display">\[
+\frac{\sigma^2_{treat}d+\sigma^2_{prior}D}{\sigma^2_{treat}+\sigma^2_{prior}}+z_{1-\epsilon}\frac{\sigma_{treat}\sigma_{prior}}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}\leq \delta^*,
+\]</span> where the left side of the above equation is the if the upper <span class="math inline">\((1-\epsilon)\)</span>-credible interval. A simple algebraic step gives <span class="math display">\[
 \begin{aligned}
 D\leq -z_{1-\epsilon}&amp;\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d.
 \end{aligned}
-\]</span> Similar to the frequentist approach we can denote <span class="math inline">\(D_{suc}^{d,\delta^*}=-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d\)</span> as the <strong>required risk difference</strong> for a successful rejection of the null hypothesis taking into account the uncertainty of <span class="math inline">\(\delta\)</span>.</p>
-<p>If we assume that we <em>know</em> <span class="math inline">\(\delta\)</span> (which we rarely will, expect from simulation settings) then <span class="math inline">\(D\sim N(\delta, \sigma_{treat}^2)\)</span>, and <span class="math display">\[
+\]</span> Here, <span class="math inline">\(D_{suc}^{d,\delta^*}=-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d\)</span> is the <strong>required risk difference</strong> for a successful rejection of the null hypothesis taking into account the uncertainty of <span class="math inline">\(\delta\)</span>.</p>
+<p>Since <span class="math inline">\(D\sim N(\delta, \sigma_{treat}^2)\)</span>, <span class="math display">\[
 \begin{aligned}
 P(D\leq D_{suc}^{d,\delta^*}|\delta)&amp;=\Phi\left(-z_{1-\epsilon}\sqrt{1+\frac{\sigma^2_{treat}}{\sigma_{prior}^2}}-\frac{1}{\sigma_{treat}}\left[\delta-\delta^*\left\{ 1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2} \right\} \right]-\frac{\sigma_{treat}}{\sigma_{prior}^2}d \right).
 \end{aligned}
-\]</span> This is the <strong>conditional Bayesian probability to reject</strong> (or Bayesian power) under an (assumed) known true treatment effect <span class="math inline">\(\delta\)</span>.</p>
+\]</span> This is the <strong>conditional Bayesian probability to reject</strong> (or Bayesian power) under an (assumed) <em>known</em> true treatment effect <span class="math inline">\(\delta\)</span>.</p>
 <hr>
 <p><strong>Special case</strong></p>
 <p>If <span class="math inline">\(n_0=n_1=n\)</span> and <span class="math inline">\(\sigma_1^2=\sigma_0^2=\sigma^2\)</span>, then <span class="math inline">\(\sigma_{treat}^2=\frac{2\sigma^2}{n}\)</span> and <span class="math inline">\(\sigma_{prior}^2=\frac{2\sigma^2}{m}\)</span>, and the formula above reduces to <span class="math display">\[
@@ -997,17 +996,17 @@ P(D\leq D_{suc}^{d,\delta^*}|\delta)&amp;=\Phi\left(-z_{1-\epsilon}\sqrt{\frac{n
 </div>
 <p>The Bayesian probability to reject <span class="math inline">\(H_0: \delta&gt;\delta^*\)</span> given <span class="math inline">\(\delta=p_1-p_0=0\)</span> and an informative prior is 90%. This is higher than the frequentist probability to reject of 80% given <span class="math inline">\(\delta=p_1-p_0=0\)</span>. In contrast, the probability to reject <span class="math inline">\(H_0: \delta&gt;\delta^*\)</span> for <span class="math inline">\(\delta=0.035\)</span> under an informative prior is 11%. This is higher than the frequentist ‘type-I error’ of 5%. The probability to reject under the null hypothesis is higher for the Bayesian approach under an informative prior because the prior has substantial believe in non-inferiority.</p>
 <hr>
-<p>Suppose <span class="math inline">\(\tilde D\)</span> is calculated from a future sample given we have already observed <span class="math inline">\(D\)</span>. The <strong>Bayesian average (marginal) probability to reject</strong> (BAP) can be calculated as <span class="math display">\[
+<p>Suppose <span class="math inline">\(\tilde D\)</span> is calculated from a future sample given we have already observed <span class="math inline">\(D\)</span>. The posterior predictive distribution of <span class="math inline">\(\tilde D\)</span> is Gaussian distributed <span class="math inline">\(\tilde D \sim N(d, \sigma_{treat}^2+\sigma_{prior}^2)\)</span> under an analysis prior <span class="math inline">\(\Delta \sim N(d, \sigma^2_{prior})\)</span>. The <strong>Bayesian average (marginal) probability to reject</strong> (BAP) can be calculated as <span class="math display">\[
 \begin{aligned}
 BAP&amp;=\int_{-\infty}^{-\infty}P(D\leq D_{suc}^{d,\delta^*}|\delta)f(\delta)d\delta=\\
-&amp;=\int_{-\infty}^{-\infty}\left\{\int_{-\infty}^{-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d}f(\tilde \delta| \delta)d\tilde \delta \right\}f(\delta)d\delta=\\
-&amp;=\int_{-\infty}^{-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d} \left\{\int_{-\infty}^{-\infty}f(\tilde \delta| \delta)f(\delta)d\delta \right\}d\tilde \delta=\\
+&amp;=\int_{-\infty}^{-\infty}\left\{\int_{-\infty}^{-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d}f(\tilde \delta| \delta)d\tilde \delta \right\}f(\delta)d\delta\\
+&amp;=\int_{-\infty}^{-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d} \left\{\int_{-\infty}^{-\infty}f(\tilde \delta| \delta)f(\delta)d\delta \right\}d\tilde \delta\\
 &amp;=\int_{-\infty}^{-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d} f(\tilde \delta)d\tilde \delta
 \\&amp;=\Phi\left( -z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\frac{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}+\frac{\delta^*}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}\left\{1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right\} \right. \\
   &amp; \left. \quad \quad \quad-\frac{d}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}\left\{1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right\}\right) \\
 &amp;=\Phi\left(-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}-\frac{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}{\sigma^2_{prior}}(d-\delta^*)\right),
 \end{aligned}
-\]</span> since the posterior predictive distribution <span class="math inline">\(\tilde D|D \sim N(d, \sigma_{treat}^2+\sigma_{prior}^2)\)</span>.</p>
+\]</span> since .</p>
 <hr>
 <p><strong>Special case</strong></p>
 <p>If <span class="math inline">\(n_0=n_1=n\)</span> and <span class="math inline">\(\sigma_1^2=\sigma_0^2=\sigma^2\)</span>, then <span class="math inline">\(\sigma_{treat}^2=\frac{2\sigma^2}{n}\)</span> and <span class="math inline">\(\sigma_{prior}^2=\frac{2\sigma^2}{m}\)</span>, and the formula above reduces to <span class="math display">\[
