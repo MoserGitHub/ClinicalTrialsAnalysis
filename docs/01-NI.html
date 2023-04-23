@@ -848,7 +848,9 @@ f_2(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin
 </section>
 <section id="bayesian-approach-prior-on-the-risk-difference" class="level4" data-number="2.2.1.3">
 <h4 data-number="2.2.1.3" class="anchored" data-anchor-id="bayesian-approach-prior-on-the-risk-difference"><span class="header-section-number">2.2.1.3</span> Bayesian approach: Prior on the risk difference</h4>
-<p>The Bayesian approach uses the posterior distribution to define ‘a successful trial result’. Remember that <span class="math inline">\(D=\overline{p}_1-\overline{p}_0\)</span> with <span class="math inline">\(D \sim N(\delta, \sigma^2_{treat})\)</span>. Suppose that <span class="math inline">\(\Delta \sim N(d, \sigma^2_{prior})\)</span> is an analysis prior, then the posterior distribution is given as <span class="math display">\[
+<p>In this section we use a proper Bayesian approach for the calculation of the probability to reject the null hypothesis <span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">2</a>]</span> <span class="citation" data-cites="Muirhead2013">[<a href="references.html#ref-Muirhead2013" role="doc-biblioref">8</a>]</span>. Suppose that <span class="math inline">\(\Delta \sim N(d, \sigma^2_{prior})\)</span> is an analysis prior for the treatment effect <span class="math inline">\(\delta\)</span> and remember that <span class="math inline">\(D=\overline{p}_1-\overline{p}_0\)</span> is the estimated (observed) treatment effect with <span class="math inline">\(D \sim N(\delta, \sigma^2_{treat})\)</span>. A ‘trial success’ can then be defined as <span class="math display">\[
+P(\Delta\leq\delta^*|D)&gt;1-\epsilon,
+\]</span> where <span class="math inline">\(\epsilon\)</span> is small, say <span class="math inline">\(\epsilon=0.05\)</span> <span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">2</a>]</span> <span class="citation" data-cites="Muirhead2013">[<a href="references.html#ref-Muirhead2013" role="doc-biblioref">8</a>]</span>. Using the above specified prior and likelihood of the data, the posterior distribution is given as <span class="math display">\[
 \begin{aligned}
 \Delta|D \sim N\left(\frac{\frac{d}{\sigma^2_{prior}}+\frac{D}{\sigma^2_{treat}}}{\frac{1}{\sigma^2_{prior}}+\frac{1}{\sigma^2_{treat}}}, \frac{1}{\frac{1}{\sigma^2_{prior}}+\frac{1}{\sigma^2_{treat}}}\right)=N\left( \frac{\sigma^2_{treat}d+\sigma^2_{prior}D}{\sigma^2_{treat}+\sigma^2_{prior}}, \frac{\sigma^2_{treat}\sigma^2_{prior}}{\sigma^2_{treat}+\sigma^2_{prior}}  \right),
 \end{aligned}
@@ -860,20 +862,19 @@ f_2(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin
 \Delta|D \sim N\left(\frac{m\delta+nD}{n+m}, \frac{2\sigma^2}{n+m} \right).
 \]</span></p>
 <hr>
-<p>A trial success can then be defined as <span class="math display">\[
-P(\Delta\leq\delta^*|D)=1-\epsilon,
-\]</span> where <span class="math inline">\(\epsilon\)</span> is small, say <span class="math inline">\(\epsilon=0.05\)</span>. Similar to the frequentist approach one is interested whether the upper <span class="math inline">\((1-\epsilon)\)</span> credible interval of <span class="math inline">\(D\)</span> (taking into account the prior information) is smaller than the non-inferiority margin <span class="math inline">\(\delta^*\)</span>, that is <span class="math display">\[
+<p>The estimated treatment difference <span class="math inline">\(D\)</span> is a yet-to-be-observed statistic and one is interested whether the upper <span class="math inline">\((1-\epsilon)\)</span>-credible interval of <span class="math inline">\(D\)</span> is smaller than the non-inferiority margin <span class="math inline">\(\delta^*\)</span>, that is <span class="math display">\[
 \frac{\sigma^2_{treat}d+\sigma^2_{prior}D}{\sigma^2_{treat}+\sigma^2_{prior}}+z_{1-\epsilon}\frac{\sigma_{treat}\sigma_{prior}}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}\leq \delta^*.
-\]</span> A simple algebraic step gives</p>
+\]</span> to claim a successful trial result. A simple algebraic step gives</p>
 <p><span class="math display">\[
 \begin{aligned}
 D\leq -z_{1-\epsilon}&amp;\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d.
 \end{aligned}
-\]</span> Similar to the frequentist approach we can denote <span class="math inline">\(D_{suc}^{d,\delta^*}=-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d\)</span> as the required risk difference for a successful rejection of the null hypothesis in the Bayesian setting. Since <span class="math inline">\(D\sim N(\delta, \sigma_{treat}^2)\)</span>, it holds that <span class="math display">\[
+\]</span> Similar to the frequentist approach we can denote <span class="math inline">\(D_{suc}^{d,\delta^*}=-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d\)</span> as the <strong>required risk difference</strong> for a successful rejection of the null hypothesis taking into account the uncertainty of <span class="math inline">\(\delta\)</span>.</p>
+<p>If we assume that we <em>know</em> <span class="math inline">\(\delta\)</span> (which we rarely will, expect from simulation settings) then <span class="math inline">\(D\sim N(\delta, \sigma_{treat}^2)\)</span>, and <span class="math display">\[
 \begin{aligned}
 P(D\leq D_{suc}^{d,\delta^*}|\delta)&amp;=\Phi\left(-z_{1-\epsilon}\sqrt{1+\frac{\sigma^2_{treat}}{\sigma_{prior}^2}}-\frac{1}{\sigma_{treat}}\left[\delta-\delta^*\left\{ 1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2} \right\} \right]-\frac{\sigma_{treat}}{\sigma_{prior}^2}d \right).
 \end{aligned}
-\]</span> This is the <strong>Bayesian probability to reject</strong> (or Bayesian power) under an (assumed) known true treatment effect <span class="math inline">\(\delta\)</span>. Note that this is a conditional probability on <span class="math inline">\(\delta\)</span>.</p>
+\]</span> This is the <strong>conditional Bayesian probability to reject</strong> (or Bayesian power) under an (assumed) known true treatment effect <span class="math inline">\(\delta\)</span>.</p>
 <hr>
 <p><strong>Special case</strong></p>
 <p>If <span class="math inline">\(n_0=n_1=n\)</span> and <span class="math inline">\(\sigma_1^2=\sigma_0^2=\sigma^2\)</span>, then <span class="math inline">\(\sigma_{treat}^2=\frac{2\sigma^2}{n}\)</span> and <span class="math inline">\(\sigma_{prior}^2=\frac{2\sigma^2}{m}\)</span>, and the formula above reduces to <span class="math display">\[
@@ -884,7 +885,7 @@ P(D\leq D_{suc}^{d,\delta^*}|\delta)&amp;=\Phi\left(-z_{1-\epsilon}\sqrt{\frac{n
 <hr>
 <hr>
 <p><strong>Working example (continued)</strong></p>
-<p>We derive the Bayesian probability to reject for the SAFE-SSPE study for different <span class="math inline">\(\delta\)</span> values and analysis priors.</p>
+<p>We derive the conditional Bayesian probability to reject for the SAFE-SSPE study for different <span class="math inline">\(\delta\)</span> values and analysis priors.</p>
 <div class="cell">
 <details>
 <summary>Show R code</summary>
@@ -996,9 +997,12 @@ P(D\leq D_{suc}^{d,\delta^*}|\delta)&amp;=\Phi\left(-z_{1-\epsilon}\sqrt{\frac{n
 </div>
 <p>The Bayesian probability to reject <span class="math inline">\(H_0: \delta&gt;\delta^*\)</span> given <span class="math inline">\(\delta=p_1-p_0=0\)</span> and an informative prior is 90%. This is higher than the frequentist probability to reject of 80% given <span class="math inline">\(\delta=p_1-p_0=0\)</span>. In contrast, the probability to reject <span class="math inline">\(H_0: \delta&gt;\delta^*\)</span> for <span class="math inline">\(\delta=0.035\)</span> under an informative prior is 11%. This is higher than the frequentist ‘type-I error’ of 5%. The probability to reject under the null hypothesis is higher for the Bayesian approach under an informative prior because the prior has substantial believe in non-inferiority.</p>
 <hr>
-<p>The average (marginal) Bayesian probability to reject (BAP) can be calculated as <span class="math display">\[
+<p>Suppose <span class="math inline">\(\tilde D\)</span> is calculated from a future sample given we have already observed <span class="math inline">\(D\)</span>. Then <span class="math inline">\(\tilde D\)</span> has a posterior predictive distribution <span class="math inline">\(\tilde D|D \sim N(\delta, \sigma^2_{treat}+\sigma^2_{prior})=f(\tilde \delta|\delta)\)</span>. The Bayesian average (marginal) probability to reject (BAP) can be calculated as <span class="math display">\[
 \begin{aligned}
-BAP&amp;=\int_{-\infty}^{-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d} f(\tilde \delta)d\tilde \delta
+BAP&amp;=\int_{-\infty}^{-\infty}P(D\leq D_{suc}^{d,\delta^*}|\delta)f(\delta)d\delta=\\
+&amp;=\int_{-\infty}^{-\infty}\left\{\int_{-\infty}^{-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d}f(\tilde \delta| \delta)d\tilde \delta \right\}f(\delta)d\delta=\\
+&amp;=\int_{-\infty}^{-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d} \left\{\int_{-\infty}^{-\infty}f(\tilde \delta| \delta)f(\delta)d\delta \right\}d\tilde \delta=\\
+&amp;=\int_{-\infty}^{-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}+\delta^*\left(1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right)-\frac{\sigma^2_{treat}}{\sigma^2_{prior}}d} f(\tilde \delta)d\tilde \delta
 \\&amp;=\Phi\left( -z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}\frac{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}+\frac{\delta^*}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}\left\{1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right\} \right. \\
   &amp; \left. \quad \quad \quad-\frac{d}{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}\left\{1+\frac{\sigma_{treat}^2}{\sigma_{prior}^2}\right\}\right) \\
 &amp;=\Phi\left(-z_{1-\epsilon}\frac{\sigma_{treat}}{\sigma_{prior}}-\frac{\sqrt{\sigma^2_{treat}+\sigma^2_{prior}}}{\sigma^2_{prior}}(d-\delta^*)\right),
@@ -1314,7 +1318,7 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 <p><img src="01-NI_files/figure-html/fig15-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p><strong>Noninformative prior</strong>: Agresti and Min suggest to use a ‘diffuse’ prior and recommend to use Jeffrey’s prior <span class="citation" data-cites="Agresti2005">[<a href="references.html#ref-Agresti2005" role="doc-biblioref">8</a>]</span>. Jeffrey’s prior for a binomial likelihood is <span class="math inline">\(beta(0.5, 0.5)\)</span>-distributed.</p>
+<p><strong>Noninformative prior</strong>: Agresti and Min suggest to use a ‘diffuse’ prior and recommend to use Jeffrey’s prior <span class="citation" data-cites="Agresti2005">[<a href="references.html#ref-Agresti2005" role="doc-biblioref">9</a>]</span>. Jeffrey’s prior for a binomial likelihood is <span class="math inline">\(beta(0.5, 0.5)\)</span>-distributed.</p>
 <ul>
 <li>Parameters of beta prior for active treatment arm: <span class="math inline">\(a_1=0.5\)</span>, <span class="math inline">\(b_1=0.5\)</span>.</li>
 <li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_0=0.5\)</span>, <span class="math inline">\(b_0=0.5\)</span>.</li>
@@ -1376,7 +1380,7 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 <li>Calculate the joint pdf for all pairs <span class="math inline">\(r_i\in\{0, 1, \cdots, n_i\}\)</span>, <span class="math inline">\(i\in\{0,1\}\)</span>.</li>
 <li>The sum of the joint predictive probabilites over <span class="math inline">\(r_i\)</span> pairs where the <span class="math inline">\((1-\alpha)\)</span>-upper confidence limit of the risk difference is smaller than the non-inferiority margin is the average power.</li>
 </ul>
-<p>Here we use Agresti-Caffo confidence intervals for the risk difference <span class="citation" data-cites="Agresti2000">[<a href="references.html#ref-Agresti2000" role="doc-biblioref">9</a>]</span>.</p>
+<p>Here we use Agresti-Caffo confidence intervals for the risk difference <span class="citation" data-cites="Agresti2000">[<a href="references.html#ref-Agresti2000" role="doc-biblioref">10</a>]</span>.</p>
 <div class="cell">
 <details>
 <summary>Show R code</summary>
@@ -1517,7 +1521,7 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 </section>
 <section id="approach-2-sampling-from-prior-predictive-distribution" class="level5" data-number="2.2.1.4.2">
 <h5 data-number="2.2.1.4.2" class="anchored" data-anchor-id="approach-2-sampling-from-prior-predictive-distribution"><span class="header-section-number">2.2.1.4.2</span> Approach 2: Sampling from prior predictive distribution</h5>
-<p>The second approach samples <span class="math inline">\(q\)</span> event outcomes from the predictive distribution and calculates for each draw whether the <span class="math inline">\((1-\alpha)\)</span>-upper confidence limit of the risk difference is smaller than the non-inferiority margin. The sum of positive outcomes divided by the number of samples <span class="math inline">\(q\)</span> gives the average power. Also here we use Agresti-Caffo confidence intervals for the risk difference <span class="citation" data-cites="Agresti2000">[<a href="references.html#ref-Agresti2000" role="doc-biblioref">9</a>]</span>.</p>
+<p>The second approach samples <span class="math inline">\(q\)</span> event outcomes from the predictive distribution and calculates for each draw whether the <span class="math inline">\((1-\alpha)\)</span>-upper confidence limit of the risk difference is smaller than the non-inferiority margin. The sum of positive outcomes divided by the number of samples <span class="math inline">\(q\)</span> gives the average power. Also here we use Agresti-Caffo confidence intervals for the risk difference <span class="citation" data-cites="Agresti2000">[<a href="references.html#ref-Agresti2000" role="doc-biblioref">10</a>]</span>.</p>
 <div class="cell">
 <details>
 <summary>Show R code</summary>
@@ -1767,7 +1771,7 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 <p><img src="01-NI_files/figure-html/fig21-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p><strong>Noninformative prior</strong>: Agresti and Min suggest to use a ‘diffuse’ prior and recommend to use Jeffrey’s prior <span class="citation" data-cites="Agresti2005">[<a href="references.html#ref-Agresti2005" role="doc-biblioref">8</a>]</span>. Jeffrey’s prior for a binomial likelihood is <span class="math inline">\(beta(0.5, 0.5)\)</span>-distributed.</p>
+<p><strong>Noninformative prior</strong>: Agresti and Min suggest to use a ‘diffuse’ prior and recommend to use Jeffrey’s prior <span class="citation" data-cites="Agresti2005">[<a href="references.html#ref-Agresti2005" role="doc-biblioref">9</a>]</span>. Jeffrey’s prior for a binomial likelihood is <span class="math inline">\(beta(0.5, 0.5)\)</span>-distributed.</p>
 <ul>
 <li>Parameters of beta prior for active treatment arm: <span class="math inline">\(a_1=0.5\)</span>, <span class="math inline">\(b_1=0.5\)</span>.</li>
 <li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_0=0.5\)</span>, <span class="math inline">\(b_0=0.5\)</span>.</li>
@@ -1821,7 +1825,7 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 <hr>
 <p>We denote the joint posterior distribution as <span class="math display">\[
 f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)=\prod_{i\in\{0,1\}} \frac{\pi_i^{a_i+r_i-1}(1-\pi_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}.
-\]</span> and thus, by using Fubini’s theorem and the guidance of Patricia Altham <span class="citation" data-cites="Altham1969">[<a href="references.html#ref-Altham1969" role="doc-biblioref">10</a>]</span>, <span class="math display">\[
+\]</span> and thus, by using Fubini’s theorem and the guidance of Patricia Altham <span class="citation" data-cites="Altham1969">[<a href="references.html#ref-Altham1969" role="doc-biblioref">11</a>]</span>, <span class="math display">\[
 \begin{aligned}
 P&amp;\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0^{\pi_0+\delta^*} f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)d\pi_1d\pi_0 \\
 &amp;=\int_0^{1}\frac{\pi_0^{a_0+r_0-1}(1-\pi_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{\pi_0+\delta^*} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)d\pi_0 \\
@@ -1836,7 +1840,7 @@ P&amp;\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0
 &amp;=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{B(a_0+r_0+s, a_1+b_1+n_1-1-s+b_0+n_0-r_0)}{B(a_0+r_0, b_0+n_0-r_0)}, \\
 \end{aligned}
 \]</span></p>
-<p>where the last term in the above formula is the upper tail of a beta-binomial distribution. Altham <span class="citation" data-cites="Altham1969">[<a href="references.html#ref-Altham1969" role="doc-biblioref">10</a>]</span> showed that this could also be written as a hypergeometric distribution (see also <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span>, <span class="citation" data-cites="Grieve2016">[<a href="references.html#ref-Grieve2016" role="doc-biblioref">11</a>]</span>).</p>
+<p>where the last term in the above formula is the upper tail of a beta-binomial distribution. Altham <span class="citation" data-cites="Altham1969">[<a href="references.html#ref-Altham1969" role="doc-biblioref">11</a>]</span> showed that this could also be written as a hypergeometric distribution (see also <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span>, <span class="citation" data-cites="Grieve2016">[<a href="references.html#ref-Grieve2016" role="doc-biblioref">12</a>]</span>).</p>
 <hr>
 <p><strong>Working example (continued)</strong></p>
 <p>We calculate the Bayesian probability to reject for the SAFE-SSPE study. We show the integral solution and the calculation from the upper tail of a beta-binomial distribution.</p>
@@ -1975,17 +1979,20 @@ P&amp;\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0
 <div id="ref-Gelman2013" class="csl-entry" role="doc-biblioentry">
 <div class="csl-left-margin">7. </div><div class="csl-right-inline">Gelman A, Carlin JB, Stern HS, Dunson DB, Vehtari A, Rubin DB. Bayesian data analysis. Chapman; Hall/CRC; 2013. doi:<a href="https://doi.org/10.1201/b16018">10.1201/b16018</a></div>
 </div>
+<div id="ref-Muirhead2013" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">8. </div><div class="csl-right-inline">Muirhead RJ, Şoaita AI. On an approach to bayesian sample sizing in clinical trials. 2013; 126–137. doi:<a href="https://doi.org/10.1214/12-IMSCOLL1007">10.1214/12-IMSCOLL1007</a></div>
+</div>
 <div id="ref-Agresti2005" class="csl-entry" role="doc-biblioentry">
-<div class="csl-left-margin">8. </div><div class="csl-right-inline">Agresti A, Min Y. Frequentist performance of bayesian confidence intervals for comparing proportions in 2 × 2 contingency tables. Biometrics. 2005;61: 515–523. doi:<a href="https://doi.org/10.1111/j.1541-0420.2005.031228.x">10.1111/j.1541-0420.2005.031228.x</a></div>
+<div class="csl-left-margin">9. </div><div class="csl-right-inline">Agresti A, Min Y. Frequentist performance of bayesian confidence intervals for comparing proportions in 2 × 2 contingency tables. Biometrics. 2005;61: 515–523. doi:<a href="https://doi.org/10.1111/j.1541-0420.2005.031228.x">10.1111/j.1541-0420.2005.031228.x</a></div>
 </div>
 <div id="ref-Agresti2000" class="csl-entry" role="doc-biblioentry">
-<div class="csl-left-margin">9. </div><div class="csl-right-inline">Agresti A, Caffo B. Simple and effective confidence intervals for proportions and differences of proportions result from adding two successes and two failures. The American Statistician. 2000;54: 280. doi:<a href="https://doi.org/10.2307/2685779">10.2307/2685779</a></div>
+<div class="csl-left-margin">10. </div><div class="csl-right-inline">Agresti A, Caffo B. Simple and effective confidence intervals for proportions and differences of proportions result from adding two successes and two failures. The American Statistician. 2000;54: 280. doi:<a href="https://doi.org/10.2307/2685779">10.2307/2685779</a></div>
 </div>
 <div id="ref-Altham1969" class="csl-entry" role="doc-biblioentry">
-<div class="csl-left-margin">10. </div><div class="csl-right-inline">Altham PME. Exact bayesian analysis of a 2 times 2 contingency table, and fisher’s <span>“exact”</span> significance test. Journal of the Royal Statistical Society: Series B (Methodological). 1969;31: 261–269. doi:<a href="https://doi.org/10.1111/j.2517-6161.1969.tb00786.x">10.1111/j.2517-6161.1969.tb00786.x</a></div>
+<div class="csl-left-margin">11. </div><div class="csl-right-inline">Altham PME. Exact bayesian analysis of a 2 times 2 contingency table, and fisher’s <span>“exact”</span> significance test. Journal of the Royal Statistical Society: Series B (Methodological). 1969;31: 261–269. doi:<a href="https://doi.org/10.1111/j.2517-6161.1969.tb00786.x">10.1111/j.2517-6161.1969.tb00786.x</a></div>
 </div>
 <div id="ref-Grieve2016" class="csl-entry" role="doc-biblioentry">
-<div class="csl-left-margin">11. </div><div class="csl-right-inline">Grieve AP. Idle thoughts of a <span>“well-calibrated”</span> bayesian in clinical drug development. Pharmaceutical Statistics. 2016;15: 96–108. doi:<a href="https://doi.org/10.1002/pst.1736">10.1002/pst.1736</a></div>
+<div class="csl-left-margin">12. </div><div class="csl-right-inline">Grieve AP. Idle thoughts of a <span>“well-calibrated”</span> bayesian in clinical drug development. Pharmaceutical Statistics. 2016;15: 96–108. doi:<a href="https://doi.org/10.1002/pst.1736">10.1002/pst.1736</a></div>
 </div>
 </div>
 </section>

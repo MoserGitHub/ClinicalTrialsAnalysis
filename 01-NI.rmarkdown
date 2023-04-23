@@ -12,6 +12,7 @@ The terminology of 'power' is often imprecisely used @Kunzmann2022. Kunzmann et 
 
 In this section we consider a non-inferiority clinical trial setting with a null hypothesis $H_0: \delta > \delta^*$ and alternative hypothesis $H_a: \delta \leq \delta^*$, where $\delta^*>0$ is a fixed non-inferiority margin and a treatment effect $\delta$, for example, a continuous difference or a risk difference.
 
+
 ```{r fig1}
 #| echo: false
 #| message: false
@@ -25,6 +26,7 @@ data <- rbind(data, data.frame(x=-0.04, y=0.5, x_min=-0.07, x_max=0))
 
 ggplot(data=data, aes(x=x, y=y))+geom_vline(xintercept=0.035, linetype="dashed")+geom_vline(xintercept=0)+theme_bw()+scale_x_continuous(limits=c(-0.1, 0.07), breaks=c(-0.1, 0, 0.035), labels=c("", "delta", "non-inferiority margin"))+xlab("Treatment effect (<--- favors active treatment)")+ylim(0,2)+theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), panel.grid = element_blank())+ylab("")+geom_rect(aes(ymax=2, ymin=0, xmin=0.035, xmax=0.07), alpha=0.3)+geom_text(aes(x=0.05, y=1, label="H0:\nActive\ntreatment\nis inferior"))+geom_rect(aes(ymax=2, ymin=0, xmin=-0.1, xmax=0.035), alpha=0.3, fill="lightblue")+geom_text(aes(x=-0.07, y=1.8, label="HA: Active treatment\nis non-inferior"))+geom_rect(aes(ymax=1, ymin=0, xmin=-0.1, xmax=0), alpha=0.3, fill="blue")+geom_text(aes(x=-0.07, y=0.2, label="HA_0: Active treatment\nis superior"))+geom_point(colour="red", size=2)+geom_linerange(aes(xmax=x_max, xmin=x_min), colour="red", linewidth=1)
 ```
+
 
 ### Binomial outcome
 
@@ -74,6 +76,7 @@ $$
 
 $\delta_0$, $\delta_A$ and $\delta^*$ are assumed as fixed and known constants in a frequentist approach. Their choices are of high importance, because all trial conclusions are based on those choices and affect the sample size calculation. The plot below shows how the sample size increase as $\delta^*$ approaches $\delta$.
 
+
 ```{r fig2}
 #| echo: false
 
@@ -108,6 +111,7 @@ ggplot(data_output, aes(x = delta_star_range, y = n_output)) +
         0.075))
 ```
 
+
 ------------------------------------------------------------------------
 
 **Working example (continued)**
@@ -115,6 +119,7 @@ ggplot(data_output, aes(x = delta_star_range, y = n_output)) +
 We calculate the required sample size for the SAFE-SSPE trial using a frequentist approach with the following parameters:
 
 -   $p_1=0.01$, $p_0=0.01$, $\delta^*=0.035$, $1-\beta=0.8$, $\alpha=0.05$, $a=1/1$
+
 
 ```{r fig3}
 #| echo: true
@@ -143,6 +148,7 @@ n_1 <- n_0 * a
 n_1
 ```
 
+
 Under the specified parameters a sample size of 200 patients (100 per arm) is needed to reject the null hypothesis of inferiority. This is more or less the sample size mentioned in the study protocol of the SAFE-SSPE trial but without dropouts and adjustments for rare events.
 
 ------------------------------------------------------------------------
@@ -157,6 +163,7 @@ In the following we will use the following design priors:
 -   **Skeptical prior** (favors inferiority): $d=\delta^*$, $m=6.6$, $P(\Delta>0)=0.05$. This prior is centered on the non-inferiority margin such that there is a low probability (here 5%) of superiority.
 -   **Informative prior** (clinical expert knowledge): $d=0$ with $m=25$.
 -   **Noninformative prior**: $d=0$ with $m=0.5$.
+
 
 ```{r fig4}
 #| echo: false
@@ -210,6 +217,7 @@ ggplot(data_output, aes(x = delta_range, y = y, colour = factor(type))) +
         "blue", "darkred"))
 ```
 
+
 Let $$
 AP:=\int_{\Delta} P_{\delta}(D\leq D_{suc}^{\delta^*})f(\delta)d\delta,
 $$
@@ -234,6 +242,7 @@ $$ see for example @Grieve2022. Note that as $m \rightarrow \infty$, then $AP \r
 **Working example (continued)**
 
 We calculate the AP under the assumed prior distributions and parameters for the SAFE-SSPE trial.
+
 
 ```{r fig5}
 #| echo: true
@@ -290,6 +299,7 @@ data.frame(data_output %>%
     arrange(type))
 ```
 
+
 Under an 'enthusiastic prior' we get an average power of 59%. For a 'skeptical prior' the average power decreases to 34%. These values are lower than the frequentist power of 80%, which holds under the assumption that the specified treatment effect (the alternative hypothesis) is true.
 
 ------------------------------------------------------------------------
@@ -321,6 +331,7 @@ $$
 **Working example (continued)**
 
 We derive the probability densities for the different assumed design priors for the SAFE-SSPE study.
+
 
 ```{r fig6}
 #| echo: true
@@ -395,6 +406,7 @@ ggplot(data_power, aes(x, y, colour = type)) + geom_line(linewidth = 1) +
     labs(caption = "Dots indicate the calculated AP.")
 ```
 
+
 ------------------------------------------------------------------------
 
 The cdf of $RPR$ is
@@ -428,6 +440,7 @@ $$
 **Working example (continued)**
 
 With the formula above we can calculate the probability $P(RPR>\gamma)$, $0<\gamma<1$, for the SAFE-SSPE study and the above specified design priors.
+
 
 ```{r fig7}
 #| echo: true
@@ -490,7 +503,9 @@ ggplot(data_rpr, aes(x = gamma, y = p_rpr, colour = type)) +
     ylab("Probability that RPR is greater than threshold gamma")
 ```
 
+
 For a specific threshold, say $\gamma=0.6$, and varying 'prior sample sizes' $m$ we obtain
+
 
 ```{r fig8}
 #| echo: true
@@ -556,6 +571,7 @@ ggplot(data_rpr, aes(x = n_1_range + n_0_range, y = p_rpr, colour = type)) +
     1, 0.1))
 ```
 
+
 ------------------------------------------------------------------------
 
 Note that the average power AP integrates over the whole $\Delta$ range. This might include also 'non-favorable' regions. To see that one can decompose AP as follows (see @Kunzmann2022, @Grieve2022): $$
@@ -587,6 +603,7 @@ $$ see formula (2.11) in @Grieve2022.
 **Working example (continued)**
 
 For the SAFE-SSPE study the joint distribution $f_2(\tilde\delta, \delta)$ under an enthusiastic prior can be plotted as:
+
 
 ```{r fig9}
 #| echo: true
@@ -641,9 +658,11 @@ data_output <- data.frame(data_sim %>%
 data_output
 ```
 
+
 From the above values the average power can be calculated as (1) `r data_output$prop[4]` + (2) `r data_output$prop[3]` + (3) `r data_output$prop[2]`, which is equal to `r data_output$prop[2]+data_output$prop[3]+data_output$prop[4]`. This is the value we reported above (59%).
 
 The results of EP, PAP and AP are shown in the table below:
+
 
 ```{r fig10}
 #| echo: true
@@ -718,6 +737,7 @@ data_ep$const <- round(data_ep$const, 4)
 data_ep
 ```
 
+
 ------------------------------------------------------------------------
 
 #### Bayesian approach: Prior on the risk difference
@@ -782,6 +802,7 @@ $$
 **Working example (continued)**
 
 We derive the conditional Bayesian probability to reject for the SAFE-SSPE study for different $\delta$ values and analysis priors.
+
 
 ```{r fig11}
 #| echo: true
@@ -874,6 +895,7 @@ data_power %>%
     filter(delta %in% c("0", "0.035"))
 ```
 
+
 The Bayesian probability to reject $H_0: \delta>\delta^*$ given $\delta=p_1-p_0=0$ and an informative prior is 90%. This is higher than the frequentist probability to reject of 80% given $\delta=p_1-p_0=0$. In contrast, the probability to reject $H_0: \delta>\delta^*$ for $\delta=0.035$ under an informative prior is 11%. This is higher than the frequentist 'type-I error' of 5%. The probability to reject under the null hypothesis is higher for the Bayesian approach under an informative prior because the prior has substantial believe in non-inferiority.
 
 ------------------------------------------------------------------------
@@ -908,6 +930,7 @@ $$
 **Working example (continued)**
 
 We derive the Bayesian average probability to reject for the SAFE-SSPE study.
+
 
 ```{r fig12}
 #| echo: true
@@ -1023,6 +1046,7 @@ data_output %>%
     select(type, n_0, n_1, AP_hybrid = AP, AP_bayes)
 ```
 
+
 The average Bayesian power under an informative prior is 72% compared to 66% from a hybrid approach.
 
 ------------------------------------------------------------------------
@@ -1044,6 +1068,7 @@ For the SAFE-SSPE trial we specify the following design beta priors for the expe
 
 - Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=49.5$.
 - Parameters of beta prior for control treatment arm: $a_0=7.2$, $b_0=232.8$.
+
 
 ```{r fig13}
 #| echo: true
@@ -1096,10 +1121,12 @@ fig2 <- ggplot(diff_prior, aes(x), group = x) + geom_density(linewidth = 1.5,
 cowplot::plot_grid(fig1, fig2, ncol = 1)
 ```
 
+
 **Skeptical prior**: The beta prior for the active treatment arm is centered at 0.05 (the safety margin) with $P(\pi_1\leq 0.01)=0.025$, that is the probability that the prior is smaller or equal than the expected event proportion is 2.5%. The mean of the beta prior for the control arm is is centered at 0.01 (the expected event proportion) with $P(\pi_0> 0.05)=0.025$.
 
 - Parameters of beta prior for active treatment arm: $a_1=2.84$, $b_1=53.96$.
 - Parameters of beta prior for control treatment arm: $a_i=1.24$, $b_i=122.76$.
+
 
 ```{r fig14}
 #| echo: true
@@ -1151,10 +1178,12 @@ fig2 <- ggplot(diff_prior, aes(x), group = x) + geom_density(linewidth = 1.5,
 cowplot::plot_grid(fig1, fig2, ncol = 1)
 ```
 
+
 **Informative prior**: The beta prior for the active treatment arm and control arm is centered at 0.01 (the expected event proportion) with $P(\pi_1\leq 0.05)=0.01$ and $P(\pi_1\leq 0.05)=0.05$.
 
 - Parameters of beta prior for active treatment arm: $a_1=0.8$, $b_1=79.2$.
 - Parameters of beta prior for control treatment arm: $a_0=0.03$, $b_0=2.97$.
+
 
 ```{r fig15}
 #| echo: true
@@ -1205,10 +1234,12 @@ fig2 <- ggplot(diff_prior, aes(x), group = x) + geom_density(linewidth = 1.5,
 cowplot::plot_grid(fig1, fig2, ncol = 1)
 ```
 
+
 **Noninformative prior**: Agresti and Min suggest to use a 'diffuse' prior and recommend to use Jeffrey's prior @Agresti2005. Jeffrey's prior for a binomial likelihood is $beta(0.5, 0.5)$-distributed.
 
 - Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=0.5$.
 - Parameters of beta prior for control treatment arm: $a_0=0.5$, $b_0=0.5$.
+
 
 ```{r fig16}
 #| echo: true
@@ -1258,6 +1289,7 @@ fig2 <- ggplot(diff_prior, aes(x), group = x) + geom_density(linewidth = 1.5,
 cowplot::plot_grid(fig1, fig2, ncol = 1)
 ```
 
+
 ------------------------------------------------------------------------
 
 One can calculate the average power as follows:
@@ -1270,6 +1302,7 @@ The joint probability approach has been described in @Grieve2022 and includes th
 - The sum of the joint predictive probabilites over $r_i$ pairs where the $(1-\alpha)$-upper confidence limit of the risk difference is smaller than the non-inferiority margin is the average power.
 
 Here we use Agresti-Caffo confidence intervals for the risk difference @Agresti2000.
+
 
 ```{r fig17}
 #| echo: true
@@ -1402,9 +1435,11 @@ res_ap$ap <- round(res_ap$ap, 2)
 res_ap
 ```
 
+
 ##### Approach 2: Sampling from prior predictive distribution
 
 The second approach samples $q$ event outcomes from the predictive distribution and calculates for each draw whether the $(1-\alpha)$-upper confidence limit of the risk difference is smaller than the non-inferiority margin. The sum of positive outcomes divided by the number of samples $q$ gives the average power. Also here we use Agresti-Caffo confidence intervals for the risk difference @Agresti2000.
+
 
 ```{r fig18}
 #| echo: true
@@ -1499,6 +1534,7 @@ res_ap$ap <- round(res_ap$ap, 2)
 res_ap
 ```
 
+
 #### Bayesian approach: Prior on event probabilities
 
 In the former subsection we assumed that the prior was directly specified on the treatment effect. In this subsection we assume that that design prior is specified on the event probabilities $p_i$, $i=\{0,1\}$. Suppose that the priors on the event probability are beta distributed $\pi_i \sim Beta(a_i,b_i)$ and that we have observed a binomial distributed random sample of size $n_i$ and number of events $r_i$. Then the posterior distribution is
@@ -1520,6 +1556,7 @@ We use the same prior specifications as from the former subsection for the analy
 
 - Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=49.5$.
 - Parameters of beta prior for control treatment arm: $a_0=7.2$, $b_0=232.8$.
+
 
 ```{r fig19}
 #| echo: true
@@ -1560,10 +1597,12 @@ ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) 
     scale_linetype("Type") + ggtitle("Enthusiastic prior")
 ```
 
+
 **Skeptical prior**: The beta prior for the active treatment arm is centered at 0.05 (the safety margin) with $P(\pi_1\leq 0.01)=0.025$, that is the probability that the prior is smaller or equal than the expected event proportion is 2.5%. The mean of the beta prior for the control arm is is centered at 0.01 (the expected event proportion) with $P(\pi_0> 0.05)=0.025$.
 
 - Parameters of beta prior for active treatment arm: $a_1=2.84$, $b_1=53.96$.
 - Parameters of beta prior for control treatment arm: $a_i=1.24$, $b_i=122.76$.
+
 
 ```{r fig20}
 #| echo: true
@@ -1604,10 +1643,12 @@ ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) 
     scale_linetype("Type") + ggtitle("Skeptical prior")
 ```
 
+
 **Informative prior**: The beta prior for the active treatment arm and control arm is centered at 0.01 (the expected event proportion) with $P(\pi_1\leq 0.05)=0.01$ and $P(\pi_1\leq 0.05)=0.05$.
 
 - Parameters of beta prior for active treatment arm: $a_1=0.8$, $b_1=79.2$.
 - Parameters of beta prior for control treatment arm: $a_0=0.03$, $b_0=2.97$.
+
 
 ```{r fig21}
 #| echo: true
@@ -1650,10 +1691,12 @@ ggplot(prior_plot_long, aes(x = x, y = value, linetype = type, colour = group)) 
 
 
 
+
 **Noninformative prior**: Agresti and Min suggest to use a 'diffuse' prior and recommend to use Jeffrey's prior @Agresti2005. Jeffrey's prior for a binomial likelihood is $beta(0.5, 0.5)$-distributed.
 
 - Parameters of beta prior for active treatment arm: $a_1=0.5$, $b_1=0.5$.
 - Parameters of beta prior for control treatment arm: $a_0=0.5$, $b_0=0.5$.
+
 
 ```{r fig22}
 #| echo: true
@@ -1699,6 +1742,7 @@ ggplot(prior_plot_long, aes(x = x, y = value, linetype = type,
     palette = "Set2") + scale_linetype("Type") + ggtitle("Noninformative prior")
 ```
 
+
 ------------------------------------------------------------------------
 
 We denote the joint posterior distribution as
@@ -1738,6 +1782,7 @@ $$
 \int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{u} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)du
 $$
 needs to be zero, otherwise the function is not defined.
+
 
 ```{r fig23}
 #| echo: true
@@ -1838,6 +1883,8 @@ res_bap$bap_tail_betabinomial <- round(res_bap$bap_tail_betabinomial, 2)
 res_bap
 ```
 
+
 Small differences between both approaches occur because the 'beta-binomial distribution' approach is a discretization of the integral approach and requires integer steps for the calculation.
 
 ------------------------------------------------------------------------
+
