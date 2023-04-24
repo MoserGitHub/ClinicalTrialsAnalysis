@@ -354,16 +354,18 @@ $power
 AP:=\int_{\Delta} P_{\delta}(D\leq D_{suc}^{\delta^*})f(\delta)d\delta,
 \]</span></p>
 <p>be the <strong>‘average power’</strong> <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span> (also called ‘assurance’ <span class="citation" data-cites="OHagan2005">[<a href="references.html#ref-OHagan2005" role="doc-biblioref">5</a>]</span>, ‘probability of success’ <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">1</a>]</span>, <span class="citation" data-cites="Spiegelhalter2003">[<a href="references.html#ref-Spiegelhalter2003" role="doc-biblioref">2</a>]</span> or Bayesian predictive power <span class="citation" data-cites="Rufibach2016">[<a href="references.html#ref-Rufibach2016" role="doc-biblioref">6</a>]</span>. Kunzmann et al.&nbsp;provide in their supplemental section a literature review of the used terminology in publications from clinical trials <span class="citation" data-cites="Kunzmann2022">[<a href="references.html#ref-Kunzmann2022" role="doc-biblioref">1</a>]</span>).</p>
-<p>Remember that in an hybrid approach we are interested in trial conclusions from a frequentist point of view, thus we are interested in <span class="math display">\[
+<p>In the hybrid approach we are interested in trial conclusions from a frequentist point of view, thus we are interested in <span class="math display">\[
 D\leq -z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*.
-\]</span> By using a design prior we take into account the uncertainty of the treatment effect. The prior predictive distribution for an estimated risk difference, say <span class="math inline">\(\tilde D\)</span>, with a prior <span class="math inline">\(\Delta \sim N\left(d, \sigma_{prior}^2\right)\)</span> includes this uncertainty. For the Gaussian case, the prior predictive distribution of <span class="math inline">\(\tilde D\)</span> is <span class="math inline">\(\tilde D \sim N\left(\delta, \sigma_{treat}^2\right)\)</span>, see for example <span class="citation" data-cites="Gelman2013">[<a href="references.html#ref-Gelman2013" role="doc-biblioref">7</a>]</span>. Suppose now that <span class="math inline">\(D\)</span> has a predictive distribution as described above, then <span class="math display">\[
+\]</span></p>
+<p>Then, for a <span class="math inline">\(\tilde D\)</span> of future observations, <span class="math display">\[
 \begin{aligned}
-AP&amp;=\int_{-\infty}^{-\infty}P(D\leq D_{suc}^{d,\delta^*}|\delta)f(\delta)d\delta \\
+AP&amp;=\int_{-\infty}^{-\infty}P_{\delta}(D\leq D_{suc}^{d,\delta^*})f(\delta)d\delta \\
 &amp;=\int_{-\infty}^{-\infty}\left\{\int_{-\infty}^{-z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*}f(\tilde \delta| \delta)d\tilde \delta \right\}f(\delta)d\delta\\
+&amp;=\int_{-\infty}^{-z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*}\left\{ \int_{-\infty}^{-\infty} f(\tilde \delta| \delta)f(\delta)d\delta \right\}d\tilde \delta\\
 &amp;=\int_{-\infty}^{-z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*}f(\tilde\delta)d\tilde\delta \\
 &amp;=\Phi\left(\frac{1}{\sigma_{prior}}\left[-z_{1-\alpha}\sigma_{treat}-(d-\delta^*)\right]\right),
 \end{aligned}
-\]</span> see for example <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span>. Note that as <span class="math inline">\(m \rightarrow \infty\)</span>, then <span class="math inline">\(AP \rightarrow \Phi\left(-z_{1-\alpha}-\frac{(d-\delta^*)}{\sigma_{treat}}\right)\)</span>, that is, the frequentist power at <span class="math inline">\(d\)</span>.</p>
+\]</span>, since the prior predictive distribution of <span class="math inline">\(\tilde D\)</span> is Gaussian distributed <span class="math inline">\(\tilde D \sim N\left(\delta, \sigma_{treat}^2\right)\)</span> under a design prior <span class="math inline">\(\Delta \sim N\left(d, \sigma_{prior}^2\right)\)</span> (<span class="citation" data-cites="Gelman2013">[<a href="references.html#ref-Gelman2013" role="doc-biblioref">7</a>]</span>, <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span>). Note that as <span class="math inline">\(m \rightarrow \infty\)</span>, then <span class="math inline">\(AP \rightarrow \Phi\left(-z_{1-\alpha}-\frac{(d-\delta^*)}{\sigma_{treat}}\right)\)</span>, that is, the frequentist power at <span class="math inline">\(d\)</span>.</p>
 <hr>
 <p><strong>Working example (continued)</strong></p>
 <p>We calculate the AP under the assumed prior distributions and parameters for the SAFE-SSPE trial.</p>
@@ -1824,7 +1826,7 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 <hr>
 <p>We denote the joint posterior distribution as <span class="math display">\[
 f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)=\prod_{i\in\{0,1\}} \frac{\pi_i^{a_i+r_i-1}(1-\pi_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}.
-\]</span> and thus, by using Fubini’s theorem and the guidance of Patricia Altham <span class="citation" data-cites="Altham1969">[<a href="references.html#ref-Altham1969" role="doc-biblioref">11</a>]</span>, <span class="math display">\[
+\]</span> and thus, by using Fubini’s theorem and the explanations of Patricia Altham <span class="citation" data-cites="Altham1969">[<a href="references.html#ref-Altham1969" role="doc-biblioref">11</a>]</span>, <span class="math display">\[
 \begin{aligned}
 P&amp;\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0^{\pi_0+\delta^*} f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)d\pi_1d\pi_0 \\
 &amp;=\int_0^{1}\frac{\pi_0^{a_0+r_0-1}(1-\pi_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{\pi_0+\delta^*} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)d\pi_0 \\
