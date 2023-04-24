@@ -1831,131 +1831,227 @@ f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)=\prod_{i\in\{0,1\}} \frac{\pi_i^{a_i+r_i-1}
 P&amp;\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0^{\pi_0+\delta^*} f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)d\pi_1d\pi_0 \\
 &amp;=\int_0^{1}\frac{\pi_0^{a_0+r_0-1}(1-\pi_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{\pi_0+\delta^*} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)d\pi_0 \\
 &amp;\overset{u=\pi_0-\delta^*}{=}\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{u} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)du \\
-&amp;=\cdots
-\end{aligned}
-\]</span> is the <strong>Bayesian probability to reject</strong> given assumed <span class="math inline">\(r_0, r_1, n_0, n_1\)</span>. This integral can be solved using the <em>integrate</em> function in R, or using the continuation of the formula <span class="math display">\[
-\begin{aligned}
-\cdots&amp;=\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}u^s(1-u)^{a_1+b_1+n_1-1-s}\right)du \\
+&amp;=\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}u^s(1-u)^{a_1+b_1+n_1-1-s}\right)du \\
 &amp;=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{1}{B(a_0+r_0, b_0+n_0-r_0)} \left(\int_{-\delta^*}^{1-\delta^*}u^{a_0+r_0+s-1}(1-u)^{a_1+b_1+n_1-1+b_0+n_0-r_0-s-1}du\right) \\
 &amp;\overset{z=u+\delta^*}{=}\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{1}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_{0}^{1}z^{a_0+r_0+s-1}(1-z)^{a_1+b_1+n_1-1-s+b_0+n_0-r_0-1}dz\right) \\
-&amp;=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{B(a_0+r_0+s, a_1+b_1+n_1-1-s+b_0+n_0-r_0)}{B(a_0+r_0, b_0+n_0-r_0)}, \\
+&amp;=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{B(a_0+r_0+s, a_1+b_1+n_1-1-s+b_0+n_0-r_0)}{B(a_0+r_0, b_0+n_0-r_0)}
 \end{aligned}
-\]</span></p>
-<p>where the last term in the above formula is the upper tail of a beta-binomial distribution. Altham <span class="citation" data-cites="Altham1969">[<a href="references.html#ref-Altham1969" role="doc-biblioref">11</a>]</span> showed that this could also be written as a hypergeometric distribution (see also <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span>, <span class="citation" data-cites="Grieve2016">[<a href="references.html#ref-Grieve2016" role="doc-biblioref">12</a>]</span>).</p>
+\]</span> is the <strong>Bayesian probability to reject</strong> given the observed <span class="math inline">\(r_0, r_1, n_0, n_1\)</span>. The last term in the above formula is the upper tail of a beta-binomial distribution. Altham <span class="citation" data-cites="Altham1969">[<a href="references.html#ref-Altham1969" role="doc-biblioref">11</a>]</span> showed that this could also be written as a hypergeometric distribution (see also <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span>, <span class="citation" data-cites="Grieve2016">[<a href="references.html#ref-Grieve2016" role="doc-biblioref">12</a>]</span>).</p>
 <hr>
 <p><strong>Working example (continued)</strong></p>
-<p>We calculate the Bayesian probability to reject for the SAFE-SSPE study. We show the integral solution and the calculation from the upper tail of a beta-binomial distribution.</p>
-<p>Note that for the integral calculation the lower integrand <span class="math inline">\(-\delta^*\)</span> in</p>
-<p><span class="math display">\[
-\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{u} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)du
-\]</span> needs to be zero, otherwise the function is not defined.</p>
+<p>We calculate the Bayesian probability to reject for the SAFE-SSPE study.</p>
 <div class="cell">
 <details>
 <summary>Show R code</summary>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Integral function</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>inner_func <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    x<span class="sc">^</span>(a_1 <span class="sc">+</span> <span class="fu">ceiling</span>(n_1) <span class="sc">*</span> p_1 <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> x)<span class="sc">^</span>(b_1 <span class="sc">+</span></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ceiling</span>(n_1) <span class="sc">-</span> <span class="fu">ceiling</span>(n_1) <span class="sc">*</span> p_1 <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Enthusiastic prior</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">7.2</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.03</span>)<span class="sc">/</span>(<span class="fl">0.03</span>) <span class="sc">*</span> a_0</span>
 <span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>inner_int <span class="ot">&lt;-</span> <span class="fu">Vectorize</span>(<span class="cf">function</span>(u) {</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    u<span class="sc">^</span>(a_0 <span class="sc">+</span> <span class="fu">ceiling</span>(n_0) <span class="sc">*</span> p_0 <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> u)<span class="sc">^</span>(b_0 <span class="sc">+</span></span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ceiling</span>(n_0) <span class="sc">-</span> <span class="fu">ceiling</span>(n_0) <span class="sc">*</span> p_0 <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="fu">integrate</span>(inner_func,</span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>        <span class="dv">0</span>, u)<span class="sc">$</span>value</span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">seq</span>(a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    p_1 <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbbinom</span>(s, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), <span class="at">alpha =</span> a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0))</span>
 <span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Enthusiastic prior</span></span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">7.2</span></span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.03</span>)<span class="sc">/</span>(<span class="fl">0.03</span>) <span class="sc">*</span> a_0</span>
-<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>bap_integral <span class="ot">&lt;-</span> <span class="fu">integrate</span>(inner_int, <span class="dv">0</span>, <span class="dv">1</span><span class="sc">-</span>delta_star)<span class="sc">$</span>value<span class="sc">/</span>(<span class="fu">beta</span>(a_1 <span class="sc">+</span></span>
-<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>    n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1) <span class="sc">*</span> <span class="fu">beta</span>(a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, b_0 <span class="sc">+</span> n_0 <span class="sc">-</span></span>
-<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">*</span> p_0))</span>
-<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">seq</span>(a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span></span>
-<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>    p_1 <span class="sc">-</span> <span class="dv">1</span>))</span>
-<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbbinom</span>(s, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span></span>
-<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>    b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), <span class="at">alpha =</span> a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
-<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0))</span>
-<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Enthusiastic"</span>, bap_integral, bap_tail_betabinomial)</span>
-<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Skeptical prior</span></span>
-<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">2.84</span></span>
-<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span>)<span class="sc">/</span><span class="fl">0.05</span> <span class="sc">*</span> a_1</span>
-<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">1.24</span></span>
-<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
-<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>bap_integral <span class="ot">&lt;-</span> <span class="fu">integrate</span>(inner_int, <span class="dv">0</span>, <span class="dv">1</span> <span class="sc">-</span> delta_star)<span class="sc">$</span>value<span class="sc">/</span>(<span class="fu">beta</span>(a_1 <span class="sc">+</span></span>
-<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>    n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1) <span class="sc">*</span> <span class="fu">beta</span>(a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, b_0 <span class="sc">+</span> n_0 <span class="sc">-</span></span>
-<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">*</span> p_0))</span>
-<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">seq</span>(a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span></span>
-<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>    p_1 <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Enthusiastic"</span>, bap)</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Skeptical prior</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">2.84</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span>)<span class="sc">/</span><span class="fl">0.05</span> <span class="sc">*</span> a_1</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">1.24</span></span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">seq</span>(a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>    p_1 <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbbinom</span>(s, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span></span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>    b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), <span class="at">alpha =</span> a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0))</span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Skeptical"</span>, bap))</span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Informative prior</span></span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.03</span></span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">seq</span>(a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span></span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>    p_1 <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbbinom</span>(s, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span></span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>    b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), <span class="at">alpha =</span> a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0))</span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Informative"</span>, bap))</span>
 <span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a>bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbbinom</span>(s, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span></span>
-<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a>    b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), <span class="at">alpha =</span> a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
-<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0))</span>
-<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Skeptical"</span>, bap_integral, </span>
-<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a>                                     bap_tail_betabinomial))</span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a><span class="do">## Noninformative prior</span></span>
+<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
 <span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Informative prior</span></span>
-<span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
-<span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
-<span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.03</span></span>
-<span id="cb34-55"><a href="#cb34-55" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
+<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">seq</span>(a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span></span>
+<span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a>    p_1 <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbbinom</span>(s, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span></span>
+<span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a>    b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), <span class="at">alpha =</span> a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
+<span id="cb34-55"><a href="#cb34-55" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0))</span>
 <span id="cb34-56"><a href="#cb34-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-57"><a href="#cb34-57" aria-hidden="true" tabindex="-1"></a>bap_integral <span class="ot">&lt;-</span> <span class="fu">integrate</span>(inner_int, <span class="dv">0</span>, <span class="dv">1</span> <span class="sc">-</span> delta_star)<span class="sc">$</span>value<span class="sc">/</span>(<span class="fu">beta</span>(a_1 <span class="sc">+</span></span>
-<span id="cb34-58"><a href="#cb34-58" aria-hidden="true" tabindex="-1"></a>    n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1) <span class="sc">*</span> <span class="fu">beta</span>(a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, b_0 <span class="sc">+</span> n_0 <span class="sc">-</span></span>
-<span id="cb34-59"><a href="#cb34-59" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">*</span> p_0))</span>
+<span id="cb34-57"><a href="#cb34-57" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Noninformative"</span>, bap))</span>
+<span id="cb34-58"><a href="#cb34-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-59"><a href="#cb34-59" aria-hidden="true" tabindex="-1"></a>res_bap<span class="sc">$</span>bap <span class="ot">&lt;-</span> <span class="fu">round</span>(res_bap<span class="sc">$</span>bap, <span class="dv">2</span>)</span>
 <span id="cb34-60"><a href="#cb34-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-61"><a href="#cb34-61" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">seq</span>(a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span></span>
-<span id="cb34-62"><a href="#cb34-62" aria-hidden="true" tabindex="-1"></a>    p_1 <span class="sc">-</span> <span class="dv">1</span>))</span>
-<span id="cb34-63"><a href="#cb34-63" aria-hidden="true" tabindex="-1"></a>bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbbinom</span>(s, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span></span>
-<span id="cb34-64"><a href="#cb34-64" aria-hidden="true" tabindex="-1"></a>    b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), <span class="at">alpha =</span> a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
-<span id="cb34-65"><a href="#cb34-65" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0))</span>
-<span id="cb34-66"><a href="#cb34-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-67"><a href="#cb34-67" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Informative"</span>, bap_integral, </span>
-<span id="cb34-68"><a href="#cb34-68" aria-hidden="true" tabindex="-1"></a>                                     bap_tail_betabinomial))</span>
-<span id="cb34-69"><a href="#cb34-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-70"><a href="#cb34-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-71"><a href="#cb34-71" aria-hidden="true" tabindex="-1"></a><span class="do">## Noninformative prior</span></span>
-<span id="cb34-72"><a href="#cb34-72" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb34-73"><a href="#cb34-73" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb34-74"><a href="#cb34-74" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb34-75"><a href="#cb34-75" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb34-76"><a href="#cb34-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-77"><a href="#cb34-77" aria-hidden="true" tabindex="-1"></a>bap_integral <span class="ot">&lt;-</span> <span class="fu">integrate</span>(inner_int, <span class="dv">0</span>, <span class="dv">1</span> <span class="sc">-</span> delta_star)<span class="sc">$</span>value<span class="sc">/</span>(<span class="fu">beta</span>(a_1 <span class="sc">+</span></span>
-<span id="cb34-78"><a href="#cb34-78" aria-hidden="true" tabindex="-1"></a>    n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1) <span class="sc">*</span> <span class="fu">beta</span>(a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, b_0 <span class="sc">+</span> n_0 <span class="sc">-</span></span>
-<span id="cb34-79"><a href="#cb34-79" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">*</span> p_0))</span>
-<span id="cb34-80"><a href="#cb34-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-81"><a href="#cb34-81" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">seq</span>(a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span></span>
-<span id="cb34-82"><a href="#cb34-82" aria-hidden="true" tabindex="-1"></a>    p_1 <span class="sc">-</span> <span class="dv">1</span>))</span>
-<span id="cb34-83"><a href="#cb34-83" aria-hidden="true" tabindex="-1"></a>bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbbinom</span>(s, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span></span>
-<span id="cb34-84"><a href="#cb34-84" aria-hidden="true" tabindex="-1"></a>    b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), <span class="at">alpha =</span> a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
-<span id="cb34-85"><a href="#cb34-85" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0))</span>
-<span id="cb34-86"><a href="#cb34-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-87"><a href="#cb34-87" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Noninformative"</span>, bap_integral, </span>
-<span id="cb34-88"><a href="#cb34-88" aria-hidden="true" tabindex="-1"></a>                                     bap_tail_betabinomial))</span>
-<span id="cb34-89"><a href="#cb34-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-90"><a href="#cb34-90" aria-hidden="true" tabindex="-1"></a>res_bap<span class="sc">$</span>bap_integral <span class="ot">&lt;-</span> <span class="fu">round</span>(res_bap<span class="sc">$</span>bap_integral, <span class="dv">2</span>)</span>
-<span id="cb34-91"><a href="#cb34-91" aria-hidden="true" tabindex="-1"></a>res_bap<span class="sc">$</span>bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">round</span>(res_bap<span class="sc">$</span>bap_tail_betabinomial, <span class="dv">2</span>)</span>
-<span id="cb34-92"><a href="#cb34-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-93"><a href="#cb34-93" aria-hidden="true" tabindex="-1"></a>res_bap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-61"><a href="#cb34-61" aria-hidden="true" tabindex="-1"></a>res_bap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>            type bap_integral bap_tail_betabinomial
-1   Enthusiastic         0.88                  0.83
-2      Skeptical         0.13                  0.12
-3    Informative         0.45                  0.42
-4 Noninformative         0.50                  0.38</code></pre>
+<pre><code>            type  bap
+1   Enthusiastic 0.83
+2      Skeptical 0.12
+3    Informative 0.42
+4 Noninformative 0.38</code></pre>
 </div>
 </div>
-<p>Small differences between both approaches occur because the ‘beta-binomial distribution’ approach is a discretization of the integral approach and requires integer steps for the calculation.</p>
 <hr>
+<p>To get the Bayesian average probability to reject, we use the predictive distribution of new observations to calculate <span class="math display">\[
+\begin{aligned}
+BAP&amp;=\sum_{r_0=0}^{n_0-1}\sum_{r_1=0}^{n_1-1} P(\pi_1-\pi_0 \leq \delta^*|r_0, r_1, n_0, n_1)f_2(r_0, r_1) \\
+&amp;=\sum_{r_0=0}^{n_0-1}\sum_{r_1=0}^{n_1-1} \left\{\sum_{\tilde r_0=0}^{n_0-1}\sum_{\tilde r_1=0}^{n_1-1}P(\pi_1-\pi_0 \leq \delta^*|\tilde r_0, \tilde r_1, n_0, n_1)f_2(\tilde r_0, \tilde r_1|r_0, r_1)\right\}f_2(r_0, r_1) \\
+&amp;=\sum_{\tilde r_0=0}^{n_0-1}\sum_{\tilde r_1=0}^{n_1-1}P(\pi_1-\pi_0 \leq \delta^*|\tilde r_0, \tilde r_1, n_0, n_1) \left\{\sum_{r_0=0}^{n_0-1}\sum_{r_1=0}^{n_1-1}f_2(\tilde r_0, \tilde r_1|r_0, r_1)f_2(r_0, r_1)\right\} \\
+&amp;=\sum_{\tilde r_0=0}^{n_0-1}\sum_{\tilde r_1=0}^{n_1-1}P(\pi_1-\pi_0 \leq \delta^*|\tilde r_0, \tilde r_1, n_0, n_1)f_2(\tilde r_0, \tilde r_1|r_0, r_1)
+\end{aligned}
+\]</span></p>
+<div class="cell">
+<details>
+<summary>Show R code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of draws</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Enthusiastic prior</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">7.2</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.03</span>)<span class="sc">/</span>(<span class="fl">0.03</span>) <span class="sc">*</span> a_0</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(q, <span class="at">size =</span> <span class="fu">ceiling</span>(a_0 <span class="sc">+</span> b_0 <span class="sc">+</span> n_0 <span class="sc">-</span> <span class="dv">1</span>), </span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">alpha =</span> a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>                 n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0)</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(q, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span> b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), </span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>               <span class="at">alpha =</span> a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, <span class="at">beta =</span> b_1 <span class="sc">+</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>                 n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1)</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>q) {</span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">seq</span>(a_1 <span class="sc">+</span> r_1[k], b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> r_1[k] <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>  bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">c</span>(bap_tail_betabinomial, <span class="fu">sum</span>(<span class="fu">dbbinom</span>(s, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span></span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>      b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), <span class="at">alpha =</span> a_0 <span class="sc">+</span> r_0[k], <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>      n_0 <span class="sc">-</span> r_0[k])))</span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">mean</span>(bap_tail_betabinomial)</span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Enthusiastic"</span>, bap_tail_betabinomial)</span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Skeptical prior</span></span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">2.84</span></span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span>)<span class="sc">/</span><span class="fl">0.05</span> <span class="sc">*</span> a_1</span>
+<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">1.24</span></span>
+<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
+<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(q, <span class="at">size =</span> <span class="fu">ceiling</span>(a_0 <span class="sc">+</span> b_0 <span class="sc">+</span> n_0 <span class="sc">-</span> <span class="dv">1</span>), </span>
+<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a>               <span class="at">alpha =</span> a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
+<span id="cb36-39"><a href="#cb36-39" aria-hidden="true" tabindex="-1"></a>                 n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0)</span>
+<span id="cb36-40"><a href="#cb36-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-41"><a href="#cb36-41" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(q, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span> b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), </span>
+<span id="cb36-42"><a href="#cb36-42" aria-hidden="true" tabindex="-1"></a>               <span class="at">alpha =</span> a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, <span class="at">beta =</span> b_1 <span class="sc">+</span></span>
+<span id="cb36-43"><a href="#cb36-43" aria-hidden="true" tabindex="-1"></a>                 n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1)</span>
+<span id="cb36-44"><a href="#cb36-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-45"><a href="#cb36-45" aria-hidden="true" tabindex="-1"></a>bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb36-46"><a href="#cb36-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-47"><a href="#cb36-47" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>q) {</span>
+<span id="cb36-48"><a href="#cb36-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-49"><a href="#cb36-49" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">seq</span>(a_1 <span class="sc">+</span> r_1[k], b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> r_1[k] <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb36-50"><a href="#cb36-50" aria-hidden="true" tabindex="-1"></a>  bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">c</span>(bap_tail_betabinomial, <span class="fu">sum</span>(<span class="fu">dbbinom</span>(s, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span></span>
+<span id="cb36-51"><a href="#cb36-51" aria-hidden="true" tabindex="-1"></a>      b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), <span class="at">alpha =</span> a_0 <span class="sc">+</span> r_0[k], <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
+<span id="cb36-52"><a href="#cb36-52" aria-hidden="true" tabindex="-1"></a>      n_0 <span class="sc">-</span> r_0[k])))</span>
+<span id="cb36-53"><a href="#cb36-53" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb36-54"><a href="#cb36-54" aria-hidden="true" tabindex="-1"></a>bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">mean</span>(bap_tail_betabinomial)</span>
+<span id="cb36-55"><a href="#cb36-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-56"><a href="#cb36-56" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Skeptical"</span>, </span>
+<span id="cb36-57"><a href="#cb36-57" aria-hidden="true" tabindex="-1"></a>                                     bap_tail_betabinomial))</span>
+<span id="cb36-58"><a href="#cb36-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-59"><a href="#cb36-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Informative prior</span></span>
+<span id="cb36-60"><a href="#cb36-60" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb36-61"><a href="#cb36-61" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
+<span id="cb36-62"><a href="#cb36-62" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.03</span></span>
+<span id="cb36-63"><a href="#cb36-63" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
+<span id="cb36-64"><a href="#cb36-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-65"><a href="#cb36-65" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(q, <span class="at">size =</span> <span class="fu">ceiling</span>(a_0 <span class="sc">+</span> b_0 <span class="sc">+</span> n_0 <span class="sc">-</span> <span class="dv">1</span>), </span>
+<span id="cb36-66"><a href="#cb36-66" aria-hidden="true" tabindex="-1"></a>               <span class="at">alpha =</span> a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
+<span id="cb36-67"><a href="#cb36-67" aria-hidden="true" tabindex="-1"></a>                 n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0)</span>
+<span id="cb36-68"><a href="#cb36-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-69"><a href="#cb36-69" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(q, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span> b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), </span>
+<span id="cb36-70"><a href="#cb36-70" aria-hidden="true" tabindex="-1"></a>               <span class="at">alpha =</span> a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, <span class="at">beta =</span> b_1 <span class="sc">+</span></span>
+<span id="cb36-71"><a href="#cb36-71" aria-hidden="true" tabindex="-1"></a>                 n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1)</span>
+<span id="cb36-72"><a href="#cb36-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-73"><a href="#cb36-73" aria-hidden="true" tabindex="-1"></a>bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb36-74"><a href="#cb36-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-75"><a href="#cb36-75" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>q) {</span>
+<span id="cb36-76"><a href="#cb36-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-77"><a href="#cb36-77" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">seq</span>(a_1 <span class="sc">+</span> r_1[k], b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> r_1[k] <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb36-78"><a href="#cb36-78" aria-hidden="true" tabindex="-1"></a>  bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">c</span>(bap_tail_betabinomial, <span class="fu">sum</span>(<span class="fu">dbbinom</span>(s, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span></span>
+<span id="cb36-79"><a href="#cb36-79" aria-hidden="true" tabindex="-1"></a>      b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), <span class="at">alpha =</span> a_0 <span class="sc">+</span> r_0[k], <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
+<span id="cb36-80"><a href="#cb36-80" aria-hidden="true" tabindex="-1"></a>      n_0 <span class="sc">-</span> r_0[k])))</span>
+<span id="cb36-81"><a href="#cb36-81" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb36-82"><a href="#cb36-82" aria-hidden="true" tabindex="-1"></a>bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">mean</span>(bap_tail_betabinomial)</span>
+<span id="cb36-83"><a href="#cb36-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-84"><a href="#cb36-84" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Informative"</span>, </span>
+<span id="cb36-85"><a href="#cb36-85" aria-hidden="true" tabindex="-1"></a>                                     bap_tail_betabinomial))</span>
+<span id="cb36-86"><a href="#cb36-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-87"><a href="#cb36-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-88"><a href="#cb36-88" aria-hidden="true" tabindex="-1"></a><span class="do">## Noninformative prior</span></span>
+<span id="cb36-89"><a href="#cb36-89" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb36-90"><a href="#cb36-90" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb36-91"><a href="#cb36-91" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb36-92"><a href="#cb36-92" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb36-93"><a href="#cb36-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-94"><a href="#cb36-94" aria-hidden="true" tabindex="-1"></a>r_0 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(q, <span class="at">size =</span> <span class="fu">ceiling</span>(a_0 <span class="sc">+</span> b_0 <span class="sc">+</span> n_0 <span class="sc">-</span> <span class="dv">1</span>), </span>
+<span id="cb36-95"><a href="#cb36-95" aria-hidden="true" tabindex="-1"></a>               <span class="at">alpha =</span> a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
+<span id="cb36-96"><a href="#cb36-96" aria-hidden="true" tabindex="-1"></a>                 n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0)</span>
+<span id="cb36-97"><a href="#cb36-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-98"><a href="#cb36-98" aria-hidden="true" tabindex="-1"></a>r_1 <span class="ot">&lt;-</span> <span class="fu">rbbinom</span>(q, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span> b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), </span>
+<span id="cb36-99"><a href="#cb36-99" aria-hidden="true" tabindex="-1"></a>               <span class="at">alpha =</span> a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, <span class="at">beta =</span> b_1 <span class="sc">+</span></span>
+<span id="cb36-100"><a href="#cb36-100" aria-hidden="true" tabindex="-1"></a>                 n_1 <span class="sc">-</span> n_1 <span class="sc">*</span> p_1)</span>
+<span id="cb36-101"><a href="#cb36-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-102"><a href="#cb36-102" aria-hidden="true" tabindex="-1"></a>bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb36-103"><a href="#cb36-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-104"><a href="#cb36-104" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>q) {</span>
+<span id="cb36-105"><a href="#cb36-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-106"><a href="#cb36-106" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">seq</span>(a_1 <span class="sc">+</span> r_1[k], b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> r_1[k] <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb36-107"><a href="#cb36-107" aria-hidden="true" tabindex="-1"></a>  bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">c</span>(bap_tail_betabinomial, <span class="fu">sum</span>(<span class="fu">dbbinom</span>(s, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span></span>
+<span id="cb36-108"><a href="#cb36-108" aria-hidden="true" tabindex="-1"></a>      b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), <span class="at">alpha =</span> a_0 <span class="sc">+</span> r_0[k], <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
+<span id="cb36-109"><a href="#cb36-109" aria-hidden="true" tabindex="-1"></a>      n_0 <span class="sc">-</span> r_0[k])))</span>
+<span id="cb36-110"><a href="#cb36-110" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb36-111"><a href="#cb36-111" aria-hidden="true" tabindex="-1"></a>bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">mean</span>(bap_tail_betabinomial)</span>
+<span id="cb36-112"><a href="#cb36-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-113"><a href="#cb36-113" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Noninformative"</span>, </span>
+<span id="cb36-114"><a href="#cb36-114" aria-hidden="true" tabindex="-1"></a>                                     bap_tail_betabinomial))</span>
+<span id="cb36-115"><a href="#cb36-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-116"><a href="#cb36-116" aria-hidden="true" tabindex="-1"></a>res_bap<span class="sc">$</span>bap_tail_betabinomial <span class="ot">&lt;-</span> <span class="fu">round</span>(res_bap<span class="sc">$</span>bap_tail_betabinomial, <span class="dv">2</span>)</span>
+<span id="cb36-117"><a href="#cb36-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-118"><a href="#cb36-118" aria-hidden="true" tabindex="-1"></a>res_bap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>            type bap_tail_betabinomial
+1   Enthusiastic                  0.91
+2      Skeptical                  0.13
+3    Informative                  0.29
+4 Noninformative                  0.41</code></pre>
+</div>
+</div>
 
 
 <div id="refs" class="references csl-bib-body" role="doc-bibliography" style="display: none">

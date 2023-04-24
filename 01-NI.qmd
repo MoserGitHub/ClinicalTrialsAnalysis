@@ -1688,46 +1688,23 @@ $$ and thus, by using Fubini's theorem and the explanations of Patricia Altham @
 P&\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0^{\pi_0+\delta^*} f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)d\pi_1d\pi_0 \\
 &=\int_0^{1}\frac{\pi_0^{a_0+r_0-1}(1-\pi_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{\pi_0+\delta^*} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)d\pi_0 \\
 &\overset{u=\pi_0-\delta^*}{=}\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{u} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)du \\
-&=\cdots
-\end{aligned}
-$$ is the **Bayesian probability to reject** given assumed $r_0, r_1, n_0, n_1$. This integral can be solved using the *integrate* function in R, or using the continuation of the formula $$
-\begin{aligned}
-\cdots&=\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}u^s(1-u)^{a_1+b_1+n_1-1-s}\right)du \\
+&=\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}u^s(1-u)^{a_1+b_1+n_1-1-s}\right)du \\
 &=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{1}{B(a_0+r_0, b_0+n_0-r_0)} \left(\int_{-\delta^*}^{1-\delta^*}u^{a_0+r_0+s-1}(1-u)^{a_1+b_1+n_1-1+b_0+n_0-r_0-s-1}du\right) \\
 &\overset{z=u+\delta^*}{=}\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{1}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_{0}^{1}z^{a_0+r_0+s-1}(1-z)^{a_1+b_1+n_1-1-s+b_0+n_0-r_0-1}dz\right) \\
-&=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{B(a_0+r_0+s, a_1+b_1+n_1-1-s+b_0+n_0-r_0)}{B(a_0+r_0, b_0+n_0-r_0)}, \\
+&=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{B(a_0+r_0+s, a_1+b_1+n_1-1-s+b_0+n_0-r_0)}{B(a_0+r_0, b_0+n_0-r_0)}
 \end{aligned}
-$$
-
-where the last term in the above formula is the upper tail of a beta-binomial distribution. Altham @Altham1969 showed that this could also be written as a hypergeometric distribution (see also @Grieve2022, @Grieve2016).
+$$ is the **Bayesian probability to reject** given the observed $r_0, r_1, n_0, n_1$. The last term in the above formula is the upper tail of a beta-binomial distribution. Altham @Altham1969 showed that this could also be written as a hypergeometric distribution (see also @Grieve2022, @Grieve2016).
 
 ------------------------------------------------------------------------
 
 **Working example (continued)**
 
-We calculate the Bayesian probability to reject for the SAFE-SSPE study. We show the integral solution and the calculation from the upper tail of a beta-binomial distribution.
-
-Note that for the integral calculation the lower integrand $-\delta^*$ in
-
-$$
-\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{u} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)du
-$$ needs to be zero, otherwise the function is not defined.
+We calculate the Bayesian probability to reject for the SAFE-SSPE study.
 
 ```{r fig23}
 #| echo: true
 #| warning: false
 
-# Integral function
-inner_func <- function(x) {
-    x^(a_1 + ceiling(n_1) * p_1 - 1) * (1 - x)^(b_1 +
-        ceiling(n_1) - ceiling(n_1) * p_1 - 1)
-}
-
-inner_int <- Vectorize(function(u) {
-    u^(a_0 + ceiling(n_0) * p_0 - 1) * (1 - u)^(b_0 +
-        ceiling(n_0) - ceiling(n_0) * p_0 - 1) * integrate(inner_func,
-        0, u)$value
-})
 
 ## Enthusiastic prior
 a_1 <- 0.5
@@ -1735,17 +1712,13 @@ b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 7.2
 b_0 <- (1 - 0.03)/(0.03) * a_0
 
-bap_integral <- integrate(inner_int, 0, 1-delta_star)$value/(beta(a_1 +
-    n_1 * p_1, b_1 + n_1 - n_1 * p_1) * beta(a_0 + n_0 * p_0, b_0 + n_0 -
-    n_0 * p_0))
-
 s <- ceiling(seq(a_1 + n_1 * p_1, b_1 + n_1 - n_1 *
     p_1 - 1))
-bap_tail_betabinomial <- sum(dbbinom(s, size = ceiling(a_1 +
+bap <- sum(dbbinom(s, size = ceiling(a_1 +
     b_1 + n_1 - 1), alpha = a_0 + n_0 * p_0, beta = b_0 +
     n_0 - n_0 * p_0))
 
-res_bap <- data.frame(type="Enthusiastic", bap_integral, bap_tail_betabinomial)
+res_bap <- data.frame(type="Enthusiastic", bap)
 
 # Skeptical prior
 a_1 <- 2.84
@@ -1753,18 +1726,121 @@ b_1 <- (1 - 0.05)/0.05 * a_1
 a_0 <- 1.24
 b_0 <- (1 - p_0)/p_0 * a_0
 
-bap_integral <- integrate(inner_int, 0, 1 - delta_star)$value/(beta(a_1 +
-    n_1 * p_1, b_1 + n_1 - n_1 * p_1) * beta(a_0 + n_0 * p_0, b_0 + n_0 -
-    n_0 * p_0))
-
 s <- ceiling(seq(a_1 + n_1 * p_1, b_1 + n_1 - n_1 *
     p_1 - 1))
 
-bap_tail_betabinomial <- sum(dbbinom(s, size = ceiling(a_1 +
+bap <- sum(dbbinom(s, size = ceiling(a_1 +
     b_1 + n_1 - 1), alpha = a_0 + n_0 * p_0, beta = b_0 +
     n_0 - n_0 * p_0))
 
-res_bap <- rbind(res_bap, data.frame(type="Skeptical", bap_integral, 
+res_bap <- rbind(res_bap, data.frame(type="Skeptical", bap))
+
+# Informative prior
+a_1 <- 0.8
+b_1 <- (1 - p_1)/p_1 * a_1
+a_0 <- 0.03
+b_0 <- (1 - p_0)/p_0 * a_0
+
+s <- ceiling(seq(a_1 + n_1 * p_1, b_1 + n_1 - n_1 *
+    p_1 - 1))
+bap <- sum(dbbinom(s, size = ceiling(a_1 +
+    b_1 + n_1 - 1), alpha = a_0 + n_0 * p_0, beta = b_0 +
+    n_0 - n_0 * p_0))
+
+res_bap <- rbind(res_bap, data.frame(type="Informative", bap))
+
+
+## Noninformative prior
+a_0 <- 0.5
+b_0 <- 0.5
+a_1 <- 0.5
+b_1 <- 0.5
+
+s <- ceiling(seq(a_1 + n_1 * p_1, b_1 + n_1 - n_1 *
+    p_1 - 1))
+bap <- sum(dbbinom(s, size = ceiling(a_1 +
+    b_1 + n_1 - 1), alpha = a_0 + n_0 * p_0, beta = b_0 +
+    n_0 - n_0 * p_0))
+
+res_bap <- rbind(res_bap, data.frame(type="Noninformative", bap))
+
+res_bap$bap <- round(res_bap$bap, 2)
+
+res_bap
+```
+
+------------------------------------------------------------------------
+
+To get the Bayesian average probability to reject, we use the predictive distribution of new observations to calculate
+$$
+\begin{aligned}
+BAP&=\sum_{r_0=0}^{n_0-1}\sum_{r_1=0}^{n_1-1} P(\pi_1-\pi_0 \leq \delta^*|r_0, r_1, n_0, n_1)f_2(r_0, r_1) \\
+&=\sum_{r_0=0}^{n_0-1}\sum_{r_1=0}^{n_1-1} \left\{\sum_{\tilde r_0=0}^{n_0-1}\sum_{\tilde r_1=0}^{n_1-1}P(\pi_1-\pi_0 \leq \delta^*|\tilde r_0, \tilde r_1, n_0, n_1)f_2(\tilde r_0, \tilde r_1|r_0, r_1)\right\}f_2(r_0, r_1) \\
+&=\sum_{\tilde r_0=0}^{n_0-1}\sum_{\tilde r_1=0}^{n_1-1}P(\pi_1-\pi_0 \leq \delta^*|\tilde r_0, \tilde r_1, n_0, n_1) \left\{\sum_{r_0=0}^{n_0-1}\sum_{r_1=0}^{n_1-1}f_2(\tilde r_0, \tilde r_1|r_0, r_1)f_2(r_0, r_1)\right\} \\
+&=\sum_{\tilde r_0=0}^{n_0-1}\sum_{\tilde r_1=0}^{n_1-1}P(\pi_1-\pi_0 \leq \delta^*|\tilde r_0, \tilde r_1, n_0, n_1)f_2(\tilde r_0, \tilde r_1|r_0, r_1)
+\end{aligned}
+$$
+
+```{r fig24}
+#| echo: true
+#| warning: false
+
+# Number of draws
+q <- 10000
+
+## Enthusiastic prior
+a_1 <- 0.5
+b_1 <- (1 - p_1)/p_1 * a_1
+a_0 <- 7.2
+b_0 <- (1 - 0.03)/(0.03) * a_0
+
+r_0 <- rbbinom(q, size = ceiling(a_0 + b_0 + n_0 - 1), 
+               alpha = a_0 + n_0 * p_0, beta = b_0 +
+                 n_0 - n_0 * p_0)
+
+r_1 <- rbbinom(q, size = ceiling(a_1 + b_1 + n_1 - 1), 
+               alpha = a_1 + n_1 * p_1, beta = b_1 +
+                 n_1 - n_1 * p_1)
+
+bap_tail_betabinomial <- c()
+
+for (k in 1:q) {
+
+  s <- ceiling(seq(a_1 + r_1[k], b_1 + n_1 - r_1[k] - 1))
+  bap_tail_betabinomial <- c(bap_tail_betabinomial, sum(dbbinom(s, size = ceiling(a_1 +
+      b_1 + n_1 - 1), alpha = a_0 + r_0[k], beta = b_0 +
+      n_0 - r_0[k])))
+}
+bap_tail_betabinomial <- mean(bap_tail_betabinomial)
+
+res_bap <- data.frame(type="Enthusiastic", bap_tail_betabinomial)
+
+# Skeptical prior
+a_1 <- 2.84
+b_1 <- (1 - 0.05)/0.05 * a_1
+a_0 <- 1.24
+b_0 <- (1 - p_0)/p_0 * a_0
+
+r_0 <- rbbinom(q, size = ceiling(a_0 + b_0 + n_0 - 1), 
+               alpha = a_0 + n_0 * p_0, beta = b_0 +
+                 n_0 - n_0 * p_0)
+
+r_1 <- rbbinom(q, size = ceiling(a_1 + b_1 + n_1 - 1), 
+               alpha = a_1 + n_1 * p_1, beta = b_1 +
+                 n_1 - n_1 * p_1)
+
+bap_tail_betabinomial <- c()
+
+for (k in 1:q) {
+
+  s <- ceiling(seq(a_1 + r_1[k], b_1 + n_1 - r_1[k] - 1))
+  bap_tail_betabinomial <- c(bap_tail_betabinomial, sum(dbbinom(s, size = ceiling(a_1 +
+      b_1 + n_1 - 1), alpha = a_0 + r_0[k], beta = b_0 +
+      n_0 - r_0[k])))
+}
+bap_tail_betabinomial <- mean(bap_tail_betabinomial)
+
+res_bap <- rbind(res_bap, data.frame(type="Skeptical", 
                                      bap_tail_betabinomial))
 
 # Informative prior
@@ -1773,17 +1849,26 @@ b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 0.03
 b_0 <- (1 - p_0)/p_0 * a_0
 
-bap_integral <- integrate(inner_int, 0, 1 - delta_star)$value/(beta(a_1 +
-    n_1 * p_1, b_1 + n_1 - n_1 * p_1) * beta(a_0 + n_0 * p_0, b_0 + n_0 -
-    n_0 * p_0))
+r_0 <- rbbinom(q, size = ceiling(a_0 + b_0 + n_0 - 1), 
+               alpha = a_0 + n_0 * p_0, beta = b_0 +
+                 n_0 - n_0 * p_0)
 
-s <- ceiling(seq(a_1 + n_1 * p_1, b_1 + n_1 - n_1 *
-    p_1 - 1))
-bap_tail_betabinomial <- sum(dbbinom(s, size = ceiling(a_1 +
-    b_1 + n_1 - 1), alpha = a_0 + n_0 * p_0, beta = b_0 +
-    n_0 - n_0 * p_0))
+r_1 <- rbbinom(q, size = ceiling(a_1 + b_1 + n_1 - 1), 
+               alpha = a_1 + n_1 * p_1, beta = b_1 +
+                 n_1 - n_1 * p_1)
 
-res_bap <- rbind(res_bap, data.frame(type="Informative", bap_integral, 
+bap_tail_betabinomial <- c()
+
+for (k in 1:q) {
+
+  s <- ceiling(seq(a_1 + r_1[k], b_1 + n_1 - r_1[k] - 1))
+  bap_tail_betabinomial <- c(bap_tail_betabinomial, sum(dbbinom(s, size = ceiling(a_1 +
+      b_1 + n_1 - 1), alpha = a_0 + r_0[k], beta = b_0 +
+      n_0 - r_0[k])))
+}
+bap_tail_betabinomial <- mean(bap_tail_betabinomial)
+
+res_bap <- rbind(res_bap, data.frame(type="Informative", 
                                      bap_tail_betabinomial))
 
 
@@ -1793,25 +1878,29 @@ b_0 <- 0.5
 a_1 <- 0.5
 b_1 <- 0.5
 
-bap_integral <- integrate(inner_int, 0, 1 - delta_star)$value/(beta(a_1 +
-    n_1 * p_1, b_1 + n_1 - n_1 * p_1) * beta(a_0 + n_0 * p_0, b_0 + n_0 -
-    n_0 * p_0))
+r_0 <- rbbinom(q, size = ceiling(a_0 + b_0 + n_0 - 1), 
+               alpha = a_0 + n_0 * p_0, beta = b_0 +
+                 n_0 - n_0 * p_0)
 
-s <- ceiling(seq(a_1 + n_1 * p_1, b_1 + n_1 - n_1 *
-    p_1 - 1))
-bap_tail_betabinomial <- sum(dbbinom(s, size = ceiling(a_1 +
-    b_1 + n_1 - 1), alpha = a_0 + n_0 * p_0, beta = b_0 +
-    n_0 - n_0 * p_0))
+r_1 <- rbbinom(q, size = ceiling(a_1 + b_1 + n_1 - 1), 
+               alpha = a_1 + n_1 * p_1, beta = b_1 +
+                 n_1 - n_1 * p_1)
 
-res_bap <- rbind(res_bap, data.frame(type="Noninformative", bap_integral, 
+bap_tail_betabinomial <- c()
+
+for (k in 1:q) {
+
+  s <- ceiling(seq(a_1 + r_1[k], b_1 + n_1 - r_1[k] - 1))
+  bap_tail_betabinomial <- c(bap_tail_betabinomial, sum(dbbinom(s, size = ceiling(a_1 +
+      b_1 + n_1 - 1), alpha = a_0 + r_0[k], beta = b_0 +
+      n_0 - r_0[k])))
+}
+bap_tail_betabinomial <- mean(bap_tail_betabinomial)
+
+res_bap <- rbind(res_bap, data.frame(type="Noninformative", 
                                      bap_tail_betabinomial))
 
-res_bap$bap_integral <- round(res_bap$bap_integral, 2)
 res_bap$bap_tail_betabinomial <- round(res_bap$bap_tail_betabinomial, 2)
 
 res_bap
 ```
-
-Small differences between both approaches occur because the 'beta-binomial distribution' approach is a discretization of the integral approach and requires integer steps for the calculation.
-
-------------------------------------------------------------------------
