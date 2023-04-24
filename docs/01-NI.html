@@ -1917,9 +1917,9 @@ P&amp;\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0
 <p>To get the Bayesian average probability to reject, we use the predictive distribution of new observations to calculate <span class="math display">\[
 \begin{aligned}
 BAP&amp;=\sum_{r_0=0}^{n_0-1}\sum_{r_1=0}^{n_1-1} P(\pi_1-\pi_0 \leq \delta^*|r_0, r_1, n_0, n_1)f_2(r_0, r_1) \\
-&amp;=\sum_{r_0=0}^{n_0-1}\sum_{r_1=0}^{n_1-1} \left\{\sum_{\tilde r_0=0}^{n_0-1}\sum_{\tilde r_1=0}^{n_1-1}P(\pi_1-\pi_0 \leq \delta^*|\tilde r_0, \tilde r_1, n_0, n_1)f_2(\tilde r_0, \tilde r_1|r_0, r_1)\right\}f_2(r_0, r_1) \\
-&amp;=\sum_{\tilde r_0=0}^{n_0-1}\sum_{\tilde r_1=0}^{n_1-1}P(\pi_1-\pi_0 \leq \delta^*|\tilde r_0, \tilde r_1, n_0, n_1) \left\{\sum_{r_0=0}^{n_0-1}\sum_{r_1=0}^{n_1-1}f_2(\tilde r_0, \tilde r_1|r_0, r_1)f_2(r_0, r_1)\right\} \\
-&amp;=\sum_{\tilde r_0=0}^{n_0-1}\sum_{\tilde r_1=0}^{n_1-1}P(\pi_1-\pi_0 \leq \delta^*|\tilde r_0, \tilde r_1, n_0, n_1)f_2(\tilde r_0, \tilde r_1|r_0, r_1)
+&amp;=\sum_{r_0=0}^{n_0-1}\sum_{r_1=0}^{n_1-1} \left\{\sum_{\tilde r_0=0}^{n_0-1}\sum_{\tilde r_1=0}^{n_1-1}P(\pi_1-\pi_0 \leq \delta^*|\tilde r_0, \tilde r_1, r_0, r_1, n_0, n_1)f_2(\tilde r_0, \tilde r_1|r_0, r_1)\right\}f_2(r_0, r_1) \\
+&amp;=\sum_{\tilde r_0=0}^{n_0-1}\sum_{\tilde r_1=0}^{n_1-1}P(\pi_1-\pi_0 \leq \delta^*|\tilde r_0, \tilde r_1, r_0, r_1, n_0, n_1) \left\{\sum_{r_0=0}^{n_0-1}\sum_{r_1=0}^{n_1-1}f_2(\tilde r_0, \tilde r_1|r_0, r_1)f_2(r_0, r_1)\right\} \\
+&amp;=\sum_{\tilde r_0=0}^{n_0-1}\sum_{\tilde r_1=0}^{n_1-1}P(\pi_1-\pi_0 \leq \delta^*|\tilde r_0, \tilde r_1, r_0, r_1, n_0, n_1)f_2(\tilde r_0, \tilde r_1|r_0, r_1)
 \end{aligned}
 \]</span></p>
 <div class="cell">
