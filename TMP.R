@@ -1,0 +1,4 @@
+=\sum_{r_0=0}^{n_0-1}\sum_{r_1=0}^{n_1-1} \left\{\sum_{\tilde r_0=0}^{n_0-1}\sum_{\tilde r_1=0}^{n_1-1}P(\pi_1-\pi_0 \leq \delta^*|\tilde r_0, \tilde r_1, n_0, n_1)f_2(\tilde r_0, \tilde r_1|r_0, r_1)\right\}f_2(r_0, r_1) \\
+&=\sum_{\tilde r_0=0}^{n_0-1}\sum_{\tilde r_1=0}^{n_1-1}P(\pi_1-\pi_0 \leq \delta^*|\tilde r_0, \tilde r_1, n_0, n_1) \left\{\sum_{r_0=0}^{n_0-1}\sum_{r_1=0}^{n_1-1}f_2(\tilde r_0, \tilde r_1|r_0, r_1)f_2(r_0, r_1)\right\} \\
+&=\sum_{\tilde r_0=0}^{n_0-1}\sum_{\tilde r_1=0}^{n_1-1}P(\pi_1-\pi_0 \leq \delta^*|\tilde r_0, \tilde r_1, n_0, n_1)f_2(\tilde r_0, \tilde r_1|r_0, r_1)
+\end{aligned}
