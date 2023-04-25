@@ -1779,9 +1779,10 @@ BAP&=\sum_{r_0=0}^{n_0-1}\sum_{r_1=0}^{n_1-1} P(\pi_1-\pi_0 \leq \delta^*|r_0, r
 $$
 
 ```{r fig24}
-#| echo: true
+#| echo: false
 #| warning: false
-
+#| results: hide
+#| 
 # Number of draws
 q <- 10000
 
