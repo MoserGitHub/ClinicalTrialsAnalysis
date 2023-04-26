@@ -220,7 +220,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">25/04/2023</p>
+      <p class="date">26/04/2023</p>
     </div>
   </div>
   
@@ -263,7 +263,7 @@ div.csl-indent {
 f(\tilde x)=\int_\Theta f(\tilde x, \theta)d\theta=\int_\Theta \underbrace{f(\tilde x | \theta)}_{likelihood}\underbrace{f(\theta)}_{prior}d\theta.
 \]</span></li>
 <li><strong>Posterior predictive distribution</strong>: Situation <em>after</em> a sample was taken. Let <span class="math inline">\(\theta\)</span> be a realisation of a random variable <span class="math inline">\(\Theta\)</span> with pdf <span class="math inline">\(f(\theta)\)</span>. Then for a future observation <span class="math inline">\(\tilde X\)</span> and observed <span class="math inline">\(X\)</span> (since <span class="math inline">\(X\)</span> is independent <span class="math inline">\(\tilde X\)</span>) the pdf is <span class="math display">\[
-f(\tilde x|x)=\int_\Theta f(\tilde x | \theta, x)f(\theta|x)d\theta=\int_\Theta \underbrace{f(\tilde x | \theta)}_{likelihood}\underbrace{f(\theta|x)}_{prior}d\theta.
+f(\tilde x|x)=\int_\Theta f(\tilde x | \theta, x)f(\theta|x)d\theta=\int_\Theta \underbrace{f(\tilde x | \theta)}_{likelihood}\underbrace{f(\theta|x)}_{posterior}d\theta.
 \]</span></li>
 <li><strong>Improper prior</strong>: A prior with <span class="math inline">\(\int_\Theta f(\theta)=\infty\)</span>.</li>
 <li><strong>Jeffrey’s prior</strong>: For an unknown parameter <span class="math inline">\(\theta\)</span> Jeffrey’s (scalar) prior is defined as <span class="math inline">\(f(\theta) \propto \sqrt{I(\theta)}\)</span>, where <span class="math inline">\(I(\theta)\)</span> is the expected Fisher information of <span class="math inline">\(\theta\)</span> <span class="citation" data-cites="Held2020">[<a href="references.html#ref-Held2020" role="doc-biblioref">3</a>]</span>. Jeffrey’s prior can be improper <span class="citation" data-cites="Held2020">[<a href="references.html#ref-Held2020" role="doc-biblioref">3</a>]</span>. Bayesian point estimates using Jeffrey’s prior are often very close to maximum likelihood estimators <span class="citation" data-cites="Held2020">[<a href="references.html#ref-Held2020" role="doc-biblioref">3</a>]</span>.</li>

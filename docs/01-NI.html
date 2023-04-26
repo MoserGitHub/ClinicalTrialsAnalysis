@@ -357,7 +357,7 @@ AP:=\int_{\Delta} P_{\delta}(D\leq D_{suc}^{\delta^*})f(\delta)d\delta,
 <p>In the hybrid approach we are interested in trial conclusions from a frequentist point of view, thus we are interested in <span class="math display">\[
 D\leq -z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*.
 \]</span></p>
-<p>Then, for a <span class="math inline">\(\tilde D\)</span> of future observations, <span class="math display">\[
+<p>Then, for a <span class="math inline">\(\tilde D\)</span> from future observations, <span class="math display">\[
 \begin{aligned}
 AP&amp;=\int_{-\infty}^{-\infty}P_{\delta}(D\leq D_{suc}^{d,\delta^*})f(\delta)d\delta \\
 &amp;=\int_{-\infty}^{-\infty}\left\{\int_{-\infty}^{-z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*}f(\tilde \delta| \delta)d\tilde \delta \right\}f(\delta)d\delta\\
@@ -365,7 +365,7 @@ AP&amp;=\int_{-\infty}^{-\infty}P_{\delta}(D\leq D_{suc}^{d,\delta^*})f(\delta)d
 &amp;=\int_{-\infty}^{-z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*}f(\tilde\delta)d\tilde\delta \\
 &amp;=\Phi\left(\frac{1}{\sigma_{prior}}\left[-z_{1-\alpha}\sigma_{treat}-(d-\delta^*)\right]\right),
 \end{aligned}
-\]</span>, since the prior predictive distribution of <span class="math inline">\(\tilde D\)</span> is Gaussian distributed <span class="math inline">\(\tilde D \sim N\left(\delta, \sigma_{treat}^2\right)\)</span> under a design prior <span class="math inline">\(\Delta \sim N\left(d, \sigma_{prior}^2\right)\)</span> (<span class="citation" data-cites="Gelman2013">[<a href="references.html#ref-Gelman2013" role="doc-biblioref">7</a>]</span>, <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span>). Note that as <span class="math inline">\(m \rightarrow \infty\)</span>, then <span class="math inline">\(AP \rightarrow \Phi\left(-z_{1-\alpha}-\frac{(d-\delta^*)}{\sigma_{treat}}\right)\)</span>, that is, the frequentist power at <span class="math inline">\(d\)</span>.</p>
+\]</span>, since the predictive distribution of <span class="math inline">\(\tilde D\)</span> is Gaussian distributed <span class="math inline">\(\tilde D \sim N\left(d, \sigma_{treat}^2+\sigma_{prior}^2\right)\)</span> under a design prior <span class="math inline">\(\Delta \sim N\left(d, \sigma_{prior}^2\right)\)</span> (<span class="citation" data-cites="Gelman2013">[<a href="references.html#ref-Gelman2013" role="doc-biblioref">7</a>]</span>, <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span>). Note that as <span class="math inline">\(m \rightarrow \infty\)</span>, then <span class="math inline">\(AP \rightarrow \Phi\left(-z_{1-\alpha}-\frac{(d-\delta^*)}{\sigma_{treat}}\right)\)</span>, that is, the frequentist power at <span class="math inline">\(d\)</span>.</p>
 <hr>
 <p><strong>Working example (continued)</strong></p>
 <p>We calculate the AP under the assumed prior distributions and parameters for the SAFE-SSPE trial.</p>

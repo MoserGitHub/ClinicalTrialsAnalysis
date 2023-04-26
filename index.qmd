@@ -29,7 +29,7 @@ f(\tilde x)=\int_\Theta f(\tilde x, \theta)d\theta=\int_\Theta \underbrace{f(\ti
 $$
 -   **Posterior predictive distribution**: Situation *after* a sample was taken. Let $\theta$ be a realisation of a random variable $\Theta$ with pdf $f(\theta)$. Then for a future observation $\tilde X$ and observed $X$ (since $X$ is independent $\tilde X$) the pdf is
 $$
-f(\tilde x|x)=\int_\Theta f(\tilde x | \theta, x)f(\theta|x)d\theta=\int_\Theta \underbrace{f(\tilde x | \theta)}_{likelihood}\underbrace{f(\theta|x)}_{prior}d\theta.
+f(\tilde x|x)=\int_\Theta f(\tilde x | \theta, x)f(\theta|x)d\theta=\int_\Theta \underbrace{f(\tilde x | \theta)}_{likelihood}\underbrace{f(\theta|x)}_{posterior}d\theta.
 $$
 - **Improper prior**: A prior with $\int_\Theta f(\theta)=\infty$.
 - **Jeffrey's prior**: For an unknown parameter $\theta$ Jeffrey's (scalar) prior is defined as $f(\theta) \propto \sqrt{I(\theta)}$, where $I(\theta)$ is the expected Fisher information of $\theta$ @Held2020. Jeffrey's prior can be improper @Held2020. Bayesian point estimates using Jeffrey's prior are often very close to maximum likelihood estimators @Held2020.

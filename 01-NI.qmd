@@ -217,7 +217,7 @@ In the hybrid approach we are interested in trial conclusions from a frequentist
 D\leq -z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*.
 $$ 
 
-Then, for a $\tilde D$ of future observations, $$
+Then, for a $\tilde D$ from future observations, $$
 \begin{aligned}
 AP&=\int_{-\infty}^{-\infty}P_{\delta}(D\leq D_{suc}^{d,\delta^*})f(\delta)d\delta \\
 &=\int_{-\infty}^{-\infty}\left\{\int_{-\infty}^{-z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*}f(\tilde \delta| \delta)d\tilde \delta \right\}f(\delta)d\delta\\
@@ -225,7 +225,7 @@ AP&=\int_{-\infty}^{-\infty}P_{\delta}(D\leq D_{suc}^{d,\delta^*})f(\delta)d\del
 &=\int_{-\infty}^{-z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*}f(\tilde\delta)d\tilde\delta \\
 &=\Phi\left(\frac{1}{\sigma_{prior}}\left[-z_{1-\alpha}\sigma_{treat}-(d-\delta^*)\right]\right),
 \end{aligned}
-$$, since the prior predictive distribution of $\tilde D$ is Gaussian distributed $\tilde D \sim N\left(\delta, \sigma_{treat}^2\right)$ under a design prior $\Delta \sim N\left(d, \sigma_{prior}^2\right)$ (@Gelman2013, @Grieve2022). Note that as $m \rightarrow \infty$, then $AP \rightarrow \Phi\left(-z_{1-\alpha}-\frac{(d-\delta^*)}{\sigma_{treat}}\right)$, that is, the frequentist power at $d$.
+$$, since the predictive distribution of $\tilde D$ is Gaussian distributed $\tilde D \sim N\left(d, \sigma_{treat}^2+\sigma_{prior}^2\right)$ under a design prior $\Delta \sim N\left(d, \sigma_{prior}^2\right)$ (@Gelman2013, @Grieve2022). Note that as $m \rightarrow \infty$, then $AP \rightarrow \Phi\left(-z_{1-\alpha}-\frac{(d-\delta^*)}{\sigma_{treat}}\right)$, that is, the frequentist power at $d$.
 
 ------------------------------------------------------------------------
 
