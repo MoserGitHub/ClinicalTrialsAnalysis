@@ -3,7 +3,7 @@ project:
   output-dir: docs
   
 book:
-  title: "Bayesian approaches in clinical trials"
+  title: "Clinical trial analysis"
   author: 
     - name: "André Moser, CTU Bern, University of Bern"
       orcid: 0000-0001-7178-6539

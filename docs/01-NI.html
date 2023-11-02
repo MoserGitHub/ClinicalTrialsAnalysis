@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Bayesian approaches in clinical trials - 2&nbsp; Power and sample size calculations</title>
+<title>Clinical trial analysis - 2&nbsp; Power and sample size calculations</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -17,9 +17,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -46,48 +47,19 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+/* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
 }
-.hanging div.csl-entry {
+.hanging-indent div.csl-entry {
   margin-left:2em;
   text-indent:-2em;
 }
@@ -101,8 +73,7 @@ div.csl-right-inline {
 }
 div.csl-indent {
   margin-left: 2em;
-}
-</style>
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -133,6 +104,7 @@ div.csl-indent {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
@@ -141,24 +113,26 @@ div.csl-indent {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Power and sample size calculations</span></h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-NI.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Power and sample size calculations</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
     </div>
   </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Bayesian approaches in clinical trials</a> 
+      <a href="./">Clinical trial analysis</a> 
         <div class="sidebar-tools-main">
-    <a href="./Bayesian-approaches-in-clinical-trials.pdf" title="Download PDF" class="sidebar-tool px-1"><i class="bi bi-file-pdf"></i></a>
+    <a href="./Clinical-trial-analysis.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
 </div>
     </div>
       </div>
@@ -166,17 +140,20 @@ div.csl-indent {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./01-NI.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Power and sample size calculations</span></a>
+  <a href="./01-NI.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Power and sample size calculations</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
@@ -185,21 +162,22 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background"><span class="toc-section-number">2.1</span>  Background</a></li>
-  <li><a href="#two-arm-non-inferiority-setting" id="toc-two-arm-non-inferiority-setting" class="nav-link" data-scroll-target="#two-arm-non-inferiority-setting"><span class="toc-section-number">2.2</span>  Two-arm non-inferiority setting</a>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background"><span class="header-section-number">2.1</span> Background</a></li>
+  <li><a href="#two-arm-non-inferiority-setting" id="toc-two-arm-non-inferiority-setting" class="nav-link" data-scroll-target="#two-arm-non-inferiority-setting"><span class="header-section-number">2.2</span> Two-arm non-inferiority setting</a>
   <ul>
-  <li><a href="#binomial-outcome" id="toc-binomial-outcome" class="nav-link" data-scroll-target="#binomial-outcome"><span class="toc-section-number">2.2.1</span>  Binomial outcome</a>
+  <li><a href="#binomial-outcome" id="toc-binomial-outcome" class="nav-link" data-scroll-target="#binomial-outcome"><span class="header-section-number">2.2.1</span> Binomial outcome</a>
   <ul class="collapse">
-  <li><a href="#frequentist-approach" id="toc-frequentist-approach" class="nav-link" data-scroll-target="#frequentist-approach"><span class="toc-section-number">2.2.1.1</span>  Frequentist approach</a></li>
-  <li><a href="#hybrid-approach-prior-on-the-risk-difference" id="toc-hybrid-approach-prior-on-the-risk-difference" class="nav-link" data-scroll-target="#hybrid-approach-prior-on-the-risk-difference"><span class="toc-section-number">2.2.1.2</span>  Hybrid approach: Prior on the risk difference</a></li>
-  <li><a href="#bayesian-approach-prior-on-the-risk-difference" id="toc-bayesian-approach-prior-on-the-risk-difference" class="nav-link" data-scroll-target="#bayesian-approach-prior-on-the-risk-difference"><span class="toc-section-number">2.2.1.3</span>  Bayesian approach: Prior on the risk difference</a></li>
-  <li><a href="#hybrid-approach-prior-on-event-probabilities" id="toc-hybrid-approach-prior-on-event-probabilities" class="nav-link" data-scroll-target="#hybrid-approach-prior-on-event-probabilities"><span class="toc-section-number">2.2.1.4</span>  Hybrid approach: Prior on event probabilities</a></li>
-  <li><a href="#bayesian-approach-prior-on-event-probabilities" id="toc-bayesian-approach-prior-on-event-probabilities" class="nav-link" data-scroll-target="#bayesian-approach-prior-on-event-probabilities"><span class="toc-section-number">2.2.1.5</span>  Bayesian approach: Prior on event probabilities</a></li>
+  <li><a href="#frequentist-approach" id="toc-frequentist-approach" class="nav-link" data-scroll-target="#frequentist-approach"><span class="header-section-number">2.2.1.1</span> Frequentist approach</a></li>
+  <li><a href="#hybrid-approach-prior-on-the-risk-difference" id="toc-hybrid-approach-prior-on-the-risk-difference" class="nav-link" data-scroll-target="#hybrid-approach-prior-on-the-risk-difference"><span class="header-section-number">2.2.1.2</span> Hybrid approach: Prior on the risk difference</a></li>
+  <li><a href="#bayesian-approach-prior-on-the-risk-difference" id="toc-bayesian-approach-prior-on-the-risk-difference" class="nav-link" data-scroll-target="#bayesian-approach-prior-on-the-risk-difference"><span class="header-section-number">2.2.1.3</span> Bayesian approach: Prior on the risk difference</a></li>
+  <li><a href="#hybrid-approach-prior-on-event-probabilities" id="toc-hybrid-approach-prior-on-event-probabilities" class="nav-link" data-scroll-target="#hybrid-approach-prior-on-event-probabilities"><span class="header-section-number">2.2.1.4</span> Hybrid approach: Prior on event probabilities</a></li>
+  <li><a href="#bayesian-approach-prior-on-event-probabilities" id="toc-bayesian-approach-prior-on-event-probabilities" class="nav-link" data-scroll-target="#bayesian-approach-prior-on-event-probabilities"><span class="header-section-number">2.2.1.5</span> Bayesian approach: Prior on event probabilities</a></li>
   </ul></li>
   </ul></li>
   </ul>
 </nav>
 </nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
@@ -208,7 +186,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Power and sample size calculations</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Power and sample size calculations</span></h1>
 </div>
 
 
@@ -365,7 +343,7 @@ AP&amp;=\int_{-\infty}^{-\infty}P_{\delta}(D\leq D_{suc}^{d,\delta^*})f(\delta)d
 &amp;=\int_{-\infty}^{-z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*}f(\tilde\delta)d\tilde\delta \\
 &amp;=\Phi\left(\frac{1}{\sigma_{prior}}\left[-z_{1-\alpha}\sigma_{treat}-(d-\delta^*)\right]\right),
 \end{aligned}
-\]</span>, since the predictive distribution of <span class="math inline">\(\tilde D\)</span> is Gaussian distributed <span class="math inline">\(\tilde D \sim N\left(d, \sigma_{treat}^2+\sigma_{prior}^2\right)\)</span> under a design prior <span class="math inline">\(\Delta \sim N\left(d, \sigma_{prior}^2\right)\)</span> (<span class="citation" data-cites="Gelman2013">[<a href="references.html#ref-Gelman2013" role="doc-biblioref">7</a>]</span>, <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span>). Note that as <span class="math inline">\(m \rightarrow \infty\)</span>, then <span class="math inline">\(AP \rightarrow \Phi\left(-z_{1-\alpha}-\frac{(d-\delta^*)}{\sigma_{treat}}\right)\)</span>, that is, the frequentist power at <span class="math inline">\(d\)</span>.</p>
+\]</span> since the predictive distribution of <span class="math inline">\(\tilde D\)</span> is Gaussian distributed <span class="math inline">\(\tilde D \sim N\left(d, \sigma_{treat}^2+\sigma_{prior}^2\right)\)</span> under a design prior <span class="math inline">\(\Delta \sim N\left(d, \sigma_{prior}^2\right)\)</span> (<span class="citation" data-cites="Gelman2013">[<a href="references.html#ref-Gelman2013" role="doc-biblioref">7</a>]</span>, <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span>). Note that as <span class="math inline">\(m \rightarrow \infty\)</span>, then <span class="math inline">\(AP \rightarrow \Phi\left(-z_{1-\alpha}-\frac{(d-\delta^*)}{\sigma_{treat}}\right)\)</span>, that is, the frequentist power at <span class="math inline">\(d\)</span>.</p>
 <hr>
 <p><strong>Working example (continued)</strong></p>
 <p>We calculate the AP under the assumed prior distributions and parameters for the SAFE-SSPE trial.</p>
@@ -1919,46 +1897,43 @@ P&amp;\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0
 BAP&amp;=\sum_{r_0=0}^{n_0-1}\sum_{r_1=0}^{n_1-1} P(\pi_1-\pi_0 \leq \delta^*|r_0, r_1, n_0, n_1)f_2(r_0, r_1|n_0, n_1)
 \end{aligned}
 \]</span></p>
-<div class="cell">
-
-</div>
 
 
-<div id="refs" class="references csl-bib-body" role="doc-bibliography" style="display: none">
-<div id="ref-Kunzmann2022" class="csl-entry" role="doc-biblioentry">
+<div id="refs" class="references csl-bib-body" role="list" style="display: none">
+<div id="ref-Kunzmann2022" class="csl-entry" role="listitem">
 <div class="csl-left-margin">1. </div><div class="csl-right-inline">Kunzmann K, Grayling MJ, Lee KM, Robertson DS, Rufibach K, Wason JMS. A review of bayesian perspectives on sample size derivation for confirmatory trials. The American Statistician. 2021;75: 424–432. doi:<a href="https://doi.org/10.1080/00031305.2021.1901782">10.1080/00031305.2021.1901782</a></div>
 </div>
-<div id="ref-Spiegelhalter2003" class="csl-entry" role="doc-biblioentry">
+<div id="ref-Spiegelhalter2003" class="csl-entry" role="listitem">
 <div class="csl-left-margin">2. </div><div class="csl-right-inline">Spiegelhalter DJ, Abrams KR, Myles JP. Bayesian approaches to clinical trials and health‐care evaluation. Wiley; 2003. doi:<a href="https://doi.org/10.1002/0470092602">10.1002/0470092602</a></div>
 </div>
-<div id="ref-Baumgartner2020" class="csl-entry" role="doc-biblioentry">
+<div id="ref-Baumgartner2020" class="csl-entry" role="listitem">
 <div class="csl-left-margin">3. </div><div class="csl-right-inline">Baumgartner C, Klok FA, Carrier M, Limacher A, Moor J, Righini M, et al. Clinical surveillance vs. Anticoagulation for low-risk patiEnts with isolated SubSegmental pulmonary embolism: Protocol for a multicentre randomised placebo-controlled non-inferiority trial (SAFE-SSPE). BMJ Open. 2020;10: e040151. doi:<a href="https://doi.org/10.1136/bmjopen-2020-040151">10.1136/bmjopen-2020-040151</a></div>
 </div>
-<div id="ref-Grieve2022" class="csl-entry" role="doc-biblioentry">
+<div id="ref-Grieve2022" class="csl-entry" role="listitem">
 <div class="csl-left-margin">4. </div><div class="csl-right-inline">Grieve AP. Hybrid frequentist/bayesian power and bayesian power in planning clinical trials. Chapman; Hall/CRC; 2022. doi:<a href="https://doi.org/10.1201/9781003218531">10.1201/9781003218531</a></div>
 </div>
-<div id="ref-OHagan2005" class="csl-entry" role="doc-biblioentry">
+<div id="ref-OHagan2005" class="csl-entry" role="listitem">
 <div class="csl-left-margin">5. </div><div class="csl-right-inline">O’Hagan A, Stevens JW, Campbell MJ. Assurance in clinical trial design. Pharmaceutical Statistics. 2005;4: 187–201. doi:<a href="https://doi.org/10.1002/pst.175">10.1002/pst.175</a></div>
 </div>
-<div id="ref-Rufibach2016" class="csl-entry" role="doc-biblioentry">
+<div id="ref-Rufibach2016" class="csl-entry" role="listitem">
 <div class="csl-left-margin">6. </div><div class="csl-right-inline">Rufibach K, Burger HU, Abt M. Bayesian predictive power: Choice of prior and some recommendations for its use as probability of success in drug development. Pharmaceutical Statistics. 2016;15: 438–446. doi:<a href="https://doi.org/10.1002/pst.1764">10.1002/pst.1764</a></div>
 </div>
-<div id="ref-Gelman2013" class="csl-entry" role="doc-biblioentry">
+<div id="ref-Gelman2013" class="csl-entry" role="listitem">
 <div class="csl-left-margin">7. </div><div class="csl-right-inline">Gelman A, Carlin JB, Stern HS, Dunson DB, Vehtari A, Rubin DB. Bayesian data analysis. Chapman; Hall/CRC; 2013. doi:<a href="https://doi.org/10.1201/b16018">10.1201/b16018</a></div>
 </div>
-<div id="ref-Muirhead2013" class="csl-entry" role="doc-biblioentry">
+<div id="ref-Muirhead2013" class="csl-entry" role="listitem">
 <div class="csl-left-margin">8. </div><div class="csl-right-inline">Muirhead RJ, Şoaita AI. On an approach to bayesian sample sizing in clinical trials. 2013; 126–137. doi:<a href="https://doi.org/10.1214/12-IMSCOLL1007">10.1214/12-IMSCOLL1007</a></div>
 </div>
-<div id="ref-Agresti2005" class="csl-entry" role="doc-biblioentry">
+<div id="ref-Agresti2005" class="csl-entry" role="listitem">
 <div class="csl-left-margin">9. </div><div class="csl-right-inline">Agresti A, Min Y. Frequentist performance of bayesian confidence intervals for comparing proportions in 2 × 2 contingency tables. Biometrics. 2005;61: 515–523. doi:<a href="https://doi.org/10.1111/j.1541-0420.2005.031228.x">10.1111/j.1541-0420.2005.031228.x</a></div>
 </div>
-<div id="ref-Agresti2000" class="csl-entry" role="doc-biblioentry">
+<div id="ref-Agresti2000" class="csl-entry" role="listitem">
 <div class="csl-left-margin">10. </div><div class="csl-right-inline">Agresti A, Caffo B. Simple and effective confidence intervals for proportions and differences of proportions result from adding two successes and two failures. The American Statistician. 2000;54: 280. doi:<a href="https://doi.org/10.2307/2685779">10.2307/2685779</a></div>
 </div>
-<div id="ref-Altham1969" class="csl-entry" role="doc-biblioentry">
+<div id="ref-Altham1969" class="csl-entry" role="listitem">
 <div class="csl-left-margin">11. </div><div class="csl-right-inline">Altham PME. Exact bayesian analysis of a 2 times 2 contingency table, and fisher’s <span>“exact”</span> significance test. Journal of the Royal Statistical Society: Series B (Methodological). 1969;31: 261–269. doi:<a href="https://doi.org/10.1111/j.2517-6161.1969.tb00786.x">10.1111/j.2517-6161.1969.tb00786.x</a></div>
 </div>
-<div id="ref-Grieve2016" class="csl-entry" role="doc-biblioentry">
+<div id="ref-Grieve2016" class="csl-entry" role="listitem">
 <div class="csl-left-margin">12. </div><div class="csl-right-inline">Grieve AP. Idle thoughts of a <span>“well-calibrated”</span> bayesian in clinical drug development. Pharmaceutical Statistics. 2016;15: 96–108. doi:<a href="https://doi.org/10.1002/pst.1736">10.1002/pst.1736</a></div>
 </div>
 </div>
@@ -1994,9 +1969,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -2061,6 +2050,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
