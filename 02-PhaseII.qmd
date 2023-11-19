@@ -338,7 +338,7 @@ fig+ggtitle("Expected N under H0")
 # datatable(res_agg, rownames = F, filter = 'top')
 ```
 
-### Prior with a=0.4, b=0.6
+### Prior with a=1, b=4
 
 We use the same simulation approach as in the previous subsection but using a a Beta prior with parameters a=1 and b=4.
 
