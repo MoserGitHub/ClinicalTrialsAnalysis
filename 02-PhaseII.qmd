@@ -334,8 +334,8 @@ fig
 fig <- ggplot(res_agg %>% filter(true_p0=="True p=0.2 (H0)"), aes(x=n_max, y=exp_n, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~theta_T) + theme_bw() + theme(panel.grid.minor = element_blank())+xlab("N_max")+ylab("Expected N under H0") + scale_shape("Stopping decision rule")
 fig+ggtitle("Expected N under H0")
 
-# library(DT)
-# datatable(res_agg, rownames = F, filter = 'top')
+library(DT)
+datatable(res_agg, rownames = F, filter = 'top')
 ```
 
 ### Prior with a=1, b=4
@@ -478,6 +478,6 @@ fig
 fig <- ggplot(res_agg %>% filter(true_p0=="True p=0.2 (H0)"), aes(x=n_max, y=exp_n, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~theta_T) + theme_bw() + theme(panel.grid.minor = element_blank())+xlab("N_max")+ylab("Expected N under H0") + scale_shape("Stopping decision rule")
 fig+ggtitle("Expected N under H0")
 
-# library(DT)
-# datatable(res_agg, rownames = F, filter = 'top')
+library(DT)
+datatable(res_agg, rownames = F, filter = 'top')
 ```
