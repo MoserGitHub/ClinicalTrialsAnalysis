@@ -1,0 +1,483 @@
+# Phase II trials
+
+```{r}
+#| echo: false
+#| warning: false
+#| results: hide
+
+library(splitstackshape)
+library(tidyverse)
+library(extraDistr)
+library(data.table)
+```
+
+Phase II trials are often single-arm trials in early phases but can also be multi-arm randomized controlled trials in later phases. The aim of early phase-II designs is to assess efficacy of a new treatment measured by clinical response in a small population of 30-100 patients. Early phase II trials can be designed as two- or three stage trials using frequentist approaches like Simon's two stage design. In this chapter we use a Bayesian predictive probability approach to analyse an early phase-II trial @Lee2008 @Sambucini2021. The aim is to compare two different decision rules for early stopping the trial: One uses the posterior distribution given the interim data, the second one uses the predictive distribution given the interim data marginalised over the possible future events. 
+
+
+## Background
+
+Let $p$ the true toxicity rate and $\pi \sim Beta(a,b)$ be a design prior on $p$. Our null hypothesis of interest is $H_0: p \leq p_0$ versus $H_1: p>p_0$, that is, we compare, say, the clinical response to prespecified thresholds. Suppose that we plan interim looks $j\geq 1$ after $N_j$ patients were recruited and $r_j$ toxicity events occurred. Under the prior $\pi$ the posterior distribution is beta distrubuted $p|r_j \sim beta(a+r_j, b+N_j-r_j)$. Suppose that we plan to recruit $N_{max}$ patients. Let $Y_j$ be the number of toxicities in future $m_j=N_{max}-N_j$ patients at interim look $j\geq 1$. Under the prior $\pi$, $Y_j$ is beta-binomial distributed $Y_j \sim betabinom(i|m_j, a+r_j, b+N_j-r_j)$ and $p|r_j,y_j \sim beta(a+r_j+y_j, b+N_{max}-N_j-r_j-y_i)$. For phase II trials it is more important to control the type II error than the type I error, because then active treatments are less likely to be missed.
+
+------------------------------------------------------------------------
+
+**Working example**
+
+Suppose that the goal of a phase-II trial is to evaluate safety of new chemotherapy treatment investigating the discontinuation rate $p$ as primary endpoint. Discontinuation is defined based on toxicity gradin from the US National Cancer Institute Common Terminology Criteria for Adverse Events (CTCAE).
+
+------------------------------------------------------------------------
+
+## Decision rules for stopping the trial
+
+**Early stopping using the posterior distribution**
+
+The decision to the stop the trial early is based on the decision rule $P(p> p_0|N_j)>\theta_T$, that is, the posterior distribution given the interim data. Usually, $\theta_T$ is chosen to be high (>0.8) @Sambucini2021. If the trial is not stopped early we recruit more patients until $N_{max}$ is reached.
+
+**Early stopping using the predictive distribution**
+
+Let $T_{j,i}:=P(p> p_0|N_j, Y_j=i)>\theta_T$, that is, the posterior distribution given the interim data and future events. The predictive probability for a successful (safe) trial is
+
+$$
+PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}>\theta_T), \quad j\geq 0.
+$$
+If $PP_j>\theta_S$ then we stop the trial because of safety concerns, otherwise we recruit more patients until $N_{max}$ is reached.
+
+------------------------------------------------------------------------
+
+**Working example**
+
+Based on prior evidence $p_0$ is set to 0.2. This threshold is based on a result from a previous study where the treatment discontinuation was estimated with 0.17 with 95% confidence intervals (0.10-0.27). Because we want to be conservative we set the parameters for a beta prior to $a=0.4$ and $b=0.6$. The mean of the prior is then 0.4. For illustrating purposes we show a prior with a prior weight of 5 patients which is centered on $p=0.2$ ($a=1$, $b=4$).
+
+------------------------------------------------------------------------
+
+```{r}
+#| echo: true
+#| warning: false
+
+# Prior information
+a_0 <- 0.4
+b_0 <- 0.6
+
+x <- seq(0.001,0.999,0.001)
+
+data_prior <- data.frame(x, y=dbeta(x, a_0, b_0), type=1)
+
+# Prior information
+a_0 <- 1
+b_0 <- 4
+
+data_prior <- bind_rows(data_prior, data.frame(x, y=dbeta(x, a_0, b_0), type=2))
+
+data_prior$type <- factor(data_prior$type, levels=1:2, 
+                          labels=c("a=0.4, b=0.6", "a=1, b=4"))
+ggplot(data_prior %>% filter(y<5), aes(x=x, y=y, linetype=type, group=type))+
+  geom_line()+theme_bw()+scale_x_continuous(breaks=seq(0,1,0.2))+
+  theme(panel.grid = element_blank(), legend.position = "bottom")+
+  scale_linetype("Prior parameters")+geom_vline(xintercept=0.4, colour="red", linetype=1)+
+  geom_vline(xintercept=0.2, colour="red", linetype=2)+
+  ylab("Density")+xlab("")+ggtitle("Different beta prior parameter choices")+
+  labs(caption=c("Red vertical lines indicate mean values of priors."))
+```
+
+
+```{r}
+#| echo: true
+#| warning: false
+
+p_0_max <- 0.2
+
+# Prior information
+a_0 <- 0.4
+b_0 <- 0.6
+
+n <- 35
+r <- 0:n
+
+n_max <- 35
+n <- seq(10, n_max, 5)
+r <- 0:n_max
+m <- n_max-r
+x <- seq(0,1,0.001)
+
+theta_T <- 0.75
+
+data <- expand.grid(n=n, r=r) %>% arrange(n) %>% filter(n>=r) %>% mutate(i=n_max-n+1)
+data <- expandRows(data, count=3)
+data <- data %>% group_by(n, r) %>% mutate(m=n_max-n, ind=1, i=cumsum(ind)-1, ind=NULL)
+
+data <- data %>% mutate(cond_prob=dbbinom(i, size=m, alpha=a_0+r, beta=b_0+n-r), 
+                        Ti=1-pbeta(p_0_max, a_0+r+i, b_0+n_max-r-i), 
+                        ind=ifelse(Ti>theta_T, 1, 0), n_max)
+
+data <- data %>% select(n_max, n, r, m, i, cond_prob, Ti, ind)
+```
+
+------------------------------------------------------------------------
+
+**Working example**
+
+Let us consider the situation where we have reached an initial $N_1=10$ with $r_1=2$ observed toxicities and we have to decide whether to stop or continue the trial. Specifically, we calculate for each potential future toxicity from $m_1$ patients and decide whether $T_{i,1}>\theta_T=0.7$.
+
+```{r}
+#| echo: true
+#| warning: false
+
+data %>% filter(n==10, r==2, i<=15)
+```
+
+Based on this information we calculate $PP_1$ decide based on the threshold $\theta_S=0.9$ whether to stop the trial early or to accrual more patients. Similarly we calculate the decision to stop the trial using the posterior distribution and use the threshold $\theta_T=0.75$.
+
+```{r}
+#| echo: true
+#| warning: false
+
+threshold_safety <- 0.9
+
+## Early stopping using predictive distribution
+data_pp <- data %>% group_by(n, r) %>% summarise(pp=round(sum(cond_prob*ind),6), 
+                                                 stop_pp=ifelse(pp>threshold_safety, 1, 0))
+
+## Early stopping using posterior distribution
+data_pp <- data_pp %>% 
+  mutate(stop_postdist=ifelse(1-pbeta(p_0_max, a_0+r, b_0+n-r)>theta_T, 1, 0))
+
+data_pp %>% filter(n==10)
+```
+
+For each interim look $j\geq1$ we can then calculate stopping of safety boundaries of the trial.
+
+```{r}
+#| echo: true
+#| warning: false
+
+data_pp_long <- pivot_longer(data_pp, cols=4:5)
+
+stop_boundaries <- data_pp_long %>% filter(value==1) %>%
+  group_by(name, n) %>% summarise(r=min(r), stop=NULL)
+
+stop_boundaries$name <- factor(stop_boundaries$name, 
+                               levels=c("stop_postdist", "stop_pp"),
+                               labels=c("Posterior distribution",
+                                        "Predictive distribution"))
+
+ggplot(stop_boundaries, aes(x=n, y=r, linetype=name))+geom_step()+
+  scale_y_continuous(limits=c(0, max(stop_boundaries$r)), 
+                     breaks=0: max(stop_boundaries$r))+
+  ylab("Toxcitiy")+xlab("Interim patients")+
+  theme_bw()+theme(panel.grid = element_blank())+
+  ggtitle("Stopping for safety boundaries")+
+  scale_linetype("")
+```
+
+------------------------------------------------------------------------
+
+## Simulation study
+
+### Prior with a=0.4, b=0.6
+
+We set up a simulation study to quantify operations characteristics (type-I error, type-II error, the probability to declare toxicity and expected number of patients and toxicities) with the following parameters
+
+- Beta prior parameters: a=0.4, b=0.6
+- True $p_0$: 0.2, 0.25, 0.3
+- $p_{0, max}$: 0.2
+- $N_0$: 10
+- Cohort increase: 5
+- $N_{max}$: 35, 40
+- $\theta_T$: 0.75, 0.9
+- $\theta_S$: 0.8, 0.9, 1
+- Number of simulation runs: 1000
+
+Note that the type-I and type-II errors correspond to the proportion of trials which stopped early. If the maximal number of patients was reached the trial cannot be stopped early. 
+
+```{r}
+#| echo: false
+#| warning: false
+#| cache: true
+
+set.seed(52359)
+
+n_sim <- 1000
+
+a_0 <- 0.4
+b_0 <- 0.6
+
+p_0_max <- 0.2
+
+true_p_0_values <- c(0.2, 0.25, 0.3)
+n_max_values <- c(30, 35, 40)
+theta_T_values <- c(0.75, 0.9)
+safety_threshold_values <- c(0.8, 0.9, 1)
+initial_n <- 10
+n_increase <- 5
+
+res_sim <- c()
+res_overall1 <- c()
+
+for (safety_threshold in safety_threshold_values) {
+  for (true_p0 in true_p_0_values) {
+    for (theta_T in theta_T_values) {
+      for (n_max in n_max_values) {
+        for (i in 1:n_sim) {
+          
+          data_core <- rbinom(initial_n, size=1, prob=true_p0)
+          
+          n <- initial_n
+          
+          while (n<(n_max+1)) {
+  
+            data_sim_res <- data.frame(n=length(data_core), r=sum(data_core), m=n_max-length(data_core)+1)
+            data_sim <- data.frame(n=rep(n, n_max-length(data_core)+1), r=rep(sum(data_core), n_max-length(data_core)+1))
+            data_sim$i <- (1:nrow(data_sim))-1
+            data_sim$m <- n_max-data_sim$n
+            data_sim$cond_prob <- dbbinom(data_sim$i, size=data_sim$m, alpha=a_0+data_sim$r, beta=b_0+data_sim$n-data_sim$r)
+            data_sim$ind <- ifelse(1-pbeta(p_0_max, a_0+data_sim$r+data_sim$i, b_0+n_max-data_sim$r-data_sim$i)>theta_T, 1, 0)
+            data_sim <- as.data.table(data_sim)
+            data_sim_res$pp <- as.numeric(data_sim[, .(sum(cond_prob*ind))])
+            data_sim_res$true_p0 <- true_p0
+            data_sim_res$theta_T <- theta_T
+            data_sim_res$n_max <- n_max
+            data_sim_res$n_sim <- i
+            data_sim_res$safety_threshold <- safety_threshold
+  
+            if (data_sim_res$pp<=safety_threshold) {
+              n <- n+n_increase
+              data_core <- c(data_core, rbinom(n_increase, size=1, prob=true_p0))
+              
+            }
+            else {
+              n <- n_max
+              n <- n+n_increase
+            }
+            res_sim[[i]] <- data_sim_res
+          }
+        }
+        res_overall1 <- bind_rows(res_overall1, res_sim)
+      }
+    }
+  }
+}
+
+res_sim <- c()
+res_overall2 <- c()
+
+for (true_p0 in true_p_0_values) {
+  for (theta_T in theta_T_values) {
+    for (n_max in n_max_values) {
+      for (i in 1:n_sim) {
+  
+        data_core <- rbinom(initial_n, size=1, prob=true_p0)
+        
+        n <- initial_n
+        
+        while (n<(n_max+1)) {
+          
+          data_sim <- data.frame(n=length(data_core), r=sum(data_core))
+          data_sim$postdist <- 1-pbeta(p_0_max, a_0+data_sim$r, b_0+data_sim$n-data_sim$r)
+          data_sim$stop <- ifelse(data_sim$postdist>theta_T, 1, 0)
+          data_sim$true_p0 <- true_p0
+          data_sim$theta_T <- theta_T
+          data_sim$n_max <- n_max
+          data_sim$n_sim <- i
+          
+
+          if (data_sim$stop==0) {
+            n <- n+n_increase
+            data_core <- c(data_core, rbinom(n_increase, size=1, prob=true_p0))
+            
+          }
+          else {
+            n <- n_max
+            n <- n+n_increase
+          }
+          res_sim[[i]] <- data_sim
+        }
+      }
+
+      res_overall2 <- bind_rows(res_overall2, res_sim)
+    }
+  }
+}
+
+res_overall2$pp <- res_overall2$postdist
+res_overall2$safety_threshold <- res_overall2$theta_T
+res_overall2$ind <- 1
+
+res_overall <- bind_rows(res_overall1, res_overall2)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| cache: false
+#| fig-height: 10
+#| fig-width: 8
+
+res_overall <- res_overall %>% mutate(stop_safety=ifelse(pp>safety_threshold, 1, 0), stop_tox=ifelse(pp>safety_threshold, 1, 0))
+res_overall$safety_threshold[res_overall$ind%in%1] <- 999
+# Trials who reach N_max cannot stop early
+res_overall$stop_safety[res_overall$n==res_overall$n_max] <- 0
+
+res_overall$obs_tox <- round(res_overall$r/res_overall$n, 3)
+
+res_agg <- res_overall %>%  group_by(n_max, theta_T, true_p0, safety_threshold) %>% summarise(stop_safety=mean(stop_safety), stop_tox=mean(stop_tox), obs_tox=mean(obs_tox), exp_n=mean(n), exp_r=mean(r))
+res_agg$theta_T <- factor(res_agg$theta_T, levels=c(0.75,0.8,0.9), labels=paste0("Theta_T: ", c(0.75,0.8,0.9)))
+res_agg$true_p0 <- factor(res_agg$true_p0, levels=c(0.2,0.25,0.3), labels=c(paste0("True p=", c(0.2), " (H0)"), paste0("True p=", c(0.25,0.3), " (H1)")))
+res_agg$safety_threshold <- factor(res_agg$safety_threshold, levels=c(0.8,0.9,1, 999), labels=c(paste0("Safety threshold: ", c(0.8,0.9,1)), "Posterior distribution"))
+
+res_agg$n_max <- as.factor(res_agg$n_max)
+
+fig <- ggplot(res_agg, aes(x=n_max, y=stop_safety, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0+theta_T, ncol=2) + theme_bw() + theme(panel.grid.minor = element_blank())+geom_hline(yintercept=0.1, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed") + scale_y_continuous(breaks=c(0,0.1,0.5,0.8, 1), limits=c(0,1))+xlab("N_max")+ylab("Probability to reject") + scale_shape("Stopping decision rule")+ggtitle("Probability to reject")
+fig
+
+fig <- ggplot(res_agg, aes(x=n_max, y=stop_tox, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0+theta_T, ncol=2) + theme_bw() + theme(panel.grid.minor = element_blank())+geom_hline(yintercept=0.1, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed") + scale_y_continuous(breaks=c(0,0.1,0.5,0.8, 1), limits=c(0,1))+xlab("N_max")+ylab("Probability") + scale_shape("Stopping decision rule")+ggtitle("Probability for declaring toxicity")
+fig
+
+fig <- ggplot(res_agg %>% filter(true_p0=="True p=0.2 (H0)"), aes(x=n_max, y=exp_n, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~theta_T) + theme_bw() + theme(panel.grid.minor = element_blank())+xlab("N_max")+ylab("Expected N under H0") + scale_shape("Stopping decision rule")
+fig+ggtitle("Expected N under H0")
+
+# library(DT)
+# datatable(res_agg, rownames = F, filter = 'top')
+```
+
+### Prior with a=0.4, b=0.6
+
+We use the same simulation approach as in the previous subsection but using a a Beta prior with parameters a=1 and b=4.
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| cache: true
+
+set.seed(52359)
+
+a_0 <- 1
+b_0 <- 4
+
+res_sim <- c()
+res_overall1 <- c()
+
+for (safety_threshold in safety_threshold_values) {
+  for (true_p0 in true_p_0_values) {
+    for (theta_T in theta_T_values) {
+      for (n_max in n_max_values) {
+        for (i in 1:n_sim) {
+          
+          data_core <- rbinom(initial_n, size=1, prob=true_p0)
+          
+          n <- initial_n
+          
+          while (n<(n_max+1)) {
+  
+            data_sim_res <- data.frame(n=length(data_core), r=sum(data_core), m=n_max-length(data_core)+1)
+            data_sim <- data.frame(n=rep(n, n_max-length(data_core)+1), r=rep(sum(data_core), n_max-length(data_core)+1))
+            data_sim$i <- (1:nrow(data_sim))-1
+            data_sim$m <- n_max-data_sim$n
+            data_sim$cond_prob <- dbbinom(data_sim$i, size=data_sim$m, alpha=a_0+data_sim$r, beta=b_0+data_sim$n-data_sim$r)
+            data_sim$ind <- ifelse(1-pbeta(p_0_max, a_0+data_sim$r+data_sim$i, b_0+n_max-data_sim$r-data_sim$i)>theta_T, 1, 0)
+            data_sim <- as.data.table(data_sim)
+            data_sim_res$pp <- as.numeric(data_sim[, .(sum(cond_prob*ind))])
+            data_sim_res$true_p0 <- true_p0
+            data_sim_res$theta_T <- theta_T
+            data_sim_res$n_max <- n_max
+            data_sim_res$n_sim <- i
+            data_sim_res$safety_threshold <- safety_threshold
+  
+            if (data_sim_res$pp<=safety_threshold) {
+              n <- n+n_increase
+              data_core <- c(data_core, rbinom(n_increase, size=1, prob=true_p0))
+              
+            }
+            else {
+              n <- n_max
+              n <- n+n_increase
+            }
+            res_sim[[i]] <- data_sim_res
+          }
+        }
+        res_overall1 <- bind_rows(res_overall1, res_sim)
+      }
+    }
+  }
+}
+
+res_sim <- c()
+res_overall2 <- c()
+
+for (true_p0 in true_p_0_values) {
+  for (theta_T in theta_T_values) {
+    for (n_max in n_max_values) {
+      for (i in 1:n_sim) {
+  
+        data_core <- rbinom(initial_n, size=1, prob=true_p0)
+        
+        n <- initial_n
+        
+        while (n<(n_max+1)) {
+          
+          data_sim <- data.frame(n=length(data_core), r=sum(data_core))
+          data_sim$postdist <- 1-pbeta(p_0_max, a_0+data_sim$r, b_0+data_sim$n-data_sim$r)
+          data_sim$stop <- ifelse(data_sim$postdist>theta_T, 1, 0)
+          data_sim$true_p0 <- true_p0
+          data_sim$theta_T <- theta_T
+          data_sim$n_max <- n_max
+          data_sim$n_sim <- i
+          
+
+          if (data_sim$stop==0) {
+            n <- n+n_increase
+            data_core <- c(data_core, rbinom(n_increase, size=1, prob=true_p0))
+            
+          }
+          else {
+            n <- n_max
+            n <- n+n_increase
+          }
+          res_sim[[i]] <- data_sim
+        }
+      }
+
+      res_overall2 <- bind_rows(res_overall2, res_sim)
+    }
+  }
+}
+
+res_overall2$pp <- res_overall2$postdist
+res_overall2$safety_threshold <- res_overall2$theta_T
+res_overall2$ind <- 1
+
+res_overall <- bind_rows(res_overall1, res_overall2)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| cache: false
+#| fig-height: 10
+#| fig-width: 8
+
+res_overall <- res_overall %>% mutate(stop_safety=ifelse(pp>safety_threshold, 1, 0), stop_tox=ifelse(pp>safety_threshold, 1, 0))
+res_overall$safety_threshold[res_overall$ind%in%1] <- 999
+# Trials who reach N_max cannot stop early
+res_overall$stop_safety[res_overall$n==res_overall$n_max] <- 0
+
+res_overall$obs_tox <- round(res_overall$r/res_overall$n, 3)
+
+res_agg <- res_overall %>%  group_by(n_max, theta_T, true_p0, safety_threshold) %>% summarise(stop_safety=mean(stop_safety), stop_tox=mean(stop_tox), obs_tox=mean(obs_tox), exp_n=mean(n), exp_r=mean(r))
+res_agg$theta_T <- factor(res_agg$theta_T, levels=c(0.75,0.8,0.9), labels=paste0("Theta_T: ", c(0.75,0.8,0.9)))
+res_agg$true_p0 <- factor(res_agg$true_p0, levels=c(0.2,0.25,0.3), labels=c(paste0("True p=", c(0.2), " (H0)"), paste0("True p=", c(0.25,0.3), " (H1)")))
+res_agg$safety_threshold <- factor(res_agg$safety_threshold, levels=c(0.8,0.9,1, 999), labels=c(paste0("Safety threshold: ", c(0.8,0.9,1)), "Posterior distribution"))
+
+res_agg$n_max <- as.factor(res_agg$n_max)
+
+fig <- ggplot(res_agg, aes(x=n_max, y=stop_safety, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0+theta_T, ncol=2) + theme_bw() + theme(panel.grid.minor = element_blank())+geom_hline(yintercept=0.1, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed") + scale_y_continuous(breaks=c(0,0.1,0.5,0.8, 1), limits=c(0,1))+xlab("N_max")+ylab("Probability to reject") + scale_shape("Stopping decision rule")+ggtitle("Probability to reject")
+fig
+
+fig <- ggplot(res_agg, aes(x=n_max, y=stop_tox, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0+theta_T, ncol=2) + theme_bw() + theme(panel.grid.minor = element_blank())+geom_hline(yintercept=0.1, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed") + scale_y_continuous(breaks=c(0,0.1,0.5,0.8, 1), limits=c(0,1))+xlab("N_max")+ylab("Probability") + scale_shape("Stopping decision rule")+ggtitle("Probability for declaring toxicity")
+fig
+
+fig <- ggplot(res_agg %>% filter(true_p0=="True p=0.2 (H0)"), aes(x=n_max, y=exp_n, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~theta_T) + theme_bw() + theme(panel.grid.minor = element_blank())+xlab("N_max")+ylab("Expected N under H0") + scale_shape("Stopping decision rule")
+fig+ggtitle("Expected N under H0")
+
+# library(DT)
+# datatable(res_agg, rownames = F, filter = 'top')
+```
