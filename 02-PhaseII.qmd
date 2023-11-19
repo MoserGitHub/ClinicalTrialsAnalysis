@@ -325,10 +325,10 @@ res_agg$safety_threshold <- factor(res_agg$safety_threshold, levels=c(0.8,0.9,1,
 
 res_agg$n_max <- as.factor(res_agg$n_max)
 
-fig <- ggplot(res_agg, aes(x=n_max, y=stop_safety, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0+theta_T, ncol=2) + theme_bw() + theme(panel.grid.minor = element_blank())+geom_hline(yintercept=0.2, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed") + scale_y_continuous(breaks=c(0,0.1,0.5,0.8, 1), limits=c(0,1))+xlab("N_max")+ylab("Probability to reject") + scale_shape("Stopping decision rule")+ggtitle("Probability to reject")
+fig <- ggplot(res_agg, aes(x=n_max, y=stop_safety, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0+theta_T, ncol=2) + theme_bw() + theme(panel.grid.minor = element_blank())+geom_hline(yintercept=0.2, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed") + scale_y_continuous(breaks=c(0,0.2,0.5,0.8, 1), limits=c(0,1))+xlab("N_max")+ylab("Probability to reject") + scale_shape("Stopping decision rule")+ggtitle("Probability to reject")
 fig
 
-fig <- ggplot(res_agg, aes(x=n_max, y=stop_tox, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0+theta_T, ncol=2) + theme_bw() + theme(panel.grid.minor = element_blank())+geom_hline(yintercept=0.2, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed") + scale_y_continuous(breaks=c(0,0.1,0.5,0.8, 1), limits=c(0,1))+xlab("N_max")+ylab("Probability") + scale_shape("Stopping decision rule")+ggtitle("Probability for declaring toxicity")
+fig <- ggplot(res_agg, aes(x=n_max, y=stop_tox, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0+theta_T, ncol=2) + theme_bw() + theme(panel.grid.minor = element_blank())+geom_hline(yintercept=0.2, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed") + scale_y_continuous(breaks=c(0,0.2,0.5,0.8, 1), limits=c(0,1))+xlab("N_max")+ylab("Probability") + scale_shape("Stopping decision rule")+ggtitle("Probability for declaring toxicity")
 fig
 
 fig <- ggplot(res_agg %>% filter(true_p0=="True p=0.2 (H0)"), aes(x=n_max, y=exp_n, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~theta_T) + theme_bw() + theme(panel.grid.minor = element_blank())+xlab("N_max")+ylab("Expected N under H0") + scale_shape("Stopping decision rule")
@@ -469,10 +469,10 @@ res_agg$safety_threshold <- factor(res_agg$safety_threshold, levels=c(0.8,0.9,1,
 
 res_agg$n_max <- as.factor(res_agg$n_max)
 
-fig <- ggplot(res_agg, aes(x=n_max, y=stop_safety, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0+theta_T, ncol=2) + theme_bw() + theme(panel.grid.minor = element_blank())+geom_hline(yintercept=0.2, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed") + scale_y_continuous(breaks=c(0,0.1,0.5,0.8, 1), limits=c(0,1))+xlab("N_max")+ylab("Probability to reject") + scale_shape("Stopping decision rule")+ggtitle("Probability to reject")
+fig <- ggplot(res_agg, aes(x=n_max, y=stop_safety, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0+theta_T, ncol=2) + theme_bw() + theme(panel.grid.minor = element_blank())+geom_hline(yintercept=0.2, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed") + scale_y_continuous(breaks=c(0,0.2,0.5,0.8, 1), limits=c(0,1))+xlab("N_max")+ylab("Probability to reject") + scale_shape("Stopping decision rule")+ggtitle("Probability to reject")
 fig
 
-fig <- ggplot(res_agg, aes(x=n_max, y=stop_tox, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0+theta_T, ncol=2) + theme_bw() + theme(panel.grid.minor = element_blank())+geom_hline(yintercept=0.2, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed") + scale_y_continuous(breaks=c(0,0.1,0.5,0.8, 1), limits=c(0,1))+xlab("N_max")+ylab("Probability") + scale_shape("Stopping decision rule")+ggtitle("Probability for declaring toxicity")
+fig <- ggplot(res_agg, aes(x=n_max, y=stop_tox, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0+theta_T, ncol=2) + theme_bw() + theme(panel.grid.minor = element_blank())+geom_hline(yintercept=0.2, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed") + scale_y_continuous(breaks=c(0,0.2,0.5,0.8, 1), limits=c(0,1))+xlab("N_max")+ylab("Probability") + scale_shape("Stopping decision rule")+ggtitle("Probability for declaring toxicity")
 fig
 
 fig <- ggplot(res_agg %>% filter(true_p0=="True p=0.2 (H0)"), aes(x=n_max, y=exp_n, shape=safety_threshold)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~theta_T) + theme_bw() + theme(panel.grid.minor = element_blank())+xlab("N_max")+ylab("Expected N under H0") + scale_shape("Stopping decision rule")
