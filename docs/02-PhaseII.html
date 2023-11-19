@@ -232,7 +232,7 @@ div.csl-indent {
 <p><strong>Early stopping using the predictive distribution</strong></p>
 <p>Let <span class="math inline">\(T_{j,i}:=P(p&gt; p_0|N_j, Y_j=i)&gt;\theta_T\)</span>, that is, the posterior distribution given the interim data and future events. The predictive probability for a successful (safe) trial is</p>
 <p><span class="math display">\[
-PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}&gt;\theta_T), \quad j\geq 0.
+PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}&gt;\theta_T), \quad j\geq 1.
 \]</span> If <span class="math inline">\(PP_j&gt;\theta_S\)</span> then we stop the trial because of safety concerns, otherwise we recruit more patients until <span class="math inline">\(N_{max}\)</span> is reached.</p>
 <hr>
 <p><strong>Working example</strong></p>

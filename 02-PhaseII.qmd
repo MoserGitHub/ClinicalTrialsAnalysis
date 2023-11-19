@@ -37,7 +37,7 @@ The decision to the stop the trial early is based on the decision rule $P(p> p_0
 Let $T_{j,i}:=P(p> p_0|N_j, Y_j=i)>\theta_T$, that is, the posterior distribution given the interim data and future events. The predictive probability for a successful (safe) trial is
 
 $$
-PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}>\theta_T), \quad j\geq 0.
+PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}>\theta_T), \quad j\geq 1.
 $$
 If $PP_j>\theta_S$ then we stop the trial because of safety concerns, otherwise we recruit more patients until $N_{max}$ is reached.
 
