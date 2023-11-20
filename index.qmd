@@ -1,5 +1,7 @@
 # Introduction
 
+This web book serves as a documentation source of some analysis approaches I used during my work at CTU Bern. I learn when I write it down (and experiment) actively. My notes contain errors, because I am a human being. Any notification of errors is highly appreciated.
+
 ## General notation and abbreviations
 
 -   iid: Independent and identically distributed.

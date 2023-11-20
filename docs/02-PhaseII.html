@@ -216,28 +216,27 @@ div.csl-indent {
 
 </header>
 
-<p>Phase II trials are often single-arm trials in early phases but can also be multi-arm randomized controlled trials in later phases. The aim of early phase-II designs is to assess efficacy of a new treatment measured by clinical response in a small population of 30-100 patients. Early phase II trials can be designed as two- or three stage trials using frequentist approaches like Simon’s two stage design. In this chapter we use a Bayesian predictive probability approach to analyse an early phase-II trial <span class="citation" data-cites="Lee2008">[<a href="references.html#ref-Lee2008" role="doc-biblioref">1</a>]</span> <span class="citation" data-cites="Sambucini2021">[<a href="references.html#ref-Sambucini2021" role="doc-biblioref">2</a>]</span>. The aim is to compare two different decision rules for early stopping the trial: One uses the posterior distribution given the interim data, the second one uses the predictive distribution given the interim data marginalised over the possible future events.</p>
+<p>Phase II trials are often single-arm trials in early phases but can also be multi-arm (non-)randomized controlled trials in later phases <span class="citation" data-cites="Mossop2022">[<a href="references.html#ref-Mossop2022" role="doc-biblioref">1</a>]</span>. The aim of early phase-II designs is to assess efficacy of a new treatment measured by clinical response in a small population of 30-100 patients. Early phase II trials can be designed as two- or three stage trials using frequentist approaches like Simon’s two stage design. In this chapter we use a Bayesian predictive probability approach to analyse an early phase-II trial <span class="citation" data-cites="Lee2008">[<a href="references.html#ref-Lee2008" role="doc-biblioref">2</a>]</span> <span class="citation" data-cites="Sambucini2021">[<a href="references.html#ref-Sambucini2021" role="doc-biblioref">3</a>]</span>. The aim is to compare two different decision rules for early stopping the trial: One uses the posterior distribution given the interim data, the second one uses the predictive distribution given the interim data and future events.</p>
 <section id="background" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="background"><span class="header-section-number">3.1</span> Background</h2>
-<p>Let <span class="math inline">\(p\)</span> the true toxicity rate and <span class="math inline">\(\pi \sim Beta(a,b)\)</span> be a design prior on <span class="math inline">\(p\)</span>. Our null hypothesis of interest is <span class="math inline">\(H_0: p \leq p_0\)</span> versus <span class="math inline">\(H_1: p&gt;p_0\)</span>, that is, we compare, say, the clinical response to prespecified thresholds. Suppose that we plan interim looks <span class="math inline">\(j\geq 1\)</span> after <span class="math inline">\(N_j\)</span> patients were recruited and <span class="math inline">\(r_j\)</span> toxicity events occurred. Under the prior <span class="math inline">\(\pi\)</span> the posterior distribution is beta distrubuted <span class="math inline">\(p|r_j \sim beta(a+r_j, b+N_j-r_j)\)</span>. Suppose that we plan to recruit <span class="math inline">\(N_{max}\)</span> patients. Let <span class="math inline">\(Y_j\)</span> be the number of toxicities in future <span class="math inline">\(m_j=N_{max}-N_j\)</span> patients at interim look <span class="math inline">\(j\geq 1\)</span>. Under the prior <span class="math inline">\(\pi\)</span>, <span class="math inline">\(Y_j\)</span> is beta-binomial distributed <span class="math inline">\(Y_j \sim betabinom(i|m_j, a+r_j, b+N_j-r_j)\)</span> and <span class="math inline">\(p|r_j,y_j \sim beta(a+r_j+y_j, b+N_{max}-N_j-r_j-y_i)\)</span>. For phase II trials it is more important to control the type II error than the type I error, because then active treatments are less likely to be missed.</p>
+<p>Let <span class="math inline">\(p\)</span> the true toxicity rate and <span class="math inline">\(\pi \sim Beta(a,b)\)</span> be a design prior on <span class="math inline">\(p\)</span>. Our null hypothesis of interest is <span class="math inline">\(H_0: p \leq p_0\)</span> versus <span class="math inline">\(H_1: p&gt;p_0\)</span>, that is, we compare, say, the clinical response <span class="math inline">\(p\)</span> toa prespecified threshold <span class="math inline">\(p_0\)</span>. Suppose that we plan interim looks <span class="math inline">\(j\geq 1\)</span> after <span class="math inline">\(N_j\)</span> patients were recruited and <span class="math inline">\(r_j\)</span> toxicity events occurred. Under the prior <span class="math inline">\(\pi\)</span> the posterior distribution is beta distributed <span class="math inline">\(p|r_j \sim Beta(a+r_j, b+N_j-r_j)\)</span>. Suppose that we plan to recruit <span class="math inline">\(N_{max}\)</span> patients. Let <span class="math inline">\(Y_j\)</span> be the number of toxicities in future <span class="math inline">\(m_j=N_{max}-N_j\)</span> patients at interim look <span class="math inline">\(j\geq 1\)</span>. Under the prior <span class="math inline">\(\pi\)</span>, <span class="math inline">\(Y_j\)</span> is beta-binomial distributed <span class="math inline">\(Y_j \sim Betabinomal(i|m_j, a+r_j, b+N_j-r_j)\)</span> and <span class="math inline">\(p|r_j,y_j \sim Beta(a+r_j+y_j, b+N_{max}-N_j-r_j-y_i)\)</span>.</p>
 <hr>
 <p><strong>Working example</strong></p>
-<p>Suppose that the goal of a phase-II trial is to evaluate safety of new chemotherapy treatment investigating the discontinuation rate <span class="math inline">\(p\)</span> as primary endpoint. Discontinuation is defined based on toxicity gradin from the US National Cancer Institute Common Terminology Criteria for Adverse Events (CTCAE).</p>
+<p>Suppose that the goal of a phase-II trial is to evaluate safety of new chemotherapy treatment investigating the discontinuation rate <span class="math inline">\(p\)</span> as primary endpoint. Discontinuation is defined based on toxicity grading from the US National Cancer Institute Common Terminology Criteria for Adverse Events (CTCAE).</p>
 <hr>
 </section>
 <section id="decision-rules-for-stopping-the-trial" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="decision-rules-for-stopping-the-trial"><span class="header-section-number">3.2</span> Decision rules for stopping the trial</h2>
 <p><strong>Early stopping using the posterior distribution</strong></p>
-<p>The decision to the stop the trial early is based on the decision rule <span class="math inline">\(P(p&gt; p_0|N_j)&gt;\theta_T\)</span>, that is, the posterior distribution given the interim data. Usually, <span class="math inline">\(\theta_T\)</span> is chosen to be high (&gt;0.8) <span class="citation" data-cites="Sambucini2021">[<a href="references.html#ref-Sambucini2021" role="doc-biblioref">2</a>]</span>. If the trial is not stopped early we recruit more patients until <span class="math inline">\(N_{max}\)</span> is reached.</p>
+<p>The decision to the stop the trial early is based on the decision rule <span class="math inline">\(P(p&gt; p_0|N_j)&gt;\theta_T\)</span>, that is, the posterior distribution given the interim data. If the trial is not stopped early we recruit more patients until <span class="math inline">\(N_{max}\)</span> is reached.</p>
 <p><strong>Early stopping using the predictive distribution</strong></p>
-<p>Let <span class="math inline">\(T_{j,i}:=P(p&gt; p_0|N_j, Y_j=i)&gt;\theta_T\)</span>, that is, the posterior distribution given the interim data and future events. The predictive probability for a successful (safe) trial is</p>
+<p>Let <span class="math inline">\(T_{j,i}:=P(p&gt; p_0|N_j, Y_j=i)\)</span>, that is, the posterior distribution given the interim data and future events. Note that because <span class="math inline">\(Y_j\)</span> are not observed events <span class="math inline">\(T_{j,i}\)</span> are random variables. The predictive probability for a successful (safe) trial is</p>
 <p><span class="math display">\[
 PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}&gt;\theta_T), \quad j\geq 1.
-\]</span> If <span class="math inline">\(PP_j&gt;\theta_S\)</span> then we stop the trial because of safety concerns, otherwise we recruit more patients until <span class="math inline">\(N_{max}\)</span> is reached.</p>
+\]</span> This is the expectation of <span class="math inline">\(T_{j,i}\)</span> given the interim data <span class="math inline">\(j\geq 1\)</span> <span class="citation" data-cites="Lee2008">[<a href="references.html#ref-Lee2008" role="doc-biblioref">2</a>]</span>. If <span class="math inline">\(PP_j&gt;\theta_S\)</span> then we stop the trial because of safety concerns, otherwise we recruit more patients until <span class="math inline">\(N_{max}\)</span> is reached. Usually, <span class="math inline">\(\theta_S\)</span> is chosen to be high (&gt;0.8) <span class="citation" data-cites="Sambucini2021">[<a href="references.html#ref-Sambucini2021" role="doc-biblioref">3</a>]</span>.</p>
 <hr>
 <p><strong>Working example</strong></p>
-<p>Based on prior evidence <span class="math inline">\(p_0\)</span> is set to 0.2. This threshold is based on a result from a previous study where the treatment discontinuation was estimated with 0.17 with 95% confidence intervals (0.10-0.27). Because we want to be conservative we set the parameters for a beta prior to <span class="math inline">\(a=0.4\)</span> and <span class="math inline">\(b=0.6\)</span>. The mean of the prior is then 0.4. For illustrating purposes we show a prior with a prior weight of 5 patients which is centered on <span class="math inline">\(p=0.2\)</span> (<span class="math inline">\(a=1\)</span>, <span class="math inline">\(b=4\)</span>).</p>
-<hr>
+<p>Based on prior evidence <span class="math inline">\(p_0\)</span> is set to 0.2. This threshold is based on a result from a previous study where the treatment discontinuation was estimated with 0.17 with 95% confidence intervals (0.10-0.27). Because we want to be conservative we set the parameters for a beta prior to <span class="math inline">\(a=0.4\)</span> and <span class="math inline">\(b=0.6\)</span>. The mean of the prior is then 0.4. For illustrating purposes we also show a prior with a prior weight of 5 patients which is centered on <span class="math inline">\(p=0.2\)</span> (<span class="math inline">\(a=1\)</span>, <span class="math inline">\(b=4\)</span>).</p>
 <div class="cell">
 <details>
 <summary>Show R code</summary>
@@ -293,16 +292,14 @@ PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}&gt;\theta_T), \quad j\geq 1.
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">expandRows</span>(data, <span class="at">count=</span><span class="dv">3</span>)</span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(n, r) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">m=</span>n_max<span class="sc">-</span>n, <span class="at">ind=</span><span class="dv">1</span>, <span class="at">i=</span><span class="fu">cumsum</span>(ind)<span class="sc">-</span><span class="dv">1</span>, <span class="at">ind=</span><span class="cn">NULL</span>)</span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">cond_prob=</span><span class="fu">dbbinom</span>(i, <span class="at">size=</span>m, <span class="at">alpha=</span>a_0<span class="sc">+</span>r, <span class="at">beta=</span>b_0<span class="sc">+</span>n<span class="sc">-</span>r), </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">cond_postprob=</span><span class="fu">dbbinom</span>(i, <span class="at">size=</span>m, <span class="at">alpha=</span>a_0<span class="sc">+</span>r, <span class="at">beta=</span>b_0<span class="sc">+</span>n<span class="sc">-</span>r), </span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Ti=</span><span class="dv">1</span><span class="sc">-</span><span class="fu">pbeta</span>(p_0_max, a_0<span class="sc">+</span>r<span class="sc">+</span>i, b_0<span class="sc">+</span>n_max<span class="sc">-</span>r<span class="sc">-</span>i), </span>
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>                        <span class="at">ind=</span><span class="fu">ifelse</span>(Ti<span class="sc">&gt;</span>theta_T, <span class="dv">1</span>, <span class="dv">0</span>), n_max)</span>
 <span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">select</span>(n_max, n, r, m, i, cond_prob, Ti, ind)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">select</span>(n_max, n, r, m, i, cond_postprob, Ti, ind)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<hr>
-<p><strong>Working example</strong></p>
-<p>Let us consider the situation where we have reached an initial <span class="math inline">\(N_1=10\)</span> with <span class="math inline">\(r_1=2\)</span> observed toxicities and we have to decide whether to stop or continue the trial. Specifically, we calculate for each potential future toxicity from <span class="math inline">\(m_1\)</span> patients and decide whether <span class="math inline">\(T_{i,1}&gt;\theta_T=0.7\)</span>.</p>
+<p>Suppose we plan a phase-II with a maximum of <span class="math inline">\(N_{max}=35\)</span> patients. Let us consider the situation where we have reached an initial <span class="math inline">\(N_1=10\)</span> with <span class="math inline">\(r_1=2\)</span> observed toxicities and we have to decide whether to stop or continue the trial. Specifically, we calculate for each potential future toxicity from <span class="math inline">\(m_1\)</span> patients and decide whether <span class="math inline">\(T_{i,1}&gt;\theta_T=0.75\)</span>. The column <em>cond_postprob</em> in the following table is <span class="math inline">\(p|r_1,y_i\)</span> (because it is conditional on the future outcome <span class="math inline">\(Y_{j,i}=i\)</span>) and the column <span class="math inline">\(Ti\)</span> corresponds to <span class="math inline">\(T_{1,i}\)</span>.</p>
 <div class="cell">
 <details>
 <summary>Show R code</summary>
@@ -311,34 +308,34 @@ PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}&gt;\theta_T), \quad j\geq 1.
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 16 × 8
 # Groups:   n, r [1]
-   n_max     n     r     m     i cond_prob      Ti   ind
-   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
- 1    35    10     2    25     0   0.0434  0.00789     0
- 2    35    10     2    25     1   0.0799  0.0315      0
- 3    35    10     2    25     2   0.103   0.0881      0
- 4    35    10     2    25     3   0.114   0.190       0
- 5    35    10     2    25     4   0.114   0.334       0
- 6    35    10     2    25     5   0.107   0.500       0
- 7    35    10     2    25     6   0.0958  0.661       0
- 8    35    10     2    25     7   0.0821  0.793       1
- 9    35    10     2    25     8   0.0678  0.887       1
-10    35    10     2    25     9   0.0542  0.945       1
-11    35    10     2    25    10   0.0419  0.976       1
-12    35    10     2    25    11   0.0313  0.990       1
-13    35    10     2    25    12   0.0227  0.997       1
-14    35    10     2    25    13   0.0159  0.999       1
-15    35    10     2    25    14   0.0107  1.00        1
-16    35    10     2    25    15   0.00690 1.00        1</code></pre>
+   n_max     n     r     m     i cond_postprob      Ti   ind
+   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
+ 1    35    10     2    25     0       0.0434  0.00789     0
+ 2    35    10     2    25     1       0.0799  0.0315      0
+ 3    35    10     2    25     2       0.103   0.0881      0
+ 4    35    10     2    25     3       0.114   0.190       0
+ 5    35    10     2    25     4       0.114   0.334       0
+ 6    35    10     2    25     5       0.107   0.500       0
+ 7    35    10     2    25     6       0.0958  0.661       0
+ 8    35    10     2    25     7       0.0821  0.793       1
+ 9    35    10     2    25     8       0.0678  0.887       1
+10    35    10     2    25     9       0.0542  0.945       1
+11    35    10     2    25    10       0.0419  0.976       1
+12    35    10     2    25    11       0.0313  0.990       1
+13    35    10     2    25    12       0.0227  0.997       1
+14    35    10     2    25    13       0.0159  0.999       1
+15    35    10     2    25    14       0.0107  1.00        1
+16    35    10     2    25    15       0.00690 1.00        1</code></pre>
 </div>
 </div>
-<p>Based on this information we calculate <span class="math inline">\(PP_1\)</span> decide based on the threshold <span class="math inline">\(\theta_S=0.9\)</span> whether to stop the trial early or to accrual more patients. Similarly we calculate the decision to stop the trial using the posterior distribution and use the threshold <span class="math inline">\(\theta_T=0.75\)</span>.</p>
+<p>Based on this information we calculate <span class="math inline">\(PP_1\)</span> and decide based on the threshold <span class="math inline">\(\theta_S=0.9\)</span> whether to stop the trial early or to accrual more patients. For the decision rule based on the posterior probability we calculate the decision to stop the trial using the posterior distribution and use the threshold <span class="math inline">\(\theta_T=0.75\)</span>.</p>
 <div class="cell">
 <details>
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>threshold_safety <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Early stopping using predictive distribution</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>data_pp <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(n, r) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">pp=</span><span class="fu">round</span>(<span class="fu">sum</span>(cond_prob<span class="sc">*</span>ind),<span class="dv">6</span>), </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>data_pp <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(n, r) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">pp=</span><span class="fu">round</span>(<span class="fu">sum</span>(cond_postprob<span class="sc">*</span>ind),<span class="dv">6</span>), </span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">stop_pp=</span><span class="fu">ifelse</span>(pp<span class="sc">&gt;</span>threshold_safety, <span class="dv">1</span>, <span class="dv">0</span>))</span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Early stopping using posterior distribution</span></span>
@@ -365,7 +362,7 @@ PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}&gt;\theta_T), \quad j\geq 1.
 11    10    10 1             1             1</code></pre>
 </div>
 </div>
-<p>For each interim look <span class="math inline">\(j\geq1\)</span> we can then calculate stopping of safety boundaries of the trial.</p>
+<p>For each interim look <span class="math inline">\(j\geq1\)</span> we can then calculate stopping of safety boundaries of the trial. Here we assumed that we recruit 5 additional patients if we do not stop the trial early.</p>
 <div class="cell">
 <details>
 <summary>Show R code</summary>
@@ -382,7 +379,7 @@ PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}&gt;\theta_T), \quad j\geq 1.
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stop_boundaries, <span class="fu">aes</span>(<span class="at">x=</span>n, <span class="at">y=</span>r, <span class="at">linetype=</span>name))<span class="sc">+</span><span class="fu">geom_step</span>()<span class="sc">+</span></span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">max</span>(stop_boundaries<span class="sc">$</span>r)), </span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>                     <span class="at">breaks=</span><span class="dv">0</span><span class="sc">:</span> <span class="fu">max</span>(stop_boundaries<span class="sc">$</span>r))<span class="sc">+</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Toxcitiy"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Interim patients"</span>)<span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Number of toxic events"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Number of patients at interim analysis"</span>)<span class="sc">+</span></span>
 <span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()<span class="sc">+</span><span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>())<span class="sc">+</span></span>
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Stopping for safety boundaries"</span>)<span class="sc">+</span></span>
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_linetype</span>(<span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -400,14 +397,19 @@ PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}&gt;\theta_T), \quad j\geq 1.
 <p>We set up a simulation study to quantify operations characteristics (type-I error, type-II error, the probability to declare toxicity and expected number of patients and toxicities) with the following parameters</p>
 <ul>
 <li>Beta prior parameters: a=0.4, b=0.6</li>
-<li>True <span class="math inline">\(p_0\)</span>: 0.2, 0.25, 0.3</li>
-<li><span class="math inline">\(p_{0, max}\)</span>: 0.2</li>
+<li>True <span class="math inline">\(p\)</span>: 0.2, 0.25, 0.3</li>
+<li><span class="math inline">\(p_0\)</span>: 0.2</li>
 <li><span class="math inline">\(N_0\)</span>: 10</li>
 <li>Cohort increase: 5</li>
-<li><span class="math inline">\(N_{max}\)</span>: 35, 40</li>
+<li><span class="math inline">\(N_{max}\)</span>: 30, 35, 40</li>
 <li><span class="math inline">\(\theta_T\)</span>: 0.75, 0.9</li>
 <li><span class="math inline">\(\theta_S\)</span>: 0.8, 0.9, 1</li>
 <li>Number of simulation runs: 1000</li>
+</ul>
+<p>Stopping decision rules:</p>
+<ul>
+<li>Posterior distribution: Stop early if <span class="math inline">\(P(p&gt; p_0|N_j)&gt;\theta_T\)</span>,</li>
+<li>Safety threshold: Stop early if <span class="math inline">\(T_{j,i}&gt;\theta_T\)</span> and <span class="math inline">\(PP_j&gt;\theta_S\)</span>.</li>
 </ul>
 <p>Note that the type-I and type-II errors correspond to the proportion of trials which stopped early. If the maximal number of patients was reached the trial cannot be stopped early.</p>
 <div class="cell">
@@ -417,8 +419,10 @@ PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}&gt;\theta_T), \quad j\geq 1.
 <div class="cell-output-display">
 <p><img src="02-PhaseII_files/figure-html/unnamed-chunk-8-2.png" class="img-fluid" width="768"></p>
 </div>
+</div>
+<div class="cell">
 <div class="cell-output-display">
-<p><img src="02-PhaseII_files/figure-html/unnamed-chunk-8-3.png" class="img-fluid" width="768"></p>
+<p><img src="02-PhaseII_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="768"></p>
 </div>
 <div class="cell-output-display">
 
@@ -432,13 +436,15 @@ PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}&gt;\theta_T), \quad j\geq 1.
 <p>We use the same simulation approach as in the previous subsection but using a a Beta prior with parameters a=1 and b=4.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="02-PhaseII_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="768"></p>
+<p><img src="02-PhaseII_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="768"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="02-PhaseII_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="768"></p>
+<p><img src="02-PhaseII_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="768"></p>
 </div>
+</div>
+<div class="cell">
 <div class="cell-output-display">
-<p><img src="02-PhaseII_files/figure-html/unnamed-chunk-10-3.png" class="img-fluid" width="768"></p>
+<p><img src="02-PhaseII_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="768"></p>
 </div>
 <div class="cell-output-display">
 
@@ -449,11 +455,14 @@ PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}&gt;\theta_T), \quad j\geq 1.
 
 
 <div id="refs" class="references csl-bib-body" role="list" style="display: none">
+<div id="ref-Mossop2022" class="csl-entry" role="listitem">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Mossop H, Grayling MJ, Gallagher FA, Welsh SJ, Stewart GD, Wason JMS. Advantages of multi-arm non-randomised sequentially allocated cohort designs for phase II oncology trials. British Journal of Cancer. 2022;126: 204–210. doi:<a href="https://doi.org/10.1038/s41416-021-01613-5">10.1038/s41416-021-01613-5</a></div>
+</div>
 <div id="ref-Lee2008" class="csl-entry" role="listitem">
-<div class="csl-left-margin">1. </div><div class="csl-right-inline">Lee JJ, Liu DD. A predictive probability design for phase II cancer clinical trials. Clinical Trials. 2008;5: 93–106. doi:<a href="https://doi.org/10.1177/1740774508089279">10.1177/1740774508089279</a></div>
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Lee JJ, Liu DD. A predictive probability design for phase II cancer clinical trials. Clinical Trials. 2008;5: 93–106. doi:<a href="https://doi.org/10.1177/1740774508089279">10.1177/1740774508089279</a></div>
 </div>
 <div id="ref-Sambucini2021" class="csl-entry" role="listitem">
-<div class="csl-left-margin">2. </div><div class="csl-right-inline">Sambucini V. Efficacy and toxicity monitoring via bayesian predictive probabilities in phase II clinical trials. Statistical Methods &amp; Applications. 2021;30: 637–663. doi:<a href="https://doi.org/10.1007/s10260-020-00537-3">10.1007/s10260-020-00537-3</a></div>
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Sambucini V. Efficacy and toxicity monitoring via bayesian predictive probabilities in phase II clinical trials. Statistical Methods &amp; Applications. 2021;30: 637–663. doi:<a href="https://doi.org/10.1007/s10260-020-00537-3">10.1007/s10260-020-00537-3</a></div>
 </div>
 </div>
 </section>
