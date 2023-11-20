@@ -5,7 +5,7 @@ project:
 book:
   title: "Clinical trial analysis"
   author: 
-    - name: "André Moser, CTU Bern, University of Bern"
+    - name: "André Moser, CTU Bern, Department of Clinical Research, University of Bern"
       orcid: 0000-0001-7178-6539
       email: "andre.moser@unibe.ch"
   date: today
