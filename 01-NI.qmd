@@ -1487,9 +1487,9 @@ res_ap
 #### Bayesian approach: Prior on event probabilities
 
 In the former subsection we assumed that the prior was directly specified on the treatment effect. In this subsection we assume that that design prior is specified on the event probabilities $p_i$, $i=\{0,1\}$. Suppose that the priors on the event probability are beta distributed $\pi_i \sim Beta(a_i,b_i)$ and that we have observed a binomial distributed random sample of size $n_i$ and number of events $r_i$. Then the posterior distribution is $$
-\pi_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)=\frac{\pi_i^{a_i+r_i-1}(1-\pi_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}
+p_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)=\frac{p_i^{a_i+r_i-1}(1-p_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}
 $$ with $B(\cdot)$ the beta function and $$
-\mu_{i,r_i}:=E(\pi_i|r_i)=\frac{a_i+r_i}{a_i+b_i+n_i}, \quad \sigma_{i,r_i}^2:=Var(\pi_i|r_i)=\frac{\left(a_i+r_i\right)\left(b_i+n_i-r_i\right)}{(a_i+b_i+n_i)^2(a_i+b_i+n_i+1)}.
+\mu_{i,r_i}:=E(p_i|r_i)=\frac{a_i+r_i}{a_i+b_i+n_i}, \quad \sigma_{i,r_i}^2:=Var(p_i|r_i)=\frac{\left(a_i+r_i\right)\left(b_i+n_i-r_i\right)}{(a_i+b_i+n_i)^2(a_i+b_i+n_i+1)}.
 $$
 
 ------------------------------------------------------------------------
@@ -1682,12 +1682,12 @@ ggplot(prior_plot_long, aes(x = x, y = value, linetype = type,
 ------------------------------------------------------------------------
 
 We denote the joint posterior distribution as $$
-f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)=\prod_{i\in\{0,1\}} \frac{\pi_i^{a_i+r_i-1}(1-\pi_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}.
+f_2(p_1, p_0|r_0, r_1, n_0, n_1)=\prod_{i\in\{0,1\}} \frac{p_i^{a_i+r_i-1}(1-p_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}.
 $$ and thus, by using Fubini's theorem and the explanations of Patricia Altham @Altham1969, $$
 \begin{aligned}
-P&\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0^{\pi_0+\delta^*} f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)d\pi_1d\pi_0 \\
-&=\int_0^{1}\frac{\pi_0^{a_0+r_0-1}(1-\pi_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{\pi_0+\delta^*} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)d\pi_0 \\
-&\overset{u=\pi_0-\delta^*}{=}\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{u} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)du \\
+P&\left(p_1-p_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0^{p_0+\delta^*} f_2(p_1, p_0|r_0, r_1, n_0, n_1)dp_1dp_0 \\
+&=\int_0^{1}\frac{p_0^{a_0+r_0-1}(1-p_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{p_0+\delta^*} \frac{p_1^{a_1+r_1-1}(1-p_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}dp_1\right)dp_0 \\
+&\overset{u=p_0-\delta^*}{=}\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{u} \frac{p_1^{a_1+r_1-1}(1-p_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}dp_1\right)du \\
 &=\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}u^s(1-u)^{a_1+b_1+n_1-1-s}\right)du \\
 &=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{1}{B(a_0+r_0, b_0+n_0-r_0)} \left(\int_{-\delta^*}^{1-\delta^*}u^{a_0+r_0+s-1}(1-u)^{a_1+b_1+n_1-1+b_0+n_0-r_0-s-1}du\right) \\
 &\overset{z=u+\delta^*}{=}\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{1}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_{0}^{1}z^{a_0+r_0+s-1}(1-z)^{a_1+b_1+n_1-1-s+b_0+n_0-r_0-1}dz\right) \\
@@ -1771,134 +1771,89 @@ res_bap
 
 ------------------------------------------------------------------------
 
-To get the Bayesian average probability to reject we calculate (IS THIS NECESSARY????)
-$$
-\begin{aligned}
-BAP&=\sum_{r_0=0}^{n_0-1}\sum_{r_1=0}^{n_1-1} P(\pi_1-\pi_0 \leq \delta^*|r_0, r_1, n_0, n_1)f_2(r_0, r_1|n_0, n_1)
-\end{aligned}
-$$
+
 
 ```{r fig24}
 #| echo: false
 #| warning: false
 #| results: hide
 #| 
-# Number of draws
-q <- 10000
+
+res_bap <- c()
 
 ## Enthusiastic prior
+
 a_1 <- 0.5
 b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 7.2
-b_0 <- (1 - 0.03)/(0.03) * a_0
+b_0 <- (1 - 0.03)/0.03 * a_0
 
-r_0 <- rbbinom(q, size = ceiling(a_0 + b_0 + n_0 - 1), 
-               alpha = a_0 + n_0 * p_0, beta = b_0 +
-                 n_0 - n_0 * p_0)
+r_0 <- 0:(ceiling(n_0)-1)
+r_1 <- 0:(ceiling(n_1)-1)
 
-r_1 <- rbbinom(q, size = ceiling(a_1 + b_1 + n_1 - 1), 
-               alpha = a_1 + n_1 * p_1, beta = b_1 +
-                 n_1 - n_1 * p_1)
+data_points <- expand.grid(r_1 = r_1, r_0 = r_0)
 
-bap_tail_betabinomial <- c()
+data_points$pdf_r_1 <- dbbinom(data_points$r_1, size = ceiling(n_1), a_1,
+    b_1)
+data_points$pdf_r_0 <- dbbinom(data_points$r_0, size = ceiling(n_0), a_0,
+    b_0)
+data_points$joint_pdf <- data_points$pdf_r_1 * data_points$pdf_r_0
 
-for (k in 1:q) {
-
-  s <- ceiling(seq(a_1 + r_1[k], b_1 + n_1 - r_1[k] - 1))
-  bap_tail_betabinomial <- c(bap_tail_betabinomial, sum(dbbinom(s, size = ceiling(a_1 +
-      b_1 + n_1 - 1), alpha = a_0 + r_0[k], beta = b_0 +
-      n_0 - r_0[k])))
+data_points$sig <- NA
+data_points$bap <- NA
+for (i in 1:nrow(data_points)) {
+s <- ceiling(seq(a_1 + data_points$r_1[i], b_1 + n_1 - data_points$r_1[i] - 1))
+data_points$bap[i] <- sum(dbbinom(s, size = ceiling(a_1 +
+    b_1 + n_1 - 1), alpha = a_0 + data_points$r_0[i], beta = b_0 +
+    n_0 - data_points$r_0[i]))
 }
-bap_tail_betabinomial <- mean(bap_tail_betabinomial)
 
-res_bap <- data.frame(type="Enthusiastic", bap_tail_betabinomial)
 
-# Skeptical prior
-a_1 <- 2.84
-b_1 <- (1 - 0.05)/0.05 * a_1
-a_0 <- 1.24
-b_0 <- (1 - p_0)/p_0 * a_0
 
-r_0 <- rbbinom(q, size = ceiling(a_0 + b_0 + n_0 - 1), 
-               alpha = a_0 + n_0 * p_0, beta = b_0 +
-                 n_0 - n_0 * p_0)
-
-r_1 <- rbbinom(q, size = ceiling(a_1 + b_1 + n_1 - 1), 
-               alpha = a_1 + n_1 * p_1, beta = b_1 +
-                 n_1 - n_1 * p_1)
-
-bap_tail_betabinomial <- c()
-
-for (k in 1:q) {
-
-  s <- ceiling(seq(a_1 + r_1[k], b_1 + n_1 - r_1[k] - 1))
-  bap_tail_betabinomial <- c(bap_tail_betabinomial, sum(dbbinom(s, size = ceiling(a_1 +
-      b_1 + n_1 - 1), alpha = a_0 + r_0[k], beta = b_0 +
-      n_0 - r_0[k])))
+for (i in 1:nrow(data_points)) {
+    data_points$sig[i] <- ifelse(data_points$bap[i]<=1-alpha,
+        1, 0)
 }
-bap_tail_betabinomial <- mean(bap_tail_betabinomial)
 
-res_bap <- rbind(res_bap, data.frame(type="Skeptical", 
-                                     bap_tail_betabinomial))
-
-# Informative prior
-a_1 <- 0.8
-b_1 <- (1 - p_1)/p_1 * a_1
-a_0 <- 0.03
-b_0 <- (1 - p_0)/p_0 * a_0
-
-r_0 <- rbbinom(q, size = ceiling(a_0 + b_0 + n_0 - 1), 
-               alpha = a_0 + n_0 * p_0, beta = b_0 +
-                 n_0 - n_0 * p_0)
-
-r_1 <- rbbinom(q, size = ceiling(a_1 + b_1 + n_1 - 1), 
-               alpha = a_1 + n_1 * p_1, beta = b_1 +
-                 n_1 - n_1 * p_1)
-
-bap_tail_betabinomial <- c()
-
-for (k in 1:q) {
-
-  s <- ceiling(seq(a_1 + r_1[k], b_1 + n_1 - r_1[k] - 1))
-  bap_tail_betabinomial <- c(bap_tail_betabinomial, sum(dbbinom(s, size = ceiling(a_1 +
-      b_1 + n_1 - 1), alpha = a_0 + r_0[k], beta = b_0 +
-      n_0 - r_0[k])))
-}
-bap_tail_betabinomial <- mean(bap_tail_betabinomial)
-
-res_bap <- rbind(res_bap, data.frame(type="Informative", 
-                                     bap_tail_betabinomial))
-
+res_bap <- data.frame(type = "Enthusiastic", 
+                            ap = sum(data_points$joint_pdf[data_points$sig == 1]))
 
 ## Noninformative prior
-a_0 <- 0.5
-b_0 <- 0.5
+
 a_1 <- 0.5
 b_1 <- 0.5
+a_0 <- 0.5
+b_0 <- 0.5
 
-r_0 <- rbbinom(q, size = ceiling(a_0 + b_0 + n_0 - 1), 
-               alpha = a_0 + n_0 * p_0, beta = b_0 +
-                 n_0 - n_0 * p_0)
+r_0 <- 0:(ceiling(n_0)-1)
+r_1 <- 0:(ceiling(n_1)-1)
 
-r_1 <- rbbinom(q, size = ceiling(a_1 + b_1 + n_1 - 1), 
-               alpha = a_1 + n_1 * p_1, beta = b_1 +
-                 n_1 - n_1 * p_1)
+data_points <- expand.grid(r_1 = r_1, r_0 = r_0)
 
-bap_tail_betabinomial <- c()
+data_points$pdf_r_1 <- dbbinom(data_points$r_1, size = ceiling(n_1), a_1,
+    b_1)
+data_points$pdf_r_0 <- dbbinom(data_points$r_0, size = ceiling(n_0), a_0,
+    b_0)
+data_points$joint_pdf <- data_points$pdf_r_1 * data_points$pdf_r_0
 
-for (k in 1:q) {
-
-  s <- ceiling(seq(a_1 + r_1[k], b_1 + n_1 - r_1[k] - 1))
-  bap_tail_betabinomial <- c(bap_tail_betabinomial, sum(dbbinom(s, size = ceiling(a_1 +
-      b_1 + n_1 - 1), alpha = a_0 + r_0[k], beta = b_0 +
-      n_0 - r_0[k])))
+data_points$sig <- NA
+data_points$bap <- NA
+for (i in 1:nrow(data_points)) {
+s <- ceiling(seq(a_1 + data_points$r_1[i], b_1 + n_1 - data_points$r_1[i] - 1))
+data_points$bap[i] <- sum(dbbinom(s, size = ceiling(a_1 +
+    b_1 + n_1 - 1), alpha = a_0 + data_points$r_0[i], beta = b_0 +
+    n_0 - data_points$r_0[i]))
 }
-bap_tail_betabinomial <- mean(bap_tail_betabinomial)
 
-res_bap <- rbind(res_bap, data.frame(type="Noninformative", 
-                                     bap_tail_betabinomial))
 
-res_bap$bap_tail_betabinomial <- round(res_bap$bap_tail_betabinomial, 2)
 
-res_bap
+for (i in 1:nrow(data_points)) {
+    data_points$sig[i] <- ifelse(data_points$bap[i]<=1-alpha,
+        1, 0)
+}
+
+res_bap <- data.frame(type = "Non-informative", 
+                            ap = sum(data_points$joint_pdf[data_points$sig == 1]))
+
+
 ```

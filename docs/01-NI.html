@@ -1611,9 +1611,9 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 <section id="bayesian-approach-prior-on-event-probabilities" class="level4" data-number="2.2.1.5">
 <h4 data-number="2.2.1.5" class="anchored" data-anchor-id="bayesian-approach-prior-on-event-probabilities"><span class="header-section-number">2.2.1.5</span> Bayesian approach: Prior on event probabilities</h4>
 <p>In the former subsection we assumed that the prior was directly specified on the treatment effect. In this subsection we assume that that design prior is specified on the event probabilities <span class="math inline">\(p_i\)</span>, <span class="math inline">\(i=\{0,1\}\)</span>. Suppose that the priors on the event probability are beta distributed <span class="math inline">\(\pi_i \sim Beta(a_i,b_i)\)</span> and that we have observed a binomial distributed random sample of size <span class="math inline">\(n_i\)</span> and number of events <span class="math inline">\(r_i\)</span>. Then the posterior distribution is <span class="math display">\[
-\pi_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)=\frac{\pi_i^{a_i+r_i-1}(1-\pi_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}
+p_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)=\frac{p_i^{a_i+r_i-1}(1-p_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}
 \]</span> with <span class="math inline">\(B(\cdot)\)</span> the beta function and <span class="math display">\[
-\mu_{i,r_i}:=E(\pi_i|r_i)=\frac{a_i+r_i}{a_i+b_i+n_i}, \quad \sigma_{i,r_i}^2:=Var(\pi_i|r_i)=\frac{\left(a_i+r_i\right)\left(b_i+n_i-r_i\right)}{(a_i+b_i+n_i)^2(a_i+b_i+n_i+1)}.
+\mu_{i,r_i}:=E(p_i|r_i)=\frac{a_i+r_i}{a_i+b_i+n_i}, \quad \sigma_{i,r_i}^2:=Var(p_i|r_i)=\frac{\left(a_i+r_i\right)\left(b_i+n_i-r_i\right)}{(a_i+b_i+n_i)^2(a_i+b_i+n_i+1)}.
 \]</span></p>
 <hr>
 <p><strong>Working example (continued)</strong></p>
@@ -1809,12 +1809,12 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 </div>
 <hr>
 <p>We denote the joint posterior distribution as <span class="math display">\[
-f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)=\prod_{i\in\{0,1\}} \frac{\pi_i^{a_i+r_i-1}(1-\pi_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}.
+f_2(p_1, p_0|r_0, r_1, n_0, n_1)=\prod_{i\in\{0,1\}} \frac{p_i^{a_i+r_i-1}(1-p_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}.
 \]</span> and thus, by using Fubini’s theorem and the explanations of Patricia Altham <span class="citation" data-cites="Altham1969">[<a href="references.html#ref-Altham1969" role="doc-biblioref">11</a>]</span>, <span class="math display">\[
 \begin{aligned}
-P&amp;\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0^{\pi_0+\delta^*} f_2(\pi_1, \pi_0|r_0, r_1, n_0, n_1)d\pi_1d\pi_0 \\
-&amp;=\int_0^{1}\frac{\pi_0^{a_0+r_0-1}(1-\pi_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{\pi_0+\delta^*} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)d\pi_0 \\
-&amp;\overset{u=\pi_0-\delta^*}{=}\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{u} \frac{\pi_1^{a_1+r_1-1}(1-\pi_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}d\pi_1\right)du \\
+P&amp;\left(p_1-p_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0^{p_0+\delta^*} f_2(p_1, p_0|r_0, r_1, n_0, n_1)dp_1dp_0 \\
+&amp;=\int_0^{1}\frac{p_0^{a_0+r_0-1}(1-p_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{p_0+\delta^*} \frac{p_1^{a_1+r_1-1}(1-p_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}dp_1\right)dp_0 \\
+&amp;\overset{u=p_0-\delta^*}{=}\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{u} \frac{p_1^{a_1+r_1-1}(1-p_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}dp_1\right)du \\
 &amp;=\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}u^s(1-u)^{a_1+b_1+n_1-1-s}\right)du \\
 &amp;=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{1}{B(a_0+r_0, b_0+n_0-r_0)} \left(\int_{-\delta^*}^{1-\delta^*}u^{a_0+r_0+s-1}(1-u)^{a_1+b_1+n_1-1+b_0+n_0-r_0-s-1}du\right) \\
 &amp;\overset{z=u+\delta^*}{=}\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{1}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_{0}^{1}z^{a_0+r_0+s-1}(1-z)^{a_1+b_1+n_1-1-s+b_0+n_0-r_0-1}dz\right) \\
@@ -1898,11 +1898,6 @@ P&amp;\left(\pi_1-\pi_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0
 </div>
 </div>
 <hr>
-<p>To get the Bayesian average probability to reject we calculate (IS THIS NECESSARY????) <span class="math display">\[
-\begin{aligned}
-BAP&amp;=\sum_{r_0=0}^{n_0-1}\sum_{r_1=0}^{n_1-1} P(\pi_1-\pi_0 \leq \delta^*|r_0, r_1, n_0, n_1)f_2(r_0, r_1|n_0, n_1)
-\end{aligned}
-\]</span></p>
 
 
 <div id="refs" class="references csl-bib-body" role="list" style="display: none">
