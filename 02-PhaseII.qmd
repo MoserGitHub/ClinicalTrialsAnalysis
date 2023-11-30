@@ -595,7 +595,7 @@ with the following parameters
 - Excessive toxicity probability for posterior distribution $\theta_T$: 0.8
 - Safety threshold for predictive distribution $\theta_S$: 0.8
 - Toxicity difference margin $\delta$: 0.025
-- Number of simulation runs: 100 (real simulation should be at least 1,000)
+- Number of simulation runs: 500
 
 A second simulation study ("No threshold adaption") does not adapt the discontinuation threshold at interim analyses.
 
