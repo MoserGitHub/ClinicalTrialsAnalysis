@@ -1810,17 +1810,14 @@ p_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)=\frac{p_i^{a_i+r_i-1}(1-p_i)^{
 <hr>
 <p>We denote the joint posterior distribution as <span class="math display">\[
 f_2(p_1, p_0|r_0, r_1, n_0, n_1)=\prod_{i\in\{0,1\}} \frac{p_i^{a_i+r_i-1}(1-p_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}.
-\]</span> and thus, by using Fubini’s theorem and the explanations of Patricia Altham <span class="citation" data-cites="Altham1969">[<a href="references.html#ref-Altham1969" role="doc-biblioref">11</a>]</span>, <span class="math display">\[
+\]</span> and thus, by using Fubini’s theorem, <span class="math display">\[
 \begin{aligned}
-P&amp;\left(p_1-p_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0^{p_0+\delta^*} f_2(p_1, p_0|r_0, r_1, n_0, n_1)dp_1dp_0 \\
-&amp;=\int_0^{1}\frac{p_0^{a_0+r_0-1}(1-p_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{p_0+\delta^*} \frac{p_1^{a_1+r_1-1}(1-p_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}dp_1\right)dp_0 \\
-&amp;\overset{u=p_0-\delta^*}{=}\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{u} \frac{p_1^{a_1+r_1-1}(1-p_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}dp_1\right)du \\
-&amp;=\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}u^s(1-u)^{a_1+b_1+n_1-1-s}\right)du \\
-&amp;=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{1}{B(a_0+r_0, b_0+n_0-r_0)} \left(\int_{-\delta^*}^{1-\delta^*}u^{a_0+r_0+s-1}(1-u)^{a_1+b_1+n_1-1+b_0+n_0-r_0-s-1}du\right) \\
-&amp;\overset{z=u+\delta^*}{=}\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{1}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_{0}^{1}z^{a_0+r_0+s-1}(1-z)^{a_1+b_1+n_1-1-s+b_0+n_0-r_0-1}dz\right) \\
-&amp;=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{B(a_0+r_0+s, a_1+b_1+n_1-1-s+b_0+n_0-r_0)}{B(a_0+r_0, b_0+n_0-r_0)}
+P&amp;\left(p_1-p_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=1-P\left(p_1-p_0 &gt; \delta^*\right|r_0, r_1, n_0, n_1) \\
+&amp;=\int_{\delta^*}^{1}\int_0^{p_0-\delta^*} f_2(p_1, p_0|r_0, r_1, n_0, n_1)dp_1dp_0 \\
+&amp;=\int_{\delta^*}^{1}\frac{p_0^{a_0+r_0-1}(1-p_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{p_0-\delta^*} \frac{p_1^{a_1+r_1-1}(1-p_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}dp_1\right)dp_0 \\
+&amp;=\int_{\delta^*}^{1}\frac{p_0^{a_0+r_0-1}(1-p_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}F_{B(a_1+r_1,b_1+n_1-r_1)}(p_0-\delta^*)dp_0,
 \end{aligned}
-\]</span> is the <strong>Bayesian probability to reject</strong> given the observed <span class="math inline">\(r_0, r_1, n_0, n_1\)</span>. The last term in the above formula is the upper tail of a beta-binomial distribution. Altham <span class="citation" data-cites="Altham1969">[<a href="references.html#ref-Altham1969" role="doc-biblioref">11</a>]</span> showed that this could also be written as a hypergeometric distribution (see also <span class="citation" data-cites="Grieve2022">[<a href="references.html#ref-Grieve2022" role="doc-biblioref">4</a>]</span>, <span class="citation" data-cites="Grieve2016">[<a href="references.html#ref-Grieve2016" role="doc-biblioref">12</a>]</span>).</p>
+\]</span> is the <strong>Bayesian probability to reject</strong> given the observed <span class="math inline">\(r_0, r_1, n_0, n_1\)</span>, and where <span class="math inline">\(F_{B(a_1+r_1,b_1+n_1-r_1)}\)</span> is the cumulative distribution function of a beta distribution.</p>
 <hr>
 <p><strong>Working example (continued)</strong></p>
 <p>We calculate the Bayesian probability to reject for the SAFE-SSPE study.</p>
@@ -1833,11 +1830,11 @@ P&amp;\left(p_1-p_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0^{p_
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">7.2</span></span>
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.03</span>)<span class="sc">/</span>(<span class="fl">0.03</span>) <span class="sc">*</span> a_0</span>
 <span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">seq</span>(a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span></span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    p_1 <span class="sc">-</span> <span class="dv">1</span>))</span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbbinom</span>(s, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span></span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), <span class="at">alpha =</span> a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0))</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">integrate</span>(<span class="cf">function</span>(x) (x)<span class="sc">^</span>(a_0<span class="sc">+</span>n_0<span class="sc">*</span>p_0<span class="dv">-1</span>)<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>x)<span class="sc">^</span>(b_0<span class="sc">+</span>n_0<span class="sc">-</span>n_0<span class="sc">*</span>p_0<span class="dv">-1</span>)<span class="sc">*</span><span class="fu">pbeta</span>(x<span class="sc">-</span>delta_star, a_1<span class="sc">+</span>n_1<span class="sc">*</span>p_1, b_1<span class="sc">+</span>n_1<span class="sc">-</span>n_1<span class="sc">*</span>p_1), <span class="at">lower =</span> delta_star, <span class="at">upper =</span> <span class="dv">1</span>)[[<span class="dv">1</span>]]<span class="sc">*</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">beta</span>(a_0<span class="sc">+</span>n_0<span class="sc">*</span>p_0, b_0<span class="sc">+</span>n_0<span class="sc">-</span>n_0<span class="sc">*</span>p_0))</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">seq</span>(a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    p_1 <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">integrate</span>(<span class="cf">function</span>(x) (x)<span class="sc">^</span>(a_0<span class="sc">+</span>n_0<span class="sc">*</span>p_0<span class="dv">-1</span>)<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>x)<span class="sc">^</span>(b_0<span class="sc">+</span>n_0<span class="sc">-</span>n_0<span class="sc">*</span>p_0<span class="dv">-1</span>)<span class="sc">*</span><span class="fu">pbeta</span>(x<span class="sc">-</span>delta_star, a_1<span class="sc">+</span>n_1<span class="sc">*</span>p_1, b_1<span class="sc">+</span>n_1<span class="sc">-</span>n_1<span class="sc">*</span>p_1), <span class="at">lower =</span> delta_star, <span class="at">upper =</span> <span class="dv">1</span>)[[<span class="dv">1</span>]]<span class="sc">*</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">beta</span>(a_0<span class="sc">+</span>n_0<span class="sc">*</span>p_0, b_0<span class="sc">+</span>n_0<span class="sc">-</span>n_0<span class="sc">*</span>p_0))</span>
 <span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Enthusiastic"</span>, bap)</span>
 <span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a></span>
@@ -1847,54 +1844,41 @@ P&amp;\left(p_1-p_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0^{p_
 <span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">1.24</span></span>
 <span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
 <span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">seq</span>(a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span></span>
-<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>    p_1 <span class="sc">-</span> <span class="dv">1</span>))</span>
-<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbbinom</span>(s, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span></span>
-<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>    b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), <span class="at">alpha =</span> a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
-<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0))</span>
-<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Skeptical"</span>, bap))</span>
-<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Informative prior</span></span>
-<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
-<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
-<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.03</span></span>
-<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">integrate</span>(<span class="cf">function</span>(x) (x)<span class="sc">^</span>(a_0<span class="sc">+</span>n_0<span class="sc">*</span>p_0<span class="dv">-1</span>)<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>x)<span class="sc">^</span>(b_0<span class="sc">+</span>n_0<span class="sc">-</span>n_0<span class="sc">*</span>p_0<span class="dv">-1</span>)<span class="sc">*</span><span class="fu">pbeta</span>(x<span class="sc">-</span>delta_star, a_1<span class="sc">+</span>n_1<span class="sc">*</span>p_1, b_1<span class="sc">+</span>n_1<span class="sc">-</span>n_1<span class="sc">*</span>p_1), <span class="at">lower =</span> delta_star, <span class="at">upper =</span> <span class="dv">1</span>)[[<span class="dv">1</span>]]<span class="sc">*</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">beta</span>(a_0<span class="sc">+</span>n_0<span class="sc">*</span>p_0, b_0<span class="sc">+</span>n_0<span class="sc">-</span>n_0<span class="sc">*</span>p_0))</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Skeptical"</span>, bap))</span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Informative prior</span></span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_1)<span class="sc">/</span>p_1 <span class="sc">*</span> a_1</span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.03</span></span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> p_0)<span class="sc">/</span>p_0 <span class="sc">*</span> a_0</span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">integrate</span>(<span class="cf">function</span>(x) (x)<span class="sc">^</span>(a_0<span class="sc">+</span>n_0<span class="sc">*</span>p_0<span class="dv">-1</span>)<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>x)<span class="sc">^</span>(b_0<span class="sc">+</span>n_0<span class="sc">-</span>n_0<span class="sc">*</span>p_0<span class="dv">-1</span>)<span class="sc">*</span><span class="fu">pbeta</span>(x<span class="sc">-</span>delta_star, a_1<span class="sc">+</span>n_1<span class="sc">*</span>p_1, b_1<span class="sc">+</span>n_1<span class="sc">-</span>n_1<span class="sc">*</span>p_1), <span class="at">lower =</span> delta_star, <span class="at">upper =</span> <span class="dv">1</span>)[[<span class="dv">1</span>]]<span class="sc">*</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">beta</span>(a_0<span class="sc">+</span>n_0<span class="sc">*</span>p_0, b_0<span class="sc">+</span>n_0<span class="sc">-</span>n_0<span class="sc">*</span>p_0))</span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Informative"</span>, bap))</span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">seq</span>(a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span></span>
-<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>    p_1 <span class="sc">-</span> <span class="dv">1</span>))</span>
-<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbbinom</span>(s, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span></span>
-<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>    b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), <span class="at">alpha =</span> a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
-<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0))</span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a><span class="do">## Noninformative prior</span></span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
 <span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Informative"</span>, bap))</span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">integrate</span>(<span class="cf">function</span>(x) (x)<span class="sc">^</span>(a_0<span class="sc">+</span>n_0<span class="sc">*</span>p_0<span class="dv">-1</span>)<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>x)<span class="sc">^</span>(b_0<span class="sc">+</span>n_0<span class="sc">-</span>n_0<span class="sc">*</span>p_0<span class="dv">-1</span>)<span class="sc">*</span><span class="fu">pbeta</span>(x<span class="sc">-</span>delta_star, a_1<span class="sc">+</span>n_1<span class="sc">*</span>p_1, b_1<span class="sc">+</span>n_1<span class="sc">-</span>n_1<span class="sc">*</span>p_1), <span class="at">lower =</span> delta_star, <span class="at">upper =</span> <span class="dv">1</span>)[[<span class="dv">1</span>]]<span class="sc">*</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">beta</span>(a_0<span class="sc">+</span>n_0<span class="sc">*</span>p_0, b_0<span class="sc">+</span>n_0<span class="sc">-</span>n_0<span class="sc">*</span>p_0))</span>
 <span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a><span class="do">## Noninformative prior</span></span>
-<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">seq</span>(a_1 <span class="sc">+</span> n_1 <span class="sc">*</span> p_1, b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> n_1 <span class="sc">*</span></span>
-<span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a>    p_1 <span class="sc">-</span> <span class="dv">1</span>))</span>
-<span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a>bap <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbbinom</span>(s, <span class="at">size =</span> <span class="fu">ceiling</span>(a_1 <span class="sc">+</span></span>
-<span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a>    b_1 <span class="sc">+</span> n_1 <span class="sc">-</span> <span class="dv">1</span>), <span class="at">alpha =</span> a_0 <span class="sc">+</span> n_0 <span class="sc">*</span> p_0, <span class="at">beta =</span> b_0 <span class="sc">+</span></span>
-<span id="cb34-55"><a href="#cb34-55" aria-hidden="true" tabindex="-1"></a>    n_0 <span class="sc">-</span> n_0 <span class="sc">*</span> p_0))</span>
-<span id="cb34-56"><a href="#cb34-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-57"><a href="#cb34-57" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Noninformative"</span>, bap))</span>
-<span id="cb34-58"><a href="#cb34-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-59"><a href="#cb34-59" aria-hidden="true" tabindex="-1"></a>res_bap<span class="sc">$</span>bap <span class="ot">&lt;-</span> <span class="fu">round</span>(res_bap<span class="sc">$</span>bap, <span class="dv">2</span>)</span>
-<span id="cb34-60"><a href="#cb34-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-61"><a href="#cb34-61" aria-hidden="true" tabindex="-1"></a>res_bap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a>res_bap <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res_bap, <span class="fu">data.frame</span>(<span class="at">type=</span><span class="st">"Noninformative"</span>, bap))</span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a>res_bap<span class="sc">$</span>bap <span class="ot">&lt;-</span> <span class="fu">round</span>(res_bap<span class="sc">$</span>bap, <span class="dv">2</span>)</span>
+<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a>res_bap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>            type  bap
-1   Enthusiastic 0.83
-2      Skeptical 0.12
-3    Informative 0.42
-4 Noninformative 0.38</code></pre>
+1   Enthusiastic 0.03
+2      Skeptical 0.00
+3    Informative 0.01
+4 Noninformative 0.03</code></pre>
 </div>
 </div>
 <hr>
@@ -1930,12 +1914,6 @@ P&amp;\left(p_1-p_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0^{p_
 </div>
 <div id="ref-Agresti2000" class="csl-entry" role="listitem">
 <div class="csl-left-margin">10. </div><div class="csl-right-inline">Agresti A, Caffo B. Simple and effective confidence intervals for proportions and differences of proportions result from adding two successes and two failures. The American Statistician. 2000;54: 280. doi:<a href="https://doi.org/10.2307/2685779">10.2307/2685779</a></div>
-</div>
-<div id="ref-Altham1969" class="csl-entry" role="listitem">
-<div class="csl-left-margin">11. </div><div class="csl-right-inline">Altham PME. Exact bayesian analysis of a 2 times 2 contingency table, and fisher’s <span>“exact”</span> significance test. Journal of the Royal Statistical Society: Series B (Methodological). 1969;31: 261–269. doi:<a href="https://doi.org/10.1111/j.2517-6161.1969.tb00786.x">10.1111/j.2517-6161.1969.tb00786.x</a></div>
-</div>
-<div id="ref-Grieve2016" class="csl-entry" role="listitem">
-<div class="csl-left-margin">12. </div><div class="csl-right-inline">Grieve AP. Idle thoughts of a <span>“well-calibrated”</span> bayesian in clinical drug development. Pharmaceutical Statistics. 2016;15: 96–108. doi:<a href="https://doi.org/10.1002/pst.1736">10.1002/pst.1736</a></div>
 </div>
 </div>
 </section>

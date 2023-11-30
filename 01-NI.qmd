@@ -1683,17 +1683,14 @@ ggplot(prior_plot_long, aes(x = x, y = value, linetype = type,
 
 We denote the joint posterior distribution as $$
 f_2(p_1, p_0|r_0, r_1, n_0, n_1)=\prod_{i\in\{0,1\}} \frac{p_i^{a_i+r_i-1}(1-p_i)^{b_i+n_i-r_i-1}}{B(a_i+r_i, b_i+n_i-r_i)}.
-$$ and thus, by using Fubini's theorem and the explanations of Patricia Altham @Altham1969, $$
+$$ and thus, by using Fubini's theorem, $$
 \begin{aligned}
-P&\left(p_1-p_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=\int_0^{1}\int_0^{p_0+\delta^*} f_2(p_1, p_0|r_0, r_1, n_0, n_1)dp_1dp_0 \\
-&=\int_0^{1}\frac{p_0^{a_0+r_0-1}(1-p_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{p_0+\delta^*} \frac{p_1^{a_1+r_1-1}(1-p_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}dp_1\right)dp_0 \\
-&\overset{u=p_0-\delta^*}{=}\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{u} \frac{p_1^{a_1+r_1-1}(1-p_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}dp_1\right)du \\
-&=\int_{-\delta^*}^{1-\delta^*}\frac{u^{a_0+r_0-1}(1-u)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}u^s(1-u)^{a_1+b_1+n_1-1-s}\right)du \\
-&=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{1}{B(a_0+r_0, b_0+n_0-r_0)} \left(\int_{-\delta^*}^{1-\delta^*}u^{a_0+r_0+s-1}(1-u)^{a_1+b_1+n_1-1+b_0+n_0-r_0-s-1}du\right) \\
-&\overset{z=u+\delta^*}{=}\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{1}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_{0}^{1}z^{a_0+r_0+s-1}(1-z)^{a_1+b_1+n_1-1-s+b_0+n_0-r_0-1}dz\right) \\
-&=\sum_{s=a_1+r_1}^{a_1+b_1+n_1-1}\begin{pmatrix} a_1+b_1+n_1-1 \\ s \end{pmatrix}\frac{B(a_0+r_0+s, a_1+b_1+n_1-1-s+b_0+n_0-r_0)}{B(a_0+r_0, b_0+n_0-r_0)}
+P&\left(p_1-p_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=1-P\left(p_1-p_0 > \delta^*\right|r_0, r_1, n_0, n_1) \\
+&=\int_{\delta^*}^{1}\int_0^{p_0-\delta^*} f_2(p_1, p_0|r_0, r_1, n_0, n_1)dp_1dp_0 \\
+&=\int_{\delta^*}^{1}\frac{p_0^{a_0+r_0-1}(1-p_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{p_0-\delta^*} \frac{p_1^{a_1+r_1-1}(1-p_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}dp_1\right)dp_0 \\
+&=\int_{\delta^*}^{1}\frac{p_0^{a_0+r_0-1}(1-p_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}F_{B(a_1+r_1,b_1+n_1-r_1)}(p_0-\delta^*)dp_0,
 \end{aligned}
-$$ is the **Bayesian probability to reject** given the observed $r_0, r_1, n_0, n_1$. The last term in the above formula is the upper tail of a beta-binomial distribution. Altham @Altham1969 showed that this could also be written as a hypergeometric distribution (see also @Grieve2022, @Grieve2016).
+$$ is the **Bayesian probability to reject** given the observed $r_0, r_1, n_0, n_1$, and where $F_{B(a_1+r_1,b_1+n_1-r_1)}$ is the cumulative distribution function of a beta distribution.
 
 ------------------------------------------------------------------------
 
@@ -1712,11 +1709,11 @@ b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 7.2
 b_0 <- (1 - 0.03)/(0.03) * a_0
 
+bap <- integrate(function(x) (x)^(a_0+n_0*p_0-1)*(1-x)^(b_0+n_0-n_0*p_0-1)*pbeta(x-delta_star, a_1+n_1*p_1, b_1+n_1-n_1*p_1), lower = delta_star, upper = 1)[[1]]*(1/beta(a_0+n_0*p_0, b_0+n_0-n_0*p_0))
+
 s <- ceiling(seq(a_1 + n_1 * p_1, b_1 + n_1 - n_1 *
     p_1 - 1))
-bap <- sum(dbbinom(s, size = ceiling(a_1 +
-    b_1 + n_1 - 1), alpha = a_0 + n_0 * p_0, beta = b_0 +
-    n_0 - n_0 * p_0))
+bap <- integrate(function(x) (x)^(a_0+n_0*p_0-1)*(1-x)^(b_0+n_0-n_0*p_0-1)*pbeta(x-delta_star, a_1+n_1*p_1, b_1+n_1-n_1*p_1), lower = delta_star, upper = 1)[[1]]*(1/beta(a_0+n_0*p_0, b_0+n_0-n_0*p_0))
 
 res_bap <- data.frame(type="Enthusiastic", bap)
 
@@ -1726,12 +1723,7 @@ b_1 <- (1 - 0.05)/0.05 * a_1
 a_0 <- 1.24
 b_0 <- (1 - p_0)/p_0 * a_0
 
-s <- ceiling(seq(a_1 + n_1 * p_1, b_1 + n_1 - n_1 *
-    p_1 - 1))
-
-bap <- sum(dbbinom(s, size = ceiling(a_1 +
-    b_1 + n_1 - 1), alpha = a_0 + n_0 * p_0, beta = b_0 +
-    n_0 - n_0 * p_0))
+bap <- integrate(function(x) (x)^(a_0+n_0*p_0-1)*(1-x)^(b_0+n_0-n_0*p_0-1)*pbeta(x-delta_star, a_1+n_1*p_1, b_1+n_1-n_1*p_1), lower = delta_star, upper = 1)[[1]]*(1/beta(a_0+n_0*p_0, b_0+n_0-n_0*p_0))
 
 res_bap <- rbind(res_bap, data.frame(type="Skeptical", bap))
 
@@ -1741,11 +1733,7 @@ b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 0.03
 b_0 <- (1 - p_0)/p_0 * a_0
 
-s <- ceiling(seq(a_1 + n_1 * p_1, b_1 + n_1 - n_1 *
-    p_1 - 1))
-bap <- sum(dbbinom(s, size = ceiling(a_1 +
-    b_1 + n_1 - 1), alpha = a_0 + n_0 * p_0, beta = b_0 +
-    n_0 - n_0 * p_0))
+bap <- integrate(function(x) (x)^(a_0+n_0*p_0-1)*(1-x)^(b_0+n_0-n_0*p_0-1)*pbeta(x-delta_star, a_1+n_1*p_1, b_1+n_1-n_1*p_1), lower = delta_star, upper = 1)[[1]]*(1/beta(a_0+n_0*p_0, b_0+n_0-n_0*p_0))
 
 res_bap <- rbind(res_bap, data.frame(type="Informative", bap))
 
@@ -1756,11 +1744,7 @@ b_0 <- 0.5
 a_1 <- 0.5
 b_1 <- 0.5
 
-s <- ceiling(seq(a_1 + n_1 * p_1, b_1 + n_1 - n_1 *
-    p_1 - 1))
-bap <- sum(dbbinom(s, size = ceiling(a_1 +
-    b_1 + n_1 - 1), alpha = a_0 + n_0 * p_0, beta = b_0 +
-    n_0 - n_0 * p_0))
+bap <- integrate(function(x) (x)^(a_0+n_0*p_0-1)*(1-x)^(b_0+n_0-n_0*p_0-1)*pbeta(x-delta_star, a_1+n_1*p_1, b_1+n_1-n_1*p_1), lower = delta_star, upper = 1)[[1]]*(1/beta(a_0+n_0*p_0, b_0+n_0-n_0*p_0))
 
 res_bap <- rbind(res_bap, data.frame(type="Noninformative", bap))
 
@@ -1770,90 +1754,3 @@ res_bap
 ```
 
 ------------------------------------------------------------------------
-
-
-
-```{r fig24}
-#| echo: false
-#| warning: false
-#| results: hide
-#| 
-
-res_bap <- c()
-
-## Enthusiastic prior
-
-a_1 <- 0.5
-b_1 <- (1 - p_1)/p_1 * a_1
-a_0 <- 7.2
-b_0 <- (1 - 0.03)/0.03 * a_0
-
-r_0 <- 0:(ceiling(n_0)-1)
-r_1 <- 0:(ceiling(n_1)-1)
-
-data_points <- expand.grid(r_1 = r_1, r_0 = r_0)
-
-data_points$pdf_r_1 <- dbbinom(data_points$r_1, size = ceiling(n_1), a_1,
-    b_1)
-data_points$pdf_r_0 <- dbbinom(data_points$r_0, size = ceiling(n_0), a_0,
-    b_0)
-data_points$joint_pdf <- data_points$pdf_r_1 * data_points$pdf_r_0
-
-data_points$sig <- NA
-data_points$bap <- NA
-for (i in 1:nrow(data_points)) {
-s <- ceiling(seq(a_1 + data_points$r_1[i], b_1 + n_1 - data_points$r_1[i] - 1))
-data_points$bap[i] <- sum(dbbinom(s, size = ceiling(a_1 +
-    b_1 + n_1 - 1), alpha = a_0 + data_points$r_0[i], beta = b_0 +
-    n_0 - data_points$r_0[i]))
-}
-
-
-
-for (i in 1:nrow(data_points)) {
-    data_points$sig[i] <- ifelse(data_points$bap[i]<=1-alpha,
-        1, 0)
-}
-
-res_bap <- data.frame(type = "Enthusiastic", 
-                            ap = sum(data_points$joint_pdf[data_points$sig == 1]))
-
-## Noninformative prior
-
-a_1 <- 0.5
-b_1 <- 0.5
-a_0 <- 0.5
-b_0 <- 0.5
-
-r_0 <- 0:(ceiling(n_0)-1)
-r_1 <- 0:(ceiling(n_1)-1)
-
-data_points <- expand.grid(r_1 = r_1, r_0 = r_0)
-
-data_points$pdf_r_1 <- dbbinom(data_points$r_1, size = ceiling(n_1), a_1,
-    b_1)
-data_points$pdf_r_0 <- dbbinom(data_points$r_0, size = ceiling(n_0), a_0,
-    b_0)
-data_points$joint_pdf <- data_points$pdf_r_1 * data_points$pdf_r_0
-
-data_points$sig <- NA
-data_points$bap <- NA
-for (i in 1:nrow(data_points)) {
-s <- ceiling(seq(a_1 + data_points$r_1[i], b_1 + n_1 - data_points$r_1[i] - 1))
-data_points$bap[i] <- sum(dbbinom(s, size = ceiling(a_1 +
-    b_1 + n_1 - 1), alpha = a_0 + data_points$r_0[i], beta = b_0 +
-    n_0 - data_points$r_0[i]))
-}
-
-
-
-for (i in 1:nrow(data_points)) {
-    data_points$sig[i] <- ifelse(data_points$bap[i]<=1-alpha,
-        1, 0)
-}
-
-res_bap <- data.frame(type = "Non-informative", 
-                            ap = sum(data_points$joint_pdf[data_points$sig == 1]))
-
-
-```

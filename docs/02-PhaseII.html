@@ -177,7 +177,7 @@ div.csl-indent {
   <li><a href="#prior-with-a1-b4" id="toc-prior-with-a1-b4" class="nav-link" data-scroll-target="#prior-with-a1-b4"><span class="header-section-number">3.1.2.2</span> Prior with a=1, b=4</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#randomised-non-comparitive-two-arm-design" id="toc-randomised-non-comparitive-two-arm-design" class="nav-link" data-scroll-target="#randomised-non-comparitive-two-arm-design"><span class="header-section-number">3.2</span> Randomised non-comparitive two arm design</a>
+  <li><a href="#randomised-non-comparitive-two-arm-design-with-adaptive-excessive-toxicity-treshold" id="toc-randomised-non-comparitive-two-arm-design-with-adaptive-excessive-toxicity-treshold" class="nav-link" data-scroll-target="#randomised-non-comparitive-two-arm-design-with-adaptive-excessive-toxicity-treshold"><span class="header-section-number">3.2</span> Randomised non-comparitive two arm design with adaptive excessive toxicity treshold</a>
   <ul>
   <li><a href="#simulation-study-1" id="toc-simulation-study-1" class="nav-link" data-scroll-target="#simulation-study-1"><span class="header-section-number">3.2.1</span> Simulation study</a></li>
   </ul></li>
@@ -232,8 +232,8 @@ PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}&gt;\theta_T), \quad j\geq 1.
 <details>
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prior information</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.4</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="fl">0.6</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="dv">8</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>,<span class="fl">0.999</span>,<span class="fl">0.001</span>)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
@@ -250,7 +250,7 @@ PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}&gt;\theta_T), \quad j\geq 1.
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_prior <span class="sc">%&gt;%</span> <span class="fu">filter</span>(y<span class="sc">&lt;</span><span class="dv">5</span>), <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y, <span class="at">linetype=</span>type, <span class="at">group=</span>type))<span class="sc">+</span></span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span><span class="fu">theme_bw</span>()<span class="sc">+</span><span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="fl">0.2</span>))<span class="sc">+</span></span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(), <span class="at">legend.position =</span> <span class="st">"bottom"</span>)<span class="sc">+</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_linetype</span>(<span class="st">"Prior parameters"</span>)<span class="sc">+</span><span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="fl">0.4</span>, <span class="at">colour=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_linetype</span>(<span class="st">"Prior parameters"</span>)<span class="sc">+</span><span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="fl">0.2</span>, <span class="at">colour=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="dv">1</span>)<span class="sc">+</span></span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="fl">0.2</span>, <span class="at">colour=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="dv">2</span>)<span class="sc">+</span></span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Density"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">""</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Different beta prior parameter choices"</span>)<span class="sc">+</span></span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">caption=</span><span class="fu">c</span>(<span class="st">"Red vertical lines indicate mean values of priors."</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -436,24 +436,92 @@ PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}&gt;\theta_T), \quad j\geq 1.
 </section>
 </section>
 </section>
-<section id="randomised-non-comparitive-two-arm-design" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="randomised-non-comparitive-two-arm-design"><span class="header-section-number">3.2</span> Randomised non-comparitive two arm design</h2>
-<p>Suppose we randomise patients with 1:1 allocation ratio to an experimental and control arm. After <span class="math inline">\(N_1\)</span> patients the first interim analysis is planned. As in the single arm situation we decide to stop the trial early if either the posterior distribution <span class="math inline">\(P(p_l&gt; p_0|N_j)&gt;\theta_T\)</span> or if <span class="math inline">\(PP_{j,l}&gt;\theta_S\)</span>, <span class="math inline">\(l\in \{control, experimental\}\)</span> otherwise <span class="math inline">\(n_{increase}\)</span> new patients are randomised. We stop the trial if either the control or the experimental arm reaches one of the thresholds. Further we declare the trial as successful if the median of the posterior distribution of the experimental arm lies between 10th and 90th percentile of the posterior distribution of the control arm. We call this the probability of equivalence.</p>
+<section id="randomised-non-comparitive-two-arm-design-with-adaptive-excessive-toxicity-treshold" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="randomised-non-comparitive-two-arm-design-with-adaptive-excessive-toxicity-treshold"><span class="header-section-number">3.2</span> Randomised non-comparitive two arm design with adaptive excessive toxicity treshold</h2>
+<p>Suppose we randomise patients with a 1:1 allocation ratio to an experimental and a control arm. The <span class="math inline">\(j\)</span>th interim analysis will be performed after the recruitment of <span class="math inline">\(N_j=n_{j,0}+n_{j,1}\)</span> patients (<span class="math inline">\(n_{j,0}\)</span> denotes the number of patients in the control arm and <span class="math inline">\(n_{j,1}\)</span> denotes the number of patients in the experimental arm). For notational simplicity we skip the index <span class="math inline">\(j\)</span> in the following.</p>
+<p>Suppose that at an interim analysis <strong>in the experimental arm</strong> <span class="math inline">\(r_{1}\)</span> toxicities are observed. If we assume that <span class="math inline">\(N_{max}=n_{max, 0}+n_{max, 1}\)</span> is the planned sample size of the trial, then a remaining future <span class="math inline">\(m_{1}=n_{max, 1}-n_{1}\)</span> will be recruited in the experimental arm with possible future events <span class="math inline">\(S_1\in\{0,\cdots, m_1\}\)</span>.</p>
+<p><strong>The trial is stopped early</strong> if <span class="math inline">\(PP_{1}&gt;\theta_S\)</span>, where <span class="math display">\[
+PP_{1}=\sum_{0\leq s_1\leq m_{1}} P(S_{1}=s_1|r_{1})\cdot I(T_{i,1}&gt;\theta_T),
+\]</span> and <span class="math inline">\(T_{i,1}:=P(p_1 &gt; p_{max}|r_{1},n_1,S_{1}=i)\)</span>. If <span class="math inline">\(PP_{1}\leq \theta_S\)</span> then <span class="math inline">\(n^*\)</span> new patients are randomised.</p>
+<p>At each interim step, <strong>we allow the threshold toxicity rate to be adapted</strong>. Let</p>
+<p><span class="math display">\[
+\begin{aligned}
+PP_{diff}&amp;=E\left[I\left\{ P\left(p_{0}-p_{1}&gt; \delta|r_{0}, r_{1}, n_{0}, n_{1}, S_{0}, S_{1}\right)&gt;\omega\right]|r_{0}, r_{1}, n_{0}, n_{1}\right\} \\
+&amp;=\sum_{0\leq s_0 \leq m_0}\sum_{0\leq s_1 \leq m_1}I\left\{ P\left(p_{0}-p_{1}&gt; \delta|r_{0}, r_{1}, n_{0}, n_{1}, S_{0}, S_{1}\right)&gt;\omega\right\} \\
+&amp;\quad \quad \cdot P(S_0=s_0|r_0, n_0)P(S_1=s_1|r_1, n_1),
+\end{aligned}
+\]</span> be the predictive distribution of a relevant toxicity difference at the end of the trial <span class="citation" data-cites="Dmitrienko2006">[<a href="references.html#ref-Dmitrienko2006" role="doc-biblioref">4</a>]</span>. <span class="math inline">\(S_i\)</span> are betabinomial distributed <span class="math inline">\(P(S_i=s_i|r_i,n_i) \sim betabinomial(m_i, a_i+r_i, b_i-n_{max,i}-r_i)\)</span>. Note that</p>
+<p><span class="math display">\[
+\begin{aligned}
+P&amp;\left(p_{0}-p_{1}&gt; \delta|r_{0}, r_{1}, n_{0}, n_{1}, s_{0}, s_{1}\right)=\int_{\delta}^1\int_0^{p-\delta} f(p_0, p_1|r_0, n_0, r_1, n_1, s_0, s_1)dp_0dp_1 \\
+&amp;=\int_{\delta}^1\frac{p^{a_0+r_0+s_0-1}(1-p)^{b_0+n_{0,max}-r_0-s_0-1}}{B(a_0+r_0+s_0, b_0+n_{0,max}-r_0-s_0)}\int_0^{p-\delta}\frac{q^{a_1+r_1+s_1-1}(1-q)^{b_1+n_{1,max}-r_1-s_1-1}}{B(a_1+r_1+s_1, b_1+n_{1,max}-r_1-s_1)}dp \\
+&amp;=\int_{\delta}^1\frac{p^{a_0+r_0+s_0-1}(1-p)^{b_0+n_{0,max}-r_0-s_0-1}}{B(a_0+r_0+s_0, b_0+n_{0,max}-r_0-s_0)}F_{B(a_1+r_1+s_1,b_1+n_1-r_1-s_1)}(p-\delta^*)dp,
+\end{aligned}
+\]</span> where <span class="math inline">\(F_{B(a_1+r_1+s_1,b_1+n_1-r_1-s_1)}\)</span> is the cumulative distribution function of a beta distribution.</p>
+<p>If <span class="math inline">\(PP_{diff}&gt;\theta_D\)</span> then <span class="math inline">\(p_{max}\)</span> is reduced by <span class="math inline">\(d_{max}\)</span> until a lower bound <span class="math inline">\(p_{max}^l\)</span> is reached. If <span class="math inline">\(PP_{diff}\leq \theta_D\)</span>, then <span class="math inline">\(p_{max}\)</span> remains unchanged.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="02-PhaseII_files/figure-html/fig1-1.png" class="img-fluid" width="768"></p>
+</div>
+</div>
 <section id="simulation-study-1" class="level3" data-number="3.2.1">
 <h3 data-number="3.2.1" class="anchored" data-anchor-id="simulation-study-1"><span class="header-section-number">3.2.1</span> Simulation study</h3>
-<p>We set up a simulation study to quantify operations characteristics (type-I error, type-II error, the probability to declare toxicity and expected number of patients and toxicities) with the following parameters</p>
+<p>We set up a simulation study (“Threshold adaption”) to quantify operations characteristics</p>
 <ul>
-<li>Beta prior parameters: Control arm: a=0.2, b=0.8; Experimental arm, a=0.4, b=0.6</li>
-<li>True control <span class="math inline">\(p\)</span>: 0.2, 0.3</li>
-<li>True experimental <span class="math inline">\(p\)</span>: 0.2, 0.3</li>
-<li><span class="math inline">\(p_0\)</span>: 0.2</li>
-<li><span class="math inline">\(N_0\)</span>: 8</li>
-<li><span class="math inline">\(n_{increase}\)</span>: 4 (2 patients per arm)</li>
-<li><span class="math inline">\(N_{max}\)</span>: 40, 48, 56 (20, 24, 28 patients per arm)</li>
-<li><span class="math inline">\(\theta_T\)</span>: 0.75, 0.9</li>
-<li><span class="math inline">\(\theta_S\)</span>: 0.8, 0.9</li>
+<li>Probability of early stopping (stopping trial before <span class="math inline">\(N_{max}\)</span> is reached),</li>
+<li>Probability of toxicity (declaring toxicity including <span class="math inline">\(N_{max}\)</span>),</li>
+<li>Probability of efficacy (high probability that experimental arm has a lower toxcity by at least <span class="math inline">\(\delta\)</span> compared to control arm)</li>
+<li>Average (adapted) maximal toxicity threshold</li>
+<li>Expected number of patients per arm</li>
+</ul>
+<p>with the following parameters</p>
+<ul>
+<li>Beta prior parameters: Control arm: a=2, b=8; Experimental arm, a=1, b=4</li>
+<li>True control <span class="math inline">\(p0\)</span>: 0.1, 0.2, 0.3</li>
+<li>True experimental <span class="math inline">\(p1\)</span>: 0.1, 0.2, 0.3</li>
+<li>Maximal toxicity threshold <span class="math inline">\(p_{max}\)</span>: 0.2</li>
+<li>Reduction of maximal toxicity threshold <span class="math inline">\(d_{max}\)</span>: 0.02</li>
+<li>Lower bound of maximal toxicity threshold <span class="math inline">\(p_{max}^l\)</span>: 0.1</li>
+<li>Sample size at first interim analysis <span class="math inline">\(N_1\)</span>: 8</li>
+<li>Increase of sample size <span class="math inline">\(n_{increase}\)</span>: 4 (2 patients per arm)</li>
+<li>Planned sample size <span class="math inline">\(N_{max}\)</span>: 40, 48, 56 (20, 24, 28 patients per arm)</li>
+<li>Excessive toxicity probability for posterior distribution <span class="math inline">\(\theta_T\)</span>: 0.8</li>
+<li>Safety threshold for predictive distribution <span class="math inline">\(\theta_S\)</span>: 0.8</li>
+<li>Toxicity difference margin <span class="math inline">\(\delta\)</span>: 0.025</li>
 <li>Number of simulation runs: 1000</li>
 </ul>
+<p>A second simulation studies (“No threshold adaption”) does not adapt the discontinuation threshold at interim analyses.</p>
+<div class="cell">
+<details>
+<summary>Show R code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prior information control</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>,<span class="fl">0.999</span>,<span class="fl">0.001</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>data_prior <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, <span class="at">y=</span><span class="fu">dbeta</span>(x, a_0, b_0), <span class="at">type=</span><span class="dv">1</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Prior information experimental</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>data_prior <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(data_prior, <span class="fu">data.frame</span>(x, <span class="at">y=</span><span class="fu">dbeta</span>(x, a_0, b_0), <span class="at">type=</span><span class="dv">2</span>))</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>data_prior<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">factor</span>(data_prior<span class="sc">$</span>type, <span class="at">levels=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, </span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>                          <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"a=2, b=8 (Control arm)"</span>, <span class="st">"a=1, b=4 (Experimental arm)"</span>))</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_prior <span class="sc">%&gt;%</span> <span class="fu">filter</span>(y<span class="sc">&lt;</span><span class="dv">5</span>), <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y, <span class="at">linetype=</span>type, <span class="at">group=</span>type))<span class="sc">+</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span><span class="fu">theme_bw</span>()<span class="sc">+</span><span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="fl">0.2</span>))<span class="sc">+</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(), <span class="at">legend.position =</span> <span class="st">"bottom"</span>)<span class="sc">+</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_linetype</span>(<span class="st">"Prior parameters"</span>)<span class="sc">+</span><span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="fl">0.2</span>, <span class="at">colour=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="fl">0.2</span>, <span class="at">colour=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Density"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">""</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Beta prior parameter choices for simulation study"</span>)<span class="sc">+</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">caption=</span><span class="fu">c</span>(<span class="st">"Red vertical lines indicate mean values of priors."</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="02-PhaseII_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="02-PhaseII_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="768"></p>
@@ -468,6 +536,11 @@ PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}&gt;\theta_T), \quad j\geq 1.
 <p><img src="02-PhaseII_files/figure-html/unnamed-chunk-15-4.png" class="img-fluid" width="768"></p>
 </div>
 </div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="02-PhaseII_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="768"></p>
+</div>
+</div>
 
 
 <div id="refs" class="references csl-bib-body" role="list" style="display: none">
@@ -479,6 +552,9 @@ PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}&gt;\theta_T), \quad j\geq 1.
 </div>
 <div id="ref-Sambucini2021" class="csl-entry" role="listitem">
 <div class="csl-left-margin">3. </div><div class="csl-right-inline">Sambucini V. Efficacy and toxicity monitoring via bayesian predictive probabilities in phase II clinical trials. Statistical Methods &amp; Applications. 2021;30: 637–663. doi:<a href="https://doi.org/10.1007/s10260-020-00537-3">10.1007/s10260-020-00537-3</a></div>
+</div>
+<div id="ref-Dmitrienko2006" class="csl-entry" role="listitem">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Dmitrienko A, Wang M. Bayesian predictive approach to interim monitoring in clinical trials. Statistics in Medicine. 2006;25: 2178–2195. doi:<a href="https://doi.org/10.1002/sim.2204">10.1002/sim.2204</a></div>
 </div>
 </div>
 </section>
