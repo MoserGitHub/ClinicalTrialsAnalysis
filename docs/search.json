@@ -44,35 +44,35 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Clinical trial analysis",
+    "title": "Clinical trials analysis",
     "section": "",
     "text": "1 Introduction\nThis web book serves as a documentation source of some analysis approaches I used during my work at CTU Bern. Learning is an active process. I learn while writing my thoughts down and experiment with statistical methodology. My notes contain errors, because I am a human being. Any notification of errors is highly appreciated."
   },
   {
     "objectID": "index.html#general-notation-and-abbreviations",
     "href": "index.html#general-notation-and-abbreviations",
-    "title": "Clinical trial analysis",
+    "title": "Clinical trials analysis",
     "section": "1.1 General notation and abbreviations",
     "text": "1.1 General notation and abbreviations\n\niid: Independent and identically distributed.\npdf: Probability density function. Most often denoted as \\(f(\\cdot)\\). For bivariate pdf we use the notation \\(f_2(\\cdot)\\).\ncdf: Cumulative distribution function. Most often denoted as \\(F(\\cdot)\\). For bivariate pdf we use the notation \\(F_2(\\cdot)\\).\n\\(N_2\\): Bivariate cdf of the Gaussian distribution.\n\\(\\phi\\): pdf of the standard Gaussian distribution.\n\\(\\Phi\\): cdf of the standard Gaussian distribution.\n\\(\\Phi^{-1}\\): Quantile function of the standard Gaussian distribution function."
   },
   {
     "objectID": "index.html#power-vocabulary",
     "href": "index.html#power-vocabulary",
-    "title": "Clinical trial analysis",
+    "title": "Clinical trials analysis",
     "section": "1.2 ‘Power’ vocabulary",
     "text": "1.2 ‘Power’ vocabulary\nIn their supplement Kunzmann et al. [1] provide a literature review of the terminology used in articles. We provide here a summary of this terminology:\n\nFrequentist power: Probability of rejection given that the alternative hypothesis is true.\nAverage power: Prior averaged probability of rejection. Often also called ‘probability of success’, ‘assurance’, ‘Bayesian predictive power’.\nPrior adjusted power: Joint probability of rejection and that the treatment effect is effective."
   },
   {
     "objectID": "index.html#some-bayesian-concepts",
     "href": "index.html#some-bayesian-concepts",
-    "title": "Clinical trial analysis",
+    "title": "Clinical trials analysis",
     "section": "1.3 Some ‘Bayesian’ concepts",
     "text": "1.3 Some ‘Bayesian’ concepts\n\nPrior: A random variable \\(\\Theta\\) with pdf \\(f(\\theta)\\) representing that the uncertainty of a parameter of interest.\nDesign prior: Prior used before data collection as data generating mode [2].\nAnalysis prior: Prior used for Bayesian analysis of the collected data [2].\nPrior predictive distribution: Situation before a sample was taken. Let \\(\\theta\\) be a realisation of a random variable \\(\\Theta\\) with pdf \\(f(\\theta)\\). Then for a future observation \\(\\tilde X\\) the pdf is \\[\nf(\\tilde x)=\\int_\\Theta f(\\tilde x, \\theta)d\\theta=\\int_\\Theta \\underbrace{f(\\tilde x | \\theta)}_{likelihood}\\underbrace{f(\\theta)}_{prior}d\\theta.\n\\]\nPosterior predictive distribution: Situation after a sample was taken. Let \\(\\theta\\) be a realisation of a random variable \\(\\Theta\\) with pdf \\(f(\\theta)\\). Then for a future observation \\(\\tilde X\\) and observed \\(X\\) (since \\(X\\) is independent \\(\\tilde X\\)) the pdf is \\[\nf(\\tilde x|x)=\\int_\\Theta f(\\tilde x | \\theta, x)f(\\theta|x)d\\theta=\\int_\\Theta \\underbrace{f(\\tilde x | \\theta)}_{likelihood}\\underbrace{f(\\theta|x)}_{posterior}d\\theta.\n\\]\nImproper prior: A prior with \\(\\int_\\Theta f(\\theta)=\\infty\\).\nJeffrey’s prior: For an unknown parameter \\(\\theta\\) Jeffrey’s (scalar) prior is defined as \\(f(\\theta) \\propto \\sqrt{I(\\theta)}\\), where \\(I(\\theta)\\) is the expected Fisher information of \\(\\theta\\) [3]. Jeffrey’s prior can be improper [3]. Bayesian point estimates using Jeffrey’s prior are often very close to maximum likelihood estimators [3].\n\n\nExample: Jeffrey’s prior for the binomial model\nThe likelihood of the binomial model is \\[\nf(x|\\theta)=\\begin{pmatrix} n \\\\ x \\end{pmatrix}\\theta^x(1-\\theta)^{n-x}\n\\] and thus \\[\nL:=log(f(x|\\theta))= x\\log(\\theta)+(n-x)\\log(1-\\theta).\n\\] Simple algebra leads to \\[\n\\frac{dL}{d\\theta}=\\frac{x}{\\theta}-\\frac{n-x}{1-\\theta}, \\quad \\frac{d^2L}{d\\theta^2}=-\\frac{x}{\\theta^2}-\\frac{n-x}{(1-\\theta)^2}.\n\\] The expected Fisher information is \\[\nI(\\theta)=-E_\\theta\\left( \\frac{d^2L}{d\\theta^2} \\right)=\\frac{n\\theta}{\\theta^2}+\\frac{n-n\\theta}{(1-\\theta)^2}=\\frac{n}{\\theta(1-\\theta)}\\propto\\frac{1}{\\theta(1-\\theta)}.\n\\] Thus, Jeffrey’s prior for the binomial model is \\[\nf(\\theta) \\propto \\frac{1}{\\sqrt{\\theta(1-\\theta)}}=\\theta^{-0.5}(1-\\theta)^{-0.5}=beta(0.5, 0.5).\n\\] Jeffrey’s prior for the binomial model is a proper prior [3]."
   },
   {
     "objectID": "index.html#used-r-libraries",
     "href": "index.html#used-r-libraries",
-    "title": "Clinical trial analysis",
+    "title": "Clinical trials analysis",
     "section": "1.4 Used R libraries",
     "text": "1.4 Used R libraries\n\n\nShow R code\n# All tidyverse functions\nlibrary(tidyverse)\n# For frequentist sample size calculation\nlibrary(epiR)\n# Multivariate Gaussian and t-distributions\nlibrary(mvtnorm)\n# Beta binomial distribution\nlibrary(extraDistr)\n# Agresti-Caffo confidence intervals for risk difference\nlibrary(PropCIs)\n\n\n\n\n\n\n1. Kunzmann K, Grayling MJ, Lee KM, Robertson DS, Rufibach K, Wason JMS. A review of bayesian perspectives on sample size derivation for confirmatory trials. The American Statistician. 2021;75: 424–432. doi:10.1080/00031305.2021.1901782\n\n\n2. Stefan AM, Gronau QF, Schönbrodt FD, Wagenmakers E-J. A tutorial on bayes factor design analysis using an informed prior. Behavior Research Methods. 2019;51: 1042–1058. doi:10.3758/s13428-018-01189-8\n\n\n3. Held L, Bové DS. Likelihood and bayesian inference. Springer Berlin Heidelberg; 2020. doi:10.1007/978-3-662-60792-3"
   },

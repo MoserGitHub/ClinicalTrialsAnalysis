@@ -3,7 +3,7 @@ project:
   output-dir: docs
   
 book:
-  title: "Clinical trial analysis"
+  title: "Clinical trials analysis"
   author: 
     - name: "André Moser, CTU Bern, Department of Clinical Research, University of Bern"
       orcid: 0000-0001-7178-6539
