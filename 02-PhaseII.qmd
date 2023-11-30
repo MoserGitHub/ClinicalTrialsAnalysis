@@ -13,10 +13,9 @@ library(data.table)
 
 Phase II trials are often single-arm trials in early phases but can also be multi-arm (non-)randomized controlled trials in later phases @Mossop2022. The aim of early phase-II designs is to assess efficacy of a new treatment measured by clinical response in a small population of 30-100 patients. Early phase II trials can be designed as two- or three stage trials using frequentist approaches like Simon's two stage design. In this chapter we use a Bayesian predictive probability approach to analyse an early phase-II trial @Lee2008 @Sambucini2021. The aim is to compare two different decision rules for early stopping the trial: One uses the posterior distribution given the interim data, the second one uses the predictive distribution given the interim data and future events. 
 
-
 ## Single arm design
 
-Let $p$ the true toxicity rate and $\pi \sim Beta(a,b)$ be a design prior on $p$. Our null hypothesis of interest is $H_0: p \leq p_0$ versus $H_1: p>p_0$, that is, we compare, say, the clinical response $p$ toa prespecified threshold $p_0$. Suppose that we plan interim looks $j\geq 1$ after $N_j$ patients were recruited and $r_j$ toxicity events occurred. Under the prior $\pi$ the posterior distribution is beta distributed $p|r_j \sim Beta(a+r_j, b+N_j-r_j)$. Suppose that we plan to recruit $N_{max}$ patients. Let $Y_j$ be the number of toxicities in future $m_j=N_{max}-N_j$ patients at interim look $j\geq 1$. Under the prior $\pi$, $Y_j$ is beta-binomial distributed $Y_j \sim Betabinomal(i|m_j, a+r_j, b+N_j-r_j)$ and $p|r_j,y_j \sim Beta(a+r_j+y_j, b+N_{max}-N_j-r_j-y_i)$.
+Let $p$ the true toxicity rate and $\pi \sim Beta(a,b)$ be a design prior on $p$. Our null hypothesis of interest is $H_0: p \leq p_0$ versus $H_1: p>p_0$, that is, we compare, say, the clinical response $p$ toa prespecified threshold $p_0$. Suppose that we plan interim looks $j\geq 1$ after $n_j$ patients were recruited and $r_j$ toxicity events occurred. Under the prior $\pi$ the posterior distribution is beta distributed $p|r_j, n_j \sim Beta(a+r_j, b+n_j-r_j)$. Suppose that we plan to recruit $N_{max}$ patients. Let $S_j$ be the number of toxic events in future $m_j=N_{max}-n_j$ patients at interim look $j\geq 1$. Under the prior $\pi$, $S_j$ is Beta-binomial distributed $S_j \sim Betabinomal(i|m_j, a+r_j, b+n_j-r_j)$ and $p|r_j,y_j \sim Beta(a+r_j+s_j, b+N_{max}-n_j-r_j-s_i)$.
 
 ------------------------------------------------------------------------
 
@@ -30,22 +29,22 @@ Suppose that the goal of a phase-II trial is to evaluate safety of new chemother
 
 **Early stopping using the posterior distribution**
 
-The decision to the stop the trial early is based on the decision rule $P(p> p_0|N_j)>\theta_T$, that is, the posterior distribution given the interim data.  If the trial is not stopped early we recruit more patients until $N_{max}$ is reached.
+The decision to the stop the trial early is based on the decision rule $P(p> p_0|r_j, n_j)>\theta_T$, that is, the posterior distribution given the interim data.  If the trial is not stopped early we recruit more patients until $N_{max}$ is reached.
 
 **Early stopping using the predictive distribution**
 
-Let $T_{j,i}:=P(p> p_0|N_j, Y_j=i)$, that is, the posterior distribution given the interim data and future events. Note that because $Y_j$ are not observed events $T_{j,i}$ are random variables. The predictive probability for a successful (safe) trial is
+The predictive probability that $p|r_j, n_j$ is larger that $p_{max}$ at the end of the trial is
 
 $$
-PP_j=\sum_{i\leq m} P(Y_j=i|r_j)\cdot I(T_{j,i}>\theta_T), \quad j\geq 1.
+PP_j=\sum_{i=0}^{m_j}I(P(p> p_{max}|r_j, n_j, S_j=s_j)>\theta_T)\cdot P(S_j=s_j|r_j, n_j), \quad j\geq 1.
 $$
-This is the expectation of $T_{j,i}$ given the interim data $j\geq 1$ @Lee2008. If $PP_j>\theta_S$ then we stop the trial because of safety concerns, otherwise we recruit more patients until $N_{max}$ is reached. Usually, $\theta_S$ is chosen to be high (>0.8) @Sambucini2021.
+If $PP_j>\theta_S$ then we stop the trial because of safety concerns, otherwise we recruit more patients until $N_{max}$ is reached. Usually, $\theta_S$ is chosen to be high (>0.8) @Sambucini2021.
 
 ------------------------------------------------------------------------
 
 **Working example**
 
-Based on prior evidence $p_0$ is set to 0.2. This threshold is based on a result from a previous study where the treatment discontinuation was estimated with 0.17 with 95% confidence intervals (0.10-0.27). Below we show the prior distributions for different parameters $a=1$, $b=4$ (weight of 5 patients) and $a=2$, $b=8$ (weight of 10 patients). The mean of the prior is in both cases 0.2.
+Based on prior evidence $p_{max}$ is set to 0.2. This threshold is based on a result from a previous study where the treatment discontinuation was estimated with 0.17 with 95% confidence intervals (0.10-0.27). Below we show the prior distributions for different parameters $a=1$, $b=4$ (weight of 5 patients) and $a=2$, $b=8$ (weight of 10 patients). The mean of the prior is in both cases 0.2.
 
 
 ```{r}
@@ -82,7 +81,7 @@ ggplot(data_prior %>% filter(y<5), aes(x=x, y=y, linetype=type, group=type))+
 #| echo: true
 #| warning: false
 
-p_0_max <- 0.2
+p_max <- 0.2
 
 # Prior information
 a_0 <- 0.4
@@ -97,20 +96,20 @@ r <- 0:n_max
 m <- n_max-r
 x <- seq(0,1,0.001)
 
-theta_T <- 0.75
+theta_T <- 0.8
 
 data <- expand.grid(n=n, r=r) %>% arrange(n) %>% filter(n>=r) %>% mutate(i=n_max-n+1)
 data <- expandRows(data, count=3)
 data <- data %>% group_by(n, r) %>% mutate(m=n_max-n, ind=1, i=cumsum(ind)-1, ind=NULL)
 
 data <- data %>% mutate(cond_postprob=dbbinom(i, size=m, alpha=a_0+r, beta=b_0+n-r), 
-                        Ti=1-pbeta(p_0_max, a_0+r+i, b_0+n_max-r-i), 
+                        Ti=1-pbeta(p_max, a_0+r+i, b_0+n_max-r-i), 
                         ind=ifelse(Ti>theta_T, 1, 0), n_max)
 
 data <- data %>% select(n_max, n, r, m, i, cond_postprob, Ti, ind)
 ```
 
-Suppose we plan a phase-II with a maximum of $N_{max}=35$ patients. Let us consider the situation where we have reached an initial $N_1=10$ with $r_1=2$ observed toxicities and we have to decide whether to stop or continue the trial. Specifically, we calculate for each potential future toxicity from $m_1$ patients and decide whether $T_{i,1}>\theta_T=0.75$. The column *cond_postprob* in the following table is $p|r_1,y_i$ (because it is conditional on the future outcome $Y_{j,i}=i$) and the column $Ti$ corresponds to $T_{1,i}$.
+Suppose we plan a phase-II with a maximum of $N_{max}=35$ patients. Let us consider the situation where we have reached an initial $n_1=10$ with $r_1=2$ observed toxicities and we have to decide whether to stop or continue the trial. Specifically, we calculate for each potential future toxicity from $m_1$ patients and decide whether $T_{i,1}>\theta_T=0.8$. The column *cond_postprob* in the following table is $p|r_1,n_1, s_1$ (because it is conditional on the future outcome $S_{j,i}=s_j$) and the column $Ti$ corresponds to $T_{1,i}$.
 
 ```{r}
 #| echo: true
@@ -133,7 +132,7 @@ data_pp <- data %>% group_by(n, r) %>% summarise(pp=round(sum(cond_postprob*ind)
 
 ## Early stopping using posterior distribution
 data_pp <- data_pp %>% 
-  mutate(stop_postdist=ifelse(1-pbeta(p_0_max, a_0+r, b_0+n-r)>theta_T, 1, 0))
+  mutate(stop_postdist=ifelse(1-pbeta(p_max, a_0+r, b_0+n-r)>theta_T, 1, 0))
 
 data_pp %>% filter(n==10)
 ```
@@ -505,20 +504,25 @@ Suppose that at an interim analysis **in the experimental arm** $r_{1}$ toxiciti
 
 **The trial is stopped early** if $PP_{1}>\theta_S$, where
 $$
-PP_{1}=\sum_{0\leq s_1\leq m_{1}} P(S_{1}=s_1|r_{1})\cdot I(T_{i,1}>\theta_T),
+\begin{aligned}
+PP_{Safety}&=E\left[I\left\{ P\left(p_1-p_{max}|r_{1}, n_{1}, s_{1}\right)>\theta_T\right\}|r_{1}, n_{1}\right] \\
+&=\sum_{s_1=0}^{m_1} I(P(p_1 > p_{max}|r_{1},n_1,s_1)>\theta_T) P(S_{1}=s_1|r_{1}).
+\end{aligned}
 $$
-and $T_{i,1}:=P(p_1 > p_{max}|r_{1},n_1,S_{1}=i)$. If $PP_{1}\leq \theta_S$ then $n^*$ new patients are randomised.
+That is, we stop the trial early if the expected probability that $p_1$ is greater than $p_max$ at the end of the trial is above $\theta_S$.
+
+If $PP_{S}\leq \theta_S$ then $n^*$ new patients are randomised.
 
 At each interim step, **we allow the threshold toxicity rate to be adapted**. Let
 
 $$
 \begin{aligned}
-PP_{diff}&=E\left[I\left\{ P\left(p_{0}-p_{1}> \delta|r_{0}, r_{1}, n_{0}, n_{1}, S_{0}, S_{1}\right)>\omega\right]|r_{0}, r_{1}, n_{0}, n_{1}\right\} \\
-&=\sum_{0\leq s_0 \leq m_0}\sum_{0\leq s_1 \leq m_1}I\left\{ P\left(p_{0}-p_{1}> \delta|r_{0}, r_{1}, n_{0}, n_{1}, S_{0}, S_{1}\right)>\omega\right\} \\
-&\quad \quad \cdot P(S_0=s_0|r_0, n_0)P(S_1=s_1|r_1, n_1),
+PP_{diff}&=E\left[I\left\{ P\left(p_{0}-p_{1}> \delta|r_{0}, r_{1}, n_{0}, n_{1}, s_{0}, s_{1}\right)>\omega\right\}|r_{0}, r_{1}, n_{0}, n_{1}\right] \\
+&=\sum_{s_0=0}^{m_0}\sum_{s_1=0}^{m_1}I\left\{ P\left(p_{0}-p_{1}> \delta|r_{0}, r_{1}, n_{0}, n_{1}, s_{0}, s_{1}\right)>\omega\right\} \\
+&\quad \quad \quad \quad \quad \quad \cdot P(S_0=s_0|r_0, n_0)P(S_1=s_1|r_1, n_1),
 \end{aligned}
 $$
-be the predictive distribution of a relevant toxicity difference at the end of the trial @Dmitrienko2006. $S_i$ are betabinomial distributed $P(S_i=s_i|r_i,n_i) \sim betabinomial(m_i, a_i+r_i, b_i-n_{max,i}-r_i)$. Note that
+be the expected probablity of a relevant toxicity difference $p_0-p_1$ at the end of the trial given interim data @Dmitrienko2006. $S_i$ are Beta-binomial distributed $P(S_i=s_i|r_i,n_i) \sim Betabinomial(m_i, a_i+r_i, b_i-n_{max,i}-r_i)$. Note that
 
 $$
 \begin{aligned}
@@ -527,9 +531,11 @@ P&\left(p_{0}-p_{1}> \delta|r_{0}, r_{1}, n_{0}, n_{1}, s_{0}, s_{1}\right)=\int
 &=\int_{\delta}^1\frac{p^{a_0+r_0+s_0-1}(1-p)^{b_0+n_{0,max}-r_0-s_0-1}}{B(a_0+r_0+s_0, b_0+n_{0,max}-r_0-s_0)}F_{B(a_1+r_1+s_1,b_1+n_1-r_1-s_1)}(p-\delta^*)dp,
 \end{aligned}
 $$
-where $F_{B(a_1+r_1+s_1,b_1+n_1-r_1-s_1)}$ is the cumulative distribution function of a beta distribution.
+where $F_{B(\cdot,\cdot)}$ is the cumulative distribution function of a Beta distribution.
 
 If $PP_{diff}>\theta_D$ then $p_{max}$ is reduced by $d_{max}$ until a lower bound $p_{max}^l$ is reached. If $PP_{diff}\leq \theta_D$, then $p_{max}$ remains unchanged.
+
+The following figure summarises the trial process:
 
 ```{r fig1}
 #| echo: false
@@ -557,7 +563,7 @@ text_box3 <- "Control group\n(with assumed true p0)"
 box3 <- boxGrob(text_box3, x=0.8, y=0.6, bjust = "center")
 box3
 
-text_box4 <- "Interim analysis 1,...,u\n\nStop early if experimental group has excessive toxicity rate\notherwise randomise new patients until N_max is reached\n\nDiscontinuation threshold adaption:\nIf predictive probability that the experimental arm has lower toxicity rate\nthan control arm exceeds prespecified value,\nthen reduce discontinuation threshold by d_max"
+text_box4 <- "Interim analysis 1,...,k\n\nStop early:\nIf experimental group has a high expected probability of excessive toxicity\notherwise randomise new patients until N_max is reached\n\nDiscontinuation threshold adaption:\nIf expected probability that the experimental arm has lower toxicity rate\nthan control arm exceeds prespecified value,\nthen reduce toxicity threshold p_max by d_max"
 box4 <- boxGrob(text_box4, x=0.5, y=0.2, bjust = "center")
 box4
 
@@ -589,12 +595,12 @@ with the following parameters
 - Excessive toxicity probability for posterior distribution $\theta_T$: 0.8
 - Safety threshold for predictive distribution $\theta_S$: 0.8
 - Toxicity difference margin $\delta$: 0.025
-- Number of simulation runs: 1000
+- Number of simulation runs: 100 (real simulation should be at least 1,000)
 
-A second simulation studies ("No threshold adaption") does not adapt the discontinuation threshold at interim analyses.
+A second simulation study ("No threshold adaption") does not adapt the discontinuation threshold at interim analyses.
 
 ```{r}
-#| echo: true
+#| echo: false
 #| warning: false
 
 # Prior information control
@@ -631,7 +637,7 @@ library(blockrand)
 
 set.seed(52359)
 
-n_sim <- 1000
+n_sim <- 500
 
 a_0 <- 2
 b_0 <- 8
@@ -652,7 +658,7 @@ safety_threshold_values <- c(0.8)
 initial_n <- 8
 n_increase <- 4
 
-delta_star_values <- c(0.025)
+delta_star_values <- c(0.025, 0.1)
 post_delta_threshold <- 0.8
 pp_diff_threshold <- 0.8
 
@@ -884,16 +890,16 @@ res_agg$safety_threshold <- factor(res_agg$safety_threshold, levels=c(0.8,0.9,1,
 res_agg$n_max <- as.factor(res_agg$n_max)
 res_agg$type <- factor(res_agg$type, levels=0:1, labels=c("Threshold adaption", "No threshold adaption"))
 
-fig <- ggplot(res_agg, aes(x=n_max, y=stop_early, colour=type, label=stop_early)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0_experimental+true_p0_control) + theme_bw() + theme(panel.grid.minor = element_blank(), legend.position = "bottom")+xlab("Number of patients per arm")+ylab("Probability of early stopping")+scale_shape("Stopping decision rule")+geom_hline(yintercept=0.2, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed")+scale_color_manual("Simulation type", values=c("orange", "purple"))+scale_y_continuous(limits=c(0,1))
+fig <- ggplot(res_agg, aes(x=n_max, y=stop_early, colour=type, label=stop_early, shape=delta_star)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0_experimental+true_p0_control) + theme_bw() + theme(panel.grid.minor = element_blank(), legend.position = "bottom")+xlab("Number of patients per arm")+ylab("Probability of early stopping")+scale_shape("delta")+geom_hline(yintercept=0.2, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed")+scale_color_manual("Simulation type", values=c("orange", "purple"))+scale_y_continuous(limits=c(0,1))
 fig+ggtitle("Probability of early stopping")
 
-fig <- ggplot(res_agg, aes(x=n_max, y=toxicity, colour=type)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0_experimental+true_p0_control) + theme_bw() + theme(panel.grid.minor = element_blank(), legend.position = "bottom")+xlab("Number of patients per arm")+ylab("Probability of toxicity")+scale_shape("Stopping decision rule")+geom_hline(yintercept=0.2, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed")+scale_color_manual("Simulation type", values=c("orange", "purple"))+scale_y_continuous(limits=c(0,1))
+fig <- ggplot(res_agg, aes(x=n_max, y=toxicity, colour=type, shape=delta_star)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0_experimental+true_p0_control) + theme_bw() + theme(panel.grid.minor = element_blank(), legend.position = "bottom")+xlab("Number of patients per arm")+ylab("Probability of toxicity")+scale_shape("delta")+geom_hline(yintercept=0.2, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed")+scale_color_manual("Simulation type", values=c("orange", "purple"))+scale_y_continuous(limits=c(0,1))
 fig+ggtitle("Probability of toxicity")
 
-fig <- ggplot(res_agg, aes(x=n_max, y=efficacy, colour=type)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0_experimental+true_p0_control) + theme_bw() + theme(panel.grid.minor = element_blank(), legend.position = "bottom")+xlab("Number of patients per arm")+ylab("Probability of efficacy")+scale_shape("Stopping decision rule")+geom_hline(yintercept=0.2, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed")+scale_color_manual("Simulation type", values=c("orange", "purple"))+scale_y_continuous(limits=c(0,1))
+fig <- ggplot(res_agg, aes(x=n_max, y=efficacy, colour=type, shape=delta_star)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0_experimental+true_p0_control) + theme_bw() + theme(panel.grid.minor = element_blank(), legend.position = "bottom")+xlab("Number of patients per arm")+ylab("Probability of efficacy")+scale_shape("delta")+geom_hline(yintercept=0.2, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed")+scale_color_manual("Simulation type", values=c("orange", "purple"))+scale_y_continuous(limits=c(0,1))
 fig+ggtitle("Probability of efficacy")
 
-fig <- ggplot(res_agg, aes(x=n_max, y=p_max, colour=type)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0_experimental+true_p0_control) + theme_bw() + theme(panel.grid.minor = element_blank(), legend.position = "bottom")+xlab("Number of patients per arm")+ylab("Toxicity threshold")+scale_shape("Stopping decision rule")+geom_hline(yintercept=0.2, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed")+scale_color_manual("Simulation type", values=c("orange", "purple"))+scale_y_continuous(limits=c(0,0.2))
+fig <- ggplot(res_agg, aes(x=n_max, y=p_max, colour=type, shape=delta_star)) + geom_point(position=position_dodge2(width = 0.2)) + facet_wrap(~true_p0_experimental+true_p0_control) + theme_bw() + theme(panel.grid.minor = element_blank(), legend.position = "bottom")+xlab("Number of patients per arm")+ylab("Toxicity threshold")+scale_shape("delta")+geom_hline(yintercept=0.2, linetype="dashed") + geom_hline(yintercept=0.8, linetype="dashed")+scale_color_manual("Simulation type", values=c("orange", "purple"))+scale_y_continuous(limits=c(0,0.2))
 fig+ggtitle("Average toxicity threshold")
 ```
 
@@ -904,9 +910,117 @@ fig+ggtitle("Average toxicity threshold")
 #| fig-height: 5
 #| fig-width: 8
 
-fig <- ggplot(res_agg %>% filter(true_p0_control=="True control p=0.2", true_p0_experimental=="True experimental p=0.2"), aes(x=n_max, y=n_control, colour=type)) + geom_point(position=position_dodge2(width = 0.2)) + theme_bw() + theme(panel.grid.minor = element_blank())+xlab("N_max")+ylab("Expected N under H0 per arm")+scale_color_manual("Simulation type", values=c("orange", "purple"))
+fig <- ggplot(res_agg %>% filter(true_p0_control=="True control p=0.2", true_p0_experimental=="True experimental p=0.2"), aes(x=n_max, y=n_control, colour=type, shape=delta_star)) + geom_point(position=position_dodge2(width = 0.2)) + theme_bw() + theme(panel.grid.minor = element_blank())+xlab("N_max")+ylab("Expected N under H0 per arm")+scale_color_manual("Simulation type", values=c("orange", "purple"))+scale_shape("delta")
 fig+ggtitle("Expected N under H0")
 
 # library(DT)
 # datatable(res_agg, rownames = F, filter = 'top')
+```
+
+```{r}
+#| echo: false
+#| warning: false
+
+p_max <- 0.2
+
+# Prior information
+a_0 <- 1
+b_0 <- 4
+
+n_initial <- 8
+r <- 0:n_initial
+n_increase <- 2
+
+n_max <- 22
+n <- seq(n_initial, n_max, n_increase)
+r <- 0:n_max
+m <- n_max-r
+x <- seq(0,1,0.001)
+
+theta_T <- 0.8
+threshold_safety <- 0.8
+
+data <- expand.grid(n=n, r=r) %>% arrange(n) %>% filter(n>=r) %>% mutate(i=n_max-n+1)
+data <- expandRows(data, count=3)
+data <- data %>% group_by(n, r) %>% mutate(m=n_max-n, ind=1, i=cumsum(ind)-1, ind=NULL)
+
+data <- data %>% mutate(cond_postprob=dbbinom(i, size=m, alpha=a_0+r, beta=b_0+n-r), 
+                        Ti=1-pbeta(p_max, a_0+r+i, b_0+n_max-r-i), 
+                        ind=ifelse(Ti>theta_T, 1, 0), n_max)
+
+data <- data %>% select(n_max, n, r, m, i, cond_postprob, Ti, ind)
+
+
+
+## Early stopping using predictive distribution
+data_pp <- data %>% group_by(n_max, n, r) %>% summarise(pp=round(sum(cond_postprob*ind),6), 
+                                                 stop_pp=ifelse(pp>threshold_safety, 1, 0))
+
+
+stop_boundaries0 <- data_pp %>% filter(stop_pp==1) %>%
+  group_by(n_max, n) %>% summarise(r=min(r), stop=NULL)
+
+stop_boundaries <- stop_boundaries0
+
+n_max <- 24
+n <- seq(n_initial, n_max, n_increase)
+r <- 0:n_max
+m <- n_max-r
+x <- seq(0,1,0.001)
+
+data <- expand.grid(n=n, r=r) %>% arrange(n) %>% filter(n>=r) %>% mutate(i=n_max-n+1)
+data <- expandRows(data, count=3)
+data <- data %>% group_by(n, r) %>% mutate(m=n_max-n, ind=1, i=cumsum(ind)-1, ind=NULL)
+
+data <- data %>% mutate(cond_postprob=dbbinom(i, size=m, alpha=a_0+r, beta=b_0+n-r), 
+                        Ti=1-pbeta(p_max, a_0+r+i, b_0+n_max-r-i), 
+                        ind=ifelse(Ti>theta_T, 1, 0), n_max)
+
+data <- data %>% select(n_max, n, r, m, i, cond_postprob, Ti, ind)
+
+## Early stopping using predictive distribution
+data_pp <- data %>% group_by(n_max, n, r) %>% summarise(pp=round(sum(cond_postprob*ind),6), 
+                                                 stop_pp=ifelse(pp>threshold_safety, 1, 0))
+
+
+stop_boundaries0 <- data_pp %>% filter(stop_pp==1) %>%
+  group_by(n_max, n) %>% summarise(r=min(r), stop=NULL)
+
+stop_boundaries <- bind_rows(stop_boundaries, stop_boundaries0)
+
+n_max <- 26
+n <- seq(n_initial, n_max, n_increase)
+r <- 0:n_max
+m <- n_max-r
+x <- seq(0,1,0.001)
+
+data <- expand.grid(n=n, r=r) %>% arrange(n) %>% filter(n>=r) %>% mutate(i=n_max-n+1)
+data <- expandRows(data, count=3)
+data <- data %>% group_by(n, r) %>% mutate(m=n_max-n, ind=1, i=cumsum(ind)-1, ind=NULL)
+
+data <- data %>% mutate(cond_postprob=dbbinom(i, size=m, alpha=a_0+r, beta=b_0+n-r), 
+                        Ti=1-pbeta(p_max, a_0+r+i, b_0+n_max-r-i), 
+                        ind=ifelse(Ti>theta_T, 1, 0), n_max)
+
+data <- data %>% select(n_max, n, r, m, i, cond_postprob, Ti, ind)
+
+
+## Early stopping using predictive distribution
+data_pp <- data %>% group_by(n_max, n, r) %>% summarise(pp=round(sum(cond_postprob*ind),6), 
+                                                 stop_pp=ifelse(pp>threshold_safety, 1, 0))
+
+
+stop_boundaries0 <- data_pp %>% filter(stop_pp==1) %>%
+  group_by(n_max, n) %>% summarise(r=min(r), stop=NULL)
+
+stop_boundaries <- bind_rows(stop_boundaries, stop_boundaries0)
+
+ggplot(stop_boundaries, aes(x=n, y=r, linetype=factor(n_max)))+geom_step(position = position_dodge(width=0.2))+
+  scale_y_continuous(limits=c(0, max(stop_boundaries$r)), 
+                     breaks=0: max(stop_boundaries$r))+
+  scale_x_continuous(breaks=seq(min(n), max(n), 2))+
+  ylab("Number of toxic events")+xlab("Number of patients at interim analysis")+
+  theme_bw()+theme(panel.grid = element_blank(), legend.position = "bottom")+
+  ggtitle("Stopping for safety boundaries")+
+  scale_linetype("n_max in experimental arm")
 ```

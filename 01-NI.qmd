@@ -1687,8 +1687,8 @@ $$ and thus, by using Fubini's theorem, $$
 \begin{aligned}
 P&\left(p_1-p_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=1-P\left(p_1-p_0 > \delta^*\right|r_0, r_1, n_0, n_1) \\
 &=\int_{\delta^*}^{1}\int_0^{p_0-\delta^*} f_2(p_1, p_0|r_0, r_1, n_0, n_1)dp_1dp_0 \\
-&=\int_{\delta^*}^{1}\frac{p_0^{a_0+r_0-1}(1-p_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}\left(\int_0^{p_0-\delta^*} \frac{p_1^{a_1+r_1-1}(1-p_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}dp_1\right)dp_0 \\
-&=\int_{\delta^*}^{1}\frac{p_0^{a_0+r_0-1}(1-p_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}F_{B(a_1+r_1,b_1+n_1-r_1)}(p_0-\delta^*)dp_0,
+&=\int_{\delta^*}^{1}\frac{p_1^{a_1+r_1-1}(1-p_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}\left(\int_0^{p_1-\delta^*} \frac{p_0^{a_0+r_0-1}(1-p_0)^{b_0+n_0-r_0-1}}{B(a_0+r_0, b_0+n_0-r_0)}dp_0\right)dp_1 \\
+&=\int_{\delta^*}^{1}\frac{p_1^{a_1+r_1-1}(1-p_1)^{b_1+n_1-r_1-1}}{B(a_1+r_1, b_1+n_1-r_1)}F_{B(a_0+r_0,b_0+n_0-r_0)}(p_1-\delta^*)dp_1,
 \end{aligned}
 $$ is the **Bayesian probability to reject** given the observed $r_0, r_1, n_0, n_1$, and where $F_{B(a_1+r_1,b_1+n_1-r_1)}$ is the cumulative distribution function of a beta distribution.
 
@@ -1702,18 +1702,13 @@ We calculate the Bayesian probability to reject for the SAFE-SSPE study.
 #| echo: true
 #| warning: false
 
-
 ## Enthusiastic prior
 a_1 <- 0.5
 b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 7.2
 b_0 <- (1 - 0.03)/(0.03) * a_0
 
-bap <- integrate(function(x) (x)^(a_0+n_0*p_0-1)*(1-x)^(b_0+n_0-n_0*p_0-1)*pbeta(x-delta_star, a_1+n_1*p_1, b_1+n_1-n_1*p_1), lower = delta_star, upper = 1)[[1]]*(1/beta(a_0+n_0*p_0, b_0+n_0-n_0*p_0))
-
-s <- ceiling(seq(a_1 + n_1 * p_1, b_1 + n_1 - n_1 *
-    p_1 - 1))
-bap <- integrate(function(x) (x)^(a_0+n_0*p_0-1)*(1-x)^(b_0+n_0-n_0*p_0-1)*pbeta(x-delta_star, a_1+n_1*p_1, b_1+n_1-n_1*p_1), lower = delta_star, upper = 1)[[1]]*(1/beta(a_0+n_0*p_0, b_0+n_0-n_0*p_0))
+bap <- 1-integrate(function(x) (x)^(a_1+n_1*p_1-1)*(1-x)^(b_1+n_1-n_1*p_1-1)*pbeta(x-delta_star, a_0+n_0*p_0, b_0+n_0-n_0*p_0), lower = delta_star, upper = 1)[[1]]*(1/beta(a_1+n_1*p_1, b_1+n_1-n_1*p_1))
 
 res_bap <- data.frame(type="Enthusiastic", bap)
 
@@ -1723,7 +1718,7 @@ b_1 <- (1 - 0.05)/0.05 * a_1
 a_0 <- 1.24
 b_0 <- (1 - p_0)/p_0 * a_0
 
-bap <- integrate(function(x) (x)^(a_0+n_0*p_0-1)*(1-x)^(b_0+n_0-n_0*p_0-1)*pbeta(x-delta_star, a_1+n_1*p_1, b_1+n_1-n_1*p_1), lower = delta_star, upper = 1)[[1]]*(1/beta(a_0+n_0*p_0, b_0+n_0-n_0*p_0))
+bap <- 1-integrate(function(x) (x)^(a_1+n_1*p_1-1)*(1-x)^(b_1+n_1-n_1*p_1-1)*pbeta(x-delta_star, a_0+n_0*p_0, b_0+n_0-n_0*p_0), lower = delta_star, upper = 1)[[1]]*(1/beta(a_1+n_1*p_1, b_1+n_1-n_1*p_1))
 
 res_bap <- rbind(res_bap, data.frame(type="Skeptical", bap))
 
@@ -1733,7 +1728,7 @@ b_1 <- (1 - p_1)/p_1 * a_1
 a_0 <- 0.03
 b_0 <- (1 - p_0)/p_0 * a_0
 
-bap <- integrate(function(x) (x)^(a_0+n_0*p_0-1)*(1-x)^(b_0+n_0-n_0*p_0-1)*pbeta(x-delta_star, a_1+n_1*p_1, b_1+n_1-n_1*p_1), lower = delta_star, upper = 1)[[1]]*(1/beta(a_0+n_0*p_0, b_0+n_0-n_0*p_0))
+bap <- 1-integrate(function(x) (x)^(a_1+n_1*p_1-1)*(1-x)^(b_1+n_1-n_1*p_1-1)*pbeta(x-delta_star, a_0+n_0*p_0, b_0+n_0-n_0*p_0), lower = delta_star, upper = 1)[[1]]*(1/beta(a_1+n_1*p_1, b_1+n_1-n_1*p_1))
 
 res_bap <- rbind(res_bap, data.frame(type="Informative", bap))
 
@@ -1744,11 +1739,11 @@ b_0 <- 0.5
 a_1 <- 0.5
 b_1 <- 0.5
 
-bap <- integrate(function(x) (x)^(a_0+n_0*p_0-1)*(1-x)^(b_0+n_0-n_0*p_0-1)*pbeta(x-delta_star, a_1+n_1*p_1, b_1+n_1-n_1*p_1), lower = delta_star, upper = 1)[[1]]*(1/beta(a_0+n_0*p_0, b_0+n_0-n_0*p_0))
+bap <- 1-integrate(function(x) (x)^(a_1+n_1*p_1-1)*(1-x)^(b_1+n_1-n_1*p_1-1)*pbeta(x-delta_star, a_0+n_0*p_0, b_0+n_0-n_0*p_0), lower = delta_star, upper = 1)[[1]]*(1/beta(a_1+n_1*p_1, b_1+n_1-n_1*p_1))
 
 res_bap <- rbind(res_bap, data.frame(type="Noninformative", bap))
 
-res_bap$bap <- round(res_bap$bap, 2)
+res_bap$bap <- round(res_bap$bap, 3)
 
 res_bap
 ```
