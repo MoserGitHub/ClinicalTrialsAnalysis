@@ -45,7 +45,7 @@ This is the expectation of $T_{j,i}$ given the interim data $j\geq 1$ @Lee2008. 
 
 **Working example**
 
-Based on prior evidence $p_0$ is set to 0.2. This threshold is based on a result from a previous study where the treatment discontinuation was estimated with 0.17 with 95% confidence intervals (0.10-0.27). Because we want to be conservative we set the parameters for a beta prior to $a=0.4$ and $b=0.6$. The mean of the prior is then 0.4. For illustrating purposes we also show a prior with a prior weight of 5 patients which is centered on $p=0.2$ ($a=1$, $b=4$).
+Based on prior evidence $p_0$ is set to 0.2. This threshold is based on a result from a previous study where the treatment discontinuation was estimated with 0.17 with 95% confidence intervals (0.10-0.27). Below we show the prior distributions for different parameters $a=1$, $b=4$ (weight of 5 patients) and $a=2$, $b=8$ (weight of 10 patients). The mean of the prior is in both cases 0.2.
 
 
 ```{r}
