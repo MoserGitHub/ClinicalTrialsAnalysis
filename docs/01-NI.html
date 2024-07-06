@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.5.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Clinical trials analysis - 2&nbsp; Power and sample size calculations</title>
+<title>Clinical trials analysis – 2&nbsp; Power and sample size calculations</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -99,13 +99,42 @@ div.csl-indent {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -115,19 +144,19 @@ div.csl-indent {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-NI.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Power and sample size calculations</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-NI.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Power and sample size calculations</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
     </div>
   </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Clinical trials analysis</a> 
@@ -183,9 +212,9 @@ div.csl-indent {
   </ul>
 </nav>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -205,7 +234,9 @@ div.csl-indent {
   </div>
   
 
+
 </header>
+
 
 <section id="background" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="background"><span class="header-section-number">2.1</span> Background</h2>
@@ -218,7 +249,11 @@ div.csl-indent {
 <p>In this section we consider a non-inferiority clinical trial setting with a null hypothesis <span class="math inline">\(H_0: \delta &gt; \delta^*\)</span> and alternative hypothesis <span class="math inline">\(H_a: \delta \leq \delta^*\)</span>, where <span class="math inline">\(\delta^*&gt;0\)</span> is a fixed non-inferiority margin and a treatment effect <span class="math inline">\(\delta\)</span>, for example, a continuous difference or a risk difference.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig1-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="01-NI_files/figure-html/fig1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <section id="binomial-outcome" class="level3" data-number="2.2.1">
@@ -233,17 +268,17 @@ div.csl-indent {
 <hr>
 <section id="frequentist-approach" class="level4" data-number="2.2.1.1">
 <h4 data-number="2.2.1.1" class="anchored" data-anchor-id="frequentist-approach"><span class="header-section-number">2.2.1.1</span> Frequentist approach</h4>
-<p>Let <span class="math inline">\(Y_{i}=(Y_{i,1}, Y_{i,2}, \cdots, Y_{i,n_i})^\top\)</span> be a sample of size <span class="math inline">\(n_i\)</span> from a binomial distribution <span class="math inline">\(Y_{i} \sim Binomial(p_i, n_i)\)</span>, <span class="math inline">\(i\in \{0,1\}\)</span>, where <span class="math inline">\(p_i\)</span>, <span class="math inline">\(i\in \{0,1\}\)</span>, are the true event proportions. Denote the estimated event proportions as <span class="math inline">\(\overline p_i=\frac{1}{n_i}\sum_{k\leq n_i} Y_{i,k}\)</span>, <span class="math inline">\(i\in {0,1}\)</span>, and the estimated risk difference as <span class="math inline">\(D=\overline p_1-\overline p_0\)</span>. Then <span class="math inline">\(D\)</span> is asymptotically Gaussian distributed <span class="math inline">\(D \sim N\left(\delta, \frac{\sigma_1^2}{n_1}+\frac{\sigma_0^2}{n_0}\right)\)</span>, where <span class="math inline">\(\sigma_i^2=p_i(1-p_i)\)</span>, <span class="math inline">\(i\in \{0,1\}\)</span>. For notational purposes we denote the variance of the treatment effect as <span class="math inline">\(\sigma_{treat}^2=\frac{\sigma_1^2}{n_1}+\frac{\sigma_0^2}{n_0}\)</span>.</p>
-<p>We are interested whether the upper <span class="math inline">\((1-\alpha)\%\)</span>-confidence limit of <span class="math inline">\(D\)</span> is smaller than the non-inferiority margin <span class="math inline">\(\delta^*\)</span>, that is, <span class="math display">\[
+<p>Let <span class="math inline">\(Y_{i}=(Y_{i,1}, Y_{i,2}, \cdots, Y_{i,n_i})^\top\)</span> be a sample of size <span class="math inline">\(n_i\)</span> from a binomial distribution <span class="math inline">\(Y_{i} \sim Binomial(p_i, n_i)\)</span>, <span class="math inline">\(i\in \{0,1\}\)</span>, where <span class="math inline">\(p_i\)</span>, <span class="math inline">\(i\in \{0,1\}\)</span>, are the true event proportions. Denote the estimated event proportions as <span class="math inline">\(\overline p_i=\frac{1}{n_i}\sum_{k\leq n_i} Y_{i,k}\)</span>, <span class="math inline">\(i\in {0,1}\)</span>, and the estimated risk difference as <span class="math inline">\(D=\overline p_1-\overline p_0\)</span>. Then <span class="math inline">\(D\)</span> is asymptotically Gaussian distributed <span class="math inline">\(D \sim N\left(\delta, \frac{\sigma_1^2}{n_1}+\frac{\sigma_0^2}{n_0}\right)\)</span>, where <span class="math inline">\(\sigma_i^2=p_i(1-p_i)\)</span>, <span class="math inline">\(i\in \{0,1\}\)</span>. For notational purposes we denote the variance of the treatment effect as <span class="math inline">\(\sigma_{treat}^2=\frac{\sigma_1^2}{n_1}+\frac{\sigma_0^2}{n_0}=\frac{\sigma_1^2n_0+\sigma_0^2n_1}{n_1n_0}\)</span>.</p>
+We are interested whether the upper <span class="math inline">\((1-\alpha)\%\)</span>-confidence limit of <span class="math inline">\(D\)</span> is smaller than the non-inferiority margin <span class="math inline">\(\delta^*\)</span>, that is, <span class="math display">\[
 D+z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}\leq \delta^* \quad \Rightarrow \quad D\leq -z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*,
-\]</span> where <span class="math inline">\(z_{1-\alpha}=\Phi^{-1}(1-\alpha)\)</span>. Note that <span class="math inline">\(D_{suc}^{\delta^*}:=-z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*\)</span> is the <strong>required risk difference</strong> for a ‘successful’ rejection of the null hypothesis. Then <span class="math display">\[
-\begin{aligned}
-P_\delta(D\leq D_{suc}^{\delta^*})&amp;=\Phi\left(-z_{1-\alpha}-\sqrt{\frac{n_1n_0}{n_0\sigma_1^2+n_1\sigma_0^2}}(\delta-\delta^*)\right) \\
-&amp;=\Phi\left(-z_{1-\alpha}-\frac{(\delta-\delta^*)}{\sigma_{treat}}\right),
-\end{aligned}
-\]</span> since under regularity conditions, <span class="math display">\[
-Z=\frac{D-\delta^*}{\sigma_{treat}} \rightarrow N(0,1), \quad \min(n_1,n_0) \rightarrow \infty.
-\]</span></p>
+\]</span> where <span class="math inline">\(z_{1-\alpha}=\Phi^{-1}(1-\alpha)\)</span>. Note that <span class="math inline">\(D_{suc}^{\delta^*}:=-z_{1-\alpha}\sqrt{\frac{n_0\sigma_1^2+n_1\sigma_0^2}{n_1n_0}}+\delta^*\)</span> is the <strong>required risk difference</strong> for a ‘successful’ rejection of the null hypothesis. Then $$
+<span class="math display">\[\begin{aligned}
+P_\delta(D\leq D_{suc}^{\delta^*})&amp;=P_\delta\left(\frac{D-\delta}{\sigma_{treat}}\leq\frac{-z_{1-\alpha}\sigma_{treat}+\delta^*-\delta}{\sigma_{treat}}\right) \\
+&amp;=\Phi\left(-z_{1-\alpha}-\frac{(\delta-\delta^*)}{\sigma_{treat}}\right) \\
+&amp;=\Phi\left(-z_{1-\alpha}-\sqrt{\frac{n_1n_0}{n_0\sigma_1^2+n_1\sigma_0^2}}(\delta-\delta^*)\right),
+
+\end{aligned}\]</span>
+<p><span class="math display">\[ since under regularity conditions, \]</span> Z= N(0,1), (n_1,n_0) . $$</p>
 <p>The conditional probability <span class="math inline">\(P_{\delta}(D\leq D_{suc}^{\delta^*})\)</span> is the <strong>probability to reject given</strong> <span class="math inline">\(\delta\)</span>. For <span class="math inline">\(\delta&gt;\delta^*\)</span> this is the ‘type-I error’ and for <span class="math inline">\(\delta\leq\delta^*\)</span> the frequentist ‘power’.</p>
 <p>For a <span class="math inline">\(\delta_A\)</span> it holds that <span class="math display">\[
 -z_{1-\alpha}-\sqrt{\frac{n_1n_0}{n_0\sigma_1^2+n_1\sigma_0^2}}(\delta_A-\delta^*)=\Phi^{-1}(1-\beta)=z_{1-\beta}
@@ -255,7 +290,11 @@ n_0=(z_{1-\beta}+z_{1-\alpha})^2\frac{\sigma_1^2+a\sigma_0^2}{a(\delta_A-\delta^
 <p><span class="math inline">\(\delta_0\)</span>, <span class="math inline">\(\delta_A\)</span> and <span class="math inline">\(\delta^*\)</span> are assumed as fixed and known constants in a frequentist approach. Their choices are of high importance, because all trial conclusions are based on those choices and affect the sample size calculation. The plot below shows how the sample size increase as <span class="math inline">\(\delta^*\)</span> approaches <span class="math inline">\(\delta\)</span>.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig2-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="01-NI_files/figure-html/fig2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <hr>
@@ -265,7 +304,7 @@ n_0=(z_{1-\beta}+z_{1-\alpha})^2\frac{\sigma_1^2+a\sigma_0^2}{a(\delta_A-\delta^
 <li><span class="math inline">\(p_1=0.01\)</span>, <span class="math inline">\(p_0=0.01\)</span>, <span class="math inline">\(\delta^*=0.035\)</span>, <span class="math inline">\(1-\beta=0.8\)</span>, <span class="math inline">\(\alpha=0.05\)</span>, <span class="math inline">\(a=1/1\)</span></li>
 </ul>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiR)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -298,7 +337,7 @@ $delta
 $power
 [1] 0.8</code></pre>
 </div>
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>n_0 <span class="ot">&lt;-</span> ((<span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> beta) <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha))<span class="sc">^</span><span class="dv">2</span>) <span class="sc">*</span> ((sd_1<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">*</span> sd_0<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>(a <span class="sc">*</span> (delta <span class="sc">-</span> delta_star)<span class="sc">^</span><span class="dv">2</span>))</span>
@@ -307,7 +346,7 @@ $power
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 99.93031</code></pre>
 </div>
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>n_1 <span class="ot">&lt;-</span> n_0 <span class="sc">*</span> a</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>n_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -331,7 +370,11 @@ $power
 </ul>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig4-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="01-NI_files/figure-html/fig4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Let <span class="math display">\[
@@ -354,7 +397,7 @@ AP&amp;=\int_{-\infty}^{-\infty}P_{\delta}(D\leq D_{suc}^{d,\delta^*})f(\delta)d
 <p><strong>Working example (continued)</strong></p>
 <p>We calculate the AP under the assumed prior distributions and parameters for the SAFE-SSPE trial.</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Enthusiastic prior</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fl">6.6</span></span>
@@ -436,7 +479,7 @@ f(y)&amp;=\sqrt{\frac{m}{n}}\phi\left(\sqrt{\frac{m}{n}}\left[-z_{1-\alpha}-\sqr
 <p><strong>Working example (continued)</strong></p>
 <p>We derive the probability densities for the different assumed design priors for the SAFE-SSPE study.</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>, <span class="fl">0.999</span>, <span class="fl">0.001</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -507,7 +550,11 @@ f(y)&amp;=\sqrt{\frac{m}{n}}\phi\left(\sqrt{\frac{m}{n}}\left[-z_{1-\alpha}-\sqr
 <span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">"Dots indicate the calculated AP."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig6-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="01-NI_files/figure-html/fig6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <hr>
@@ -533,7 +580,7 @@ P(RPR\leq y)=1-\Phi&amp;\left(\frac{\sigma_{treat}}{\sigma_{prior}}\left[-z_{1-\
 <p><strong>Working example (continued)</strong></p>
 <p>With the formula above we can calculate the probability <span class="math inline">\(P(RPR&gt;\gamma)\)</span>, <span class="math inline">\(0&lt;\gamma&lt;1\)</span>, for the SAFE-SSPE study and the above specified design priors.</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gamma range</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>gamma <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.01</span>, <span class="fl">0.99</span>, <span class="fl">0.01</span>)</span>
@@ -592,12 +639,16 @@ P(RPR\leq y)=1-\Phi&amp;\left(\frac{\sigma_{treat}}{\sigma_{prior}}\left[-z_{1-\
 <span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Probability that RPR is greater than threshold gamma"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig7-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="01-NI_files/figure-html/fig7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>For a specific threshold, say <span class="math inline">\(\gamma=0.6\)</span>, and varying ‘prior sample sizes’ <span class="math inline">\(m\)</span> we obtain</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>gamma <span class="ot">&lt;-</span> <span class="fl">0.6</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -658,7 +709,11 @@ P(RPR\leq y)=1-\Phi&amp;\left(\frac{\sigma_{treat}}{\sigma_{prior}}\left[-z_{1-\
 <span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="fl">0.1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig8-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="01-NI_files/figure-html/fig8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <hr>
@@ -684,7 +739,7 @@ f_2(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin
 <p><strong>Working example (continued)</strong></p>
 <p>For the SAFE-SSPE study the joint distribution <span class="math inline">\(f_2(\tilde\delta, \delta)\)</span> under an enthusiastic prior can be plotted as:</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
@@ -730,9 +785,13 @@ f_2(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin
 <span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">"Dashed line: Noninferiority margin.</span><span class="sc">\n</span><span class="st">Dotted line: Upper CI from predicted delta &lt;= non-inferiority margin."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig9-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="01-NI_files/figure-html/fig9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-<details>
+</div>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>data_output <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(data_sim <span class="sc">%&gt;%</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(region) <span class="sc">%&gt;%</span></span>
@@ -751,7 +810,7 @@ f_2(\tilde\delta, \delta)= N_2\left(\begin{pmatrix} d \\ d \end{pmatrix}, \begin
 <p>From the above values the average power can be calculated as (1) 0.0023 + (2) 0.092 + (3) 0.4909, which is equal to 0.5852. This is the value we reported above (59%).</p>
 <p>The results of EP, PAP and AP are shown in the table below:</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>delta_star <span class="ot">&lt;-</span> <span class="fl">0.035</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> <span class="dv">0</span></span>
@@ -872,7 +931,7 @@ P(D\leq D_{suc}^{d,\delta^*}|\delta)&amp;=\Phi\left(-z_{1-\epsilon}\sqrt{\frac{n
 <p><strong>Working example (continued)</strong></p>
 <p>We derive the conditional Bayesian probability to reject for the SAFE-SSPE study for different <span class="math inline">\(\delta\)</span> values and analysis priors.</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Delta range</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">0.025</span>, <span class="fl">0.05</span>, <span class="fl">0.001</span>)</span>
@@ -958,9 +1017,13 @@ P(D\leq D_{suc}^{d,\delta^*}|\delta)&amp;=\Phi\left(-z_{1-\epsilon}\sqrt{\frac{n
 <span id="cb17-82"><a href="#cb17-82" aria-hidden="true" tabindex="-1"></a>    <span class="fu">round</span>(n_0, <span class="dv">0</span>), <span class="st">", n1="</span>, <span class="fu">round</span>(n_1, <span class="dv">0</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig11-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="01-NI_files/figure-html/fig11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-<details>
+</div>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data_power<span class="sc">$</span>y <span class="ot">&lt;-</span> <span class="fu">round</span>(data_power<span class="sc">$</span>y, <span class="dv">2</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>data_power <span class="sc">%&gt;%</span></span>
@@ -1005,7 +1068,7 @@ BAP&amp;=-z_{1-\epsilon}\sqrt{\frac{m}{n}}-\sqrt{\frac{(m+n)m}{2n\sigma^2}}(d-\d
 <p><strong>Working example (continued)</strong></p>
 <p>We derive the Bayesian average probability to reject for the SAFE-SSPE study.</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Hybrid AP</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1142,7 +1205,7 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 <li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_0=7.2\)</span>, <span class="math inline">\(b_0=232.8\)</span>.</li>
 </ul>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(extraDistr)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1190,7 +1253,11 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 <span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>cowplot<span class="sc">::</span><span class="fu">plot_grid</span>(fig1, fig2, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig13-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="01-NI_files/figure-html/fig13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p><strong>Skeptical prior</strong>: The beta prior for the active treatment arm is centered at 0.05 (the safety margin) with <span class="math inline">\(P(\pi_1\leq 0.01)=0.025\)</span>, that is the probability that the prior is smaller or equal than the expected event proportion is 2.5%. The mean of the beta prior for the control arm is is centered at 0.01 (the expected event proportion) with <span class="math inline">\(P(\pi_0&gt; 0.05)=0.025\)</span>.</p>
@@ -1199,7 +1266,7 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 <li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_i=1.24\)</span>, <span class="math inline">\(b_i=122.76\)</span>.</li>
 </ul>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>, <span class="fl">0.999</span>, <span class="fl">0.001</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1245,7 +1312,11 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 <span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>cowplot<span class="sc">::</span><span class="fu">plot_grid</span>(fig1, fig2, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig14-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="01-NI_files/figure-html/fig14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p><strong>Informative prior</strong>: The beta prior for the active treatment arm and control arm is centered at 0.01 (the expected event proportion) with <span class="math inline">\(P(\pi_1\leq 0.05)=0.01\)</span> and <span class="math inline">\(P(\pi_1\leq 0.05)=0.05\)</span>.</p>
@@ -1254,7 +1325,7 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 <li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_0=0.03\)</span>, <span class="math inline">\(b_0=2.97\)</span>.</li>
 </ul>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>, <span class="fl">0.999</span>, <span class="fl">0.001</span>)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1300,7 +1371,11 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 <span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a>cowplot<span class="sc">::</span><span class="fu">plot_grid</span>(fig1, fig2, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig15-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="01-NI_files/figure-html/fig15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p><strong>Noninformative prior</strong>: Agresti and Min suggest to use a ‘diffuse’ prior and recommend to use Jeffrey’s prior <span class="citation" data-cites="Agresti2005">[<a href="references.html#ref-Agresti2005" role="doc-biblioref">9</a>]</span>. Jeffrey’s prior for a binomial likelihood is <span class="math inline">\(beta(0.5, 0.5)\)</span>-distributed.</p>
@@ -1309,7 +1384,7 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 <li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_0=0.5\)</span>, <span class="math inline">\(b_0=0.5\)</span>.</li>
 </ul>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Noninformative prior</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
@@ -1353,7 +1428,11 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 <span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>cowplot<span class="sc">::</span><span class="fu">plot_grid</span>(fig1, fig2, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig16-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="01-NI_files/figure-html/fig16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <hr>
@@ -1367,7 +1446,7 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 </ul>
 <p>Here we use Agresti-Caffo confidence intervals for the risk difference <span class="citation" data-cites="Agresti2000">[<a href="references.html#ref-Agresti2000" role="doc-biblioref">10</a>]</span>.</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1508,7 +1587,7 @@ E(R_i)=n_i\frac{a_i}{a_i+b_i}, \quad Var(R_i)=\frac{n_ia_ib_i(n_i+a_i+b_i)}{(a_i
 <h5 data-number="2.2.1.4.2" class="anchored" data-anchor-id="approach-2-sampling-from-prior-predictive-distribution"><span class="header-section-number">2.2.1.4.2</span> Approach 2: Sampling from prior predictive distribution</h5>
 <p>The second approach samples <span class="math inline">\(q\)</span> event outcomes from the predictive distribution and calculates for each draw whether the <span class="math inline">\((1-\alpha)\)</span>-upper confidence limit of the risk difference is smaller than the non-inferiority margin. The sum of positive outcomes divided by the number of samples <span class="math inline">\(q\)</span> gives the average power. Also here we use Agresti-Caffo confidence intervals for the risk difference <span class="citation" data-cites="Agresti2000">[<a href="references.html#ref-Agresti2000" role="doc-biblioref">10</a>]</span>.</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of draws</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
@@ -1624,7 +1703,7 @@ p_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)=\frac{p_i^{a_i+r_i-1}(1-p_i)^{
 <li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_0=7.2\)</span>, <span class="math inline">\(b_0=232.8\)</span>.</li>
 </ul>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>, <span class="fl">0.999</span>, <span class="fl">0.001</span>)</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1661,7 +1740,11 @@ p_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)=\frac{p_i^{a_i+r_i-1}(1-p_i)^{
 <span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_linetype</span>(<span class="st">"Type"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Enthusiastic prior"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig19-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="01-NI_files/figure-html/fig19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p><strong>Skeptical prior</strong>: The beta prior for the active treatment arm is centered at 0.05 (the safety margin) with <span class="math inline">\(P(\pi_1\leq 0.01)=0.025\)</span>, that is the probability that the prior is smaller or equal than the expected event proportion is 2.5%. The mean of the beta prior for the control arm is is centered at 0.01 (the expected event proportion) with <span class="math inline">\(P(\pi_0&gt; 0.05)=0.025\)</span>.</p>
@@ -1670,7 +1753,7 @@ p_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)=\frac{p_i^{a_i+r_i-1}(1-p_i)^{
 <li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_i=1.24\)</span>, <span class="math inline">\(b_i=122.76\)</span>.</li>
 </ul>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>, <span class="fl">0.999</span>, <span class="fl">0.001</span>)</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1707,7 +1790,11 @@ p_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)=\frac{p_i^{a_i+r_i-1}(1-p_i)^{
 <span id="cb31-33"><a href="#cb31-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_linetype</span>(<span class="st">"Type"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Skeptical prior"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig20-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="01-NI_files/figure-html/fig20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p><strong>Informative prior</strong>: The beta prior for the active treatment arm and control arm is centered at 0.01 (the expected event proportion) with <span class="math inline">\(P(\pi_1\leq 0.05)=0.01\)</span> and <span class="math inline">\(P(\pi_1\leq 0.05)=0.05\)</span>.</p>
@@ -1716,7 +1803,7 @@ p_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)=\frac{p_i^{a_i+r_i-1}(1-p_i)^{
 <li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_0=0.03\)</span>, <span class="math inline">\(b_0=2.97\)</span>.</li>
 </ul>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>, <span class="fl">0.999</span>, <span class="fl">0.001</span>)</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1753,7 +1840,11 @@ p_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)=\frac{p_i^{a_i+r_i-1}(1-p_i)^{
 <span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_linetype</span>(<span class="st">"Type"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Enthusiastic prior"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig21-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="01-NI_files/figure-html/fig21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p><strong>Noninformative prior</strong>: Agresti and Min suggest to use a ‘diffuse’ prior and recommend to use Jeffrey’s prior <span class="citation" data-cites="Agresti2005">[<a href="references.html#ref-Agresti2005" role="doc-biblioref">9</a>]</span>. Jeffrey’s prior for a binomial likelihood is <span class="math inline">\(beta(0.5, 0.5)\)</span>-distributed.</p>
@@ -1762,7 +1853,7 @@ p_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)=\frac{p_i^{a_i+r_i-1}(1-p_i)^{
 <li>Parameters of beta prior for control treatment arm: <span class="math inline">\(a_0=0.5\)</span>, <span class="math inline">\(b_0=0.5\)</span>.</li>
 </ul>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Noninformative prior</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>a_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
@@ -1804,7 +1895,11 @@ p_i|r_i \sim Beta\left(a_i+r_i,b_i+n_i-r_i\right)=\frac{p_i^{a_i+r_i-1}(1-p_i)^{
 <span id="cb33-38"><a href="#cb33-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span> <span class="fu">scale_linetype</span>(<span class="st">"Type"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Noninformative prior"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="01-NI_files/figure-html/fig22-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="01-NI_files/figure-html/fig22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <hr>
@@ -1822,7 +1917,7 @@ P&amp;\left(p_1-p_0 \leq \delta^*\right|r_0, r_1, n_0, n_1)=1-P\left(p_1-p_0 &gt
 <p><strong>Working example (continued)</strong></p>
 <p>We calculate the Bayesian probability to reject for the SAFE-SSPE study.</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show R code</summary>
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Enthusiastic prior</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>a_1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
@@ -1952,18 +2047,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1995,11 +2079,50 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -2009,8 +2132,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -2022,7 +2154,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -2066,6 +2321,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -2091,6 +2347,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -2152,17 +2434,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link">
+      <a href="./index.html" class="pagination-link" aria-label="Introduction">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./02-PhaseII.html" class="pagination-link">
+      <a href="./02-PhaseII.html" class="pagination-link" aria-label="Phase II trials">
         <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Phase II trials</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 
